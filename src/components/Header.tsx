@@ -18,27 +18,28 @@ function Header() {
       document.body.style.overflow = "auto"; // Cleanup on component unmount
     };
   }, [open]);
+
   return (
     <>
       <div
-        className={`sticky top-0 z-50  
-          drop-shadow-xl transition-colors duration-500 ${
-            open
-              ? `flex flex-row justify-between items-center`
-              : `flex flex-row justify-between items-center `
-          } p-4 bg-[rgba(255, 255, 255, 0.01)] backdrop-blur-[10px]`}
+        className={`sticky top-0 z-50 drop-shadow-xl transition-colors duration-500 p-4 bg-[rgba(255, 255, 255, 0.01)] backdrop-blur-[10px] flex justify-between items-center`}
       >
         <div className="text-4xl">NEXMEET</div>
+        <div className="hidden md:flex md:gap-4">
+          <Link href="/">Home</Link>
+          <Link href="/">About Us</Link>
+          <Link href="/">Create Event</Link>
+          <Link href="/">SignIn</Link>
+          <Link href="/">Login</Link>
+        </div>
         <div className="block md:hidden" onClick={() => toggle()}>
           {open ? <IoMdClose /> : <GiHamburgerMenu />}
         </div>
       </div>
       <div
         className={`${
-          open
-            ? `h-screen flex flex-col justify-center items-center gap-10`
-            : `hidden`
-        } md:flex md:flex-row md:justify-center md:items-center md:gap-4`}
+          open ? `h-screen flex flex-col justify-center items-center gap-10` : `hidden`
+        } md:hidden`}
       >
         <Link href="/">Home</Link>
         <Link href="/">About Us</Link>
