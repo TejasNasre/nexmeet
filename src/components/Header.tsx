@@ -22,10 +22,10 @@ function Header() {
   return (
     <>
       <div
-        className={`sticky top-0 z-50 drop-shadow-xl transition-colors duration-500 p-4 bg-[rgba(255, 255, 255, 0.01)] backdrop-blur-[10px] flex justify-between items-center`}
+        className={`sticky top-0 z-50 drop-shadow-xl transition-colors duration-500 p-4 px-10 bg-[rgba(255, 255, 255, 0.01)] backdrop-blur-[10px] flex justify-between items-center text-white`}
       >
         <div className="text-4xl">NEXMEET</div>
-        <div className="hidden md:flex md:gap-4">
+        <div className="hidden md:flex md:gap-10">
           <Link href="/">Home</Link>
           <Link href="/">About Us</Link>
           <Link href="/">Create Event</Link>
