@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import Spline from "@splinetool/react-spline/next";
-
+import AppleCardsCarouselDemo from "@/components/Carousel";
 const Hero: React.FC = () => {
   const [isUpcoming, setIsUpcoming] = useState(true);
-
+  // const upcomingEventsData = [ /* Your upcoming events data here */ ];
+  // const pastEventsData = [ /* Your past events data here */ ];
   return (
     <div className="flex flex-col items-center">
         <Spline
@@ -30,17 +31,13 @@ const Hero: React.FC = () => {
       </div>
 
       {/* Placeholder for the card carousel */}
-      <div className="mt-8 w-full max-w-4xl">
+      <div className="mt-8 w-full max-w-7xl">
         {isUpcoming ? (
-          <div className="text-center text-lg font-semibold">
-            Upcoming Events Carousel Placeholder
-          </div>
+          <AppleCardsCarouselDemo />
         ) : (
-          <div className="text-center text-lg font-semibold">
-            Past Events Carousel Placeholder
-          </div>
+          <AppleCardsCarouselDemo />  
         )}
-      </div>
+        </div>
     </div>
   );
 };
