@@ -1,36 +1,48 @@
-import React from "react";
+import React, { useState } from "react";
+import Spline from "@splinetool/react-spline/next";
 
-function Hero() {
+const Hero: React.FC = () => {
+  const [isUpcoming, setIsUpcoming] = useState(true);
+
   return (
-    <>
-      <div className="relative bg-[#060707]">
-        <div className=" items-center min-h-screen flex justify-around relative flex-wrap px-5">
-          <>
-            <div className="bg-[#15d98bfd] h-[362px] w-[362px] absolute rounded-full blur-[120px] filter -top-[100px]  -left-20 opacity-75"></div>
-          </>
-          <div className="max-w-xl relative">
-            <h1 className="font-IBMPlexBold text-6xl max-w-md text-left uppercase">
-              NEXMEET <span className="text-[#02C173]">Coming Soon....</span>
-            </h1>
-            {/* <p className="font-IBMPlexRegular text-left">
-              A collection of 10,000 worldly Koalas each with their unique
-              skillsets. Their mission is to protect the world from evil.
-            </p> */}
-            
-          </div>
-          <div>
-            <img
-              width="500"
-              height="500"
-              alt="bg-image"
-              src="https://res.cloudinary.com/ddcg0rzlo/image/upload/v1651418249/new-nft_tlfisy.png"
-            />
-          </div>
-        </div>
+    <div className="flex flex-col items-center">
+        <Spline
+          scene="https://prod.spline.design/6-yx5IQWbDEb-jBX/scene.splinecode"
+        />
+
+      <div className="flex space-x-4 mt-6">
+        <button
+          className={`px-4 py-2 rounded-l-lg ${
+            isUpcoming ? "bg-blue-500 text-white" : "bg-gray-200"
+          }`}
+          onClick={() => setIsUpcoming(true)}
+        >
+          Upcoming Events
+        </button>
+        <button
+          className={`px-4 py-2 rounded-r-lg ${
+            !isUpcoming ? "bg-blue-500 text-white" : "bg-gray-200"
+          }`}
+          onClick={() => setIsUpcoming(false)}
+        >
+          Past Events
+        </button>
       </div>
-      <div/>
-    </>
+
+      {/* Placeholder for the card carousel */}
+      <div className="mt-8 w-full max-w-4xl">
+        {isUpcoming ? (
+          <div className="text-center text-lg font-semibold">
+            Upcoming Events Carousel Placeholder
+          </div>
+        ) : (
+          <div className="text-center text-lg font-semibold">
+            Past Events Carousel Placeholder
+          </div>
+        )}
+      </div>
+    </div>
   );
-}
+};
 
 export default Hero;
