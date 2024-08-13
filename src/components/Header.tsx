@@ -22,10 +22,10 @@ function Header() {
   return (
     <>
       <div
-        className={`sticky top-0 z-50 drop-shadow-xl transition-colors duration-500 p-4 px-10 bg-[rgba(255, 255, 255, 0.01)] backdrop-blur-[10px] flex justify-between items-center text-white`}
+        className={`sticky top-0 z-50 drop-shadow-xl transition-colors duration-500 p-4 px-10 bg-[rgba(255, 255, 255, 0.01)] backdrop-blur-[10px] flex justify-between items-center bg-black text-white shadow-bottom-only`}
       >
         <div className="text-3xl">NEXMEET</div>
-        <div className="hidden md:flex md:gap-10">
+        <div className="hidden bg-none md:flex md:gap-10">
           <Link href="/">Home</Link>
           <Link href="/">About Us</Link>
           <Link href="/">Create Event</Link>
@@ -38,7 +38,9 @@ function Header() {
       </div>
       <div
         className={`${
-          open ? `h-screen flex flex-col justify-center items-center gap-10` : `hidden`
+          open
+            ? `h-screen flex flex-col justify-center items-center gap-10`
+            : `hidden`
         } md:hidden`}
       >
         <Link href="/">Home</Link>
