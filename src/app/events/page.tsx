@@ -1,25 +1,26 @@
-"use client";
+'use client';
+
 import { useState, useEffect } from "react";
-// import Pagination from "@/components/Pagination";
+import Pagination from "../../components/Pagination";
 import data from "../../data/event.json";
 import Link from "next/link";
 
-// interface EventData {
-//   id: number;
-//   title: string;
-//   description: string;
-//   categories: string[];
-//   image: string;
-//   location: string;
-//   startDateTime: string;
-//   endDateTime: string;
-//   participants: string[];
-//   seats: number;
-//   websiteLink: string;
-//   price: number;
-//   status: "active" | "upcoming" | "inactive";
-//   tags: string[];
-// }
+interface EventData {
+  id: number;
+  title: string;
+  description: string;
+  categories: string[];
+  image: string;
+  location: string;
+  startDateTime: string;
+  endDateTime: string;
+  participants: string[];
+  seats: number;
+  websiteLink: string;
+  price: number;
+  status: "active" | "upcoming" | "inactive";
+  tags: string[];
+}
 
 function getData() {
   const response = data;
@@ -53,7 +54,7 @@ const Page: React.FC = () => {
 
   return (
     <>
-      <div className="w-full h-full bg-black text-white py-[5rem] px-[2rem]">
+      <div className="absolute top-0 w-full h-auto bg-red-800 text-white py-[5rem] px-[2rem]">
         <div className="text-center my-10 text-4xl font-bold">
           Explore Events
         </div>
@@ -128,17 +129,17 @@ const Page: React.FC = () => {
             ))
           ) : (
             <div className="h-screen flex flex-col justify-center items-center text-3xl font-bold">
-              Project Not Found
+              Event Not Found
             </div>
           )}
         </div>
-        {/* <div className="text-center mt-[3rem]">
+        <div className="text-center mt-[3rem]">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={(page) => setCurrentPage(page)}
           />
-        </div> */}
+        </div>
       </div>
     </>
   );

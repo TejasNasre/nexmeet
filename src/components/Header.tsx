@@ -1,55 +1,34 @@
 "use client";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { GiHamburgerMenu } from "react-icons/gi";
-import { IoMdClose } from "react-icons/io";
-
+import {
+  RegisterLink,
+  LoginLink,
+} from "@kinde-oss/kinde-auth-nextjs/components";
+import { userAuth } from "../action/auth";
 function Header() {
-  const [open, setOpen] = useState(false);
-
-  const toggle = () => {
-    setOpen(!open);
-    // console.log(open)
-  };
+  const [isUser, setIsUser] = useState(false);
 
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "auto";
-    return () => {
-      document.body.style.overflow = "auto"; // Cleanup on component unmount
-    };
-  }, [open]);
-
+    userAuth().then((res) => {
+      setIsUser(res);
+      // console.log(res);
+    });
+  }, []);
   return (
-    <>
-      <div
-        className={`sticky top-0 z-50 drop-shadow-xl transition-colors duration-500 p-4 px-10 bg-[rgba(255, 255, 255, 0.01)] backdrop-blur-[10px] flex justify-between items-center bg-black text-white shadow-bottom-only`}
-      >
-        <div className="text-3xl">NEXMEET</div>
-        <div className="hidden bg-none md:flex md:gap-10">
-          <Link href="/">Home</Link>
-          <Link href="/">About Us</Link>
-          <Link href="/">Create Event</Link>
-          <Link href="/">SignIn</Link>
-          <Link href="/">Login</Link>
-        </div>
-        <div className="block md:hidden" onClick={() => toggle()}>
-          {open ? <IoMdClose /> : <GiHamburgerMenu />}
-        </div>
+    <div className="relative bg-transparent w-100 z-[999] flex justify-between items-center px-8 py-8">
+      <div>
+        <h1 className="text-2xl">Logo</h1>
       </div>
-      <div
-        className={`${
-          open
-            ? `h-screen flex flex-col justify-center items-center gap-10`
-            : `hidden`
-        } md:hidden`}
-      >
+      <div className="flex justify-center items-center gap-10">
         <Link href="/">Home</Link>
+        <Link href="/events">Explore Events</Link>
         <Link href="/">About Us</Link>
-        <Link href="/">Create Event</Link>
-        <Link href="/">SignIn</Link>
-        <Link href="/">Login</Link>
+        <Link href="/">Contact</Link>
+        <LoginLink>Sign in</LoginLink>
+        <RegisterLink>Sign up</RegisterLink>
       </div>
-    </>
+    </div>
   );
 }
 
