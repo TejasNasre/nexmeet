@@ -4,6 +4,7 @@ import Link from "next/link";
 import {
   RegisterLink,
   LoginLink,
+  LogoutLink,
 } from "@kinde-oss/kinde-auth-nextjs/components";
 import { userAuth } from "../action/auth";
 function Header() {
@@ -21,12 +22,26 @@ function Header() {
         <h1 className="text-2xl">Logo</h1>
       </div>
       <div className="flex justify-center items-center gap-10">
-        <Link href="/">Home</Link>
-        <Link href="/events">Explore Events</Link>
-        <Link href="/">About Us</Link>
-        <Link href="/">Contact</Link>
-        <LoginLink>Sign in</LoginLink>
-        <RegisterLink>Sign up</RegisterLink>
+        {isUser ? (
+          <>
+            <Link href="/">Home</Link>
+            <Link href="/events">Explore Events</Link>
+            <Link href="/">About Us</Link>
+            <Link href="/">Contact</Link>
+            <LogoutLink>Log out</LogoutLink>
+          </>
+        ) : (
+          <>
+            <Link href="/">Home</Link>
+            <Link href="/events">Explore Events</Link>
+            <Link href="/">About Us</Link>
+            <Link href="/">Contact</Link>
+            <LoginLink postLoginRedirectURL="/events">Sign in</LoginLink>
+            <RegisterLink postLoginRedirectURL="/events">Sign up</RegisterLink>
+          </>
+        )}
+
+
       </div>
     </div>
   );
