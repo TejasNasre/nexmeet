@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import data from "../../../data/event.json";
 // import Timer from "@/components/Timer";
-import Loading from "@/components/loading";
+import Loading from "@/components/Loading";
 
 // interface TimerData {
 //   start_date: string;

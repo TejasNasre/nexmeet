@@ -1,34 +1,58 @@
 "use client";
 import React from "react";
-import Image from "next/image";
+import { TextEffect } from '../components/core/text-effect';
 
 const Hero: React.FC = () => {
-  return (
-    // <div className="absolute bg-black text-white w-full top-0 h-[100vh] py-10 flex flex-row justify-center items-center">
-    //   <div>
+  const getRandomColor = () => {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  };
 
-    //   </div>
-    //   <div></div>
-    // </div>
-    <div className="absolute top-0 h-screen w-full bg-black text-white flex flex-col-reverse pt-[40rem] md:pt-0 md:justify-center items-center md:flex-row">
-        <div className="w-full md:w-[50%] flex flex-col justify-start p-5 md:p-10 gap-4">
-          <h1 className="text-4xl font-bold">Empowering Your Green Future</h1>
-          <p className="text-2xl">
-            {" "}
-            Offset your carbon footprint with verified, impactful projects
-          </p>
-          <button className="md:w-[20rem]  px-6 py-2 bg-transparent border border-black text-black rounded-lg font-bold transform hover:-translate-y-1 transition duration-400">
-            Explore Projects
-          </button>
-        </div>
-        <div className="w-full md:w-[50%] p-5 md:p-10">
-          <img
-            src="/abc.png"
-            alt="hero-img"
-            className="w-full h-full"
-          />
-        </div>
-      </div>
+  const fancyVariants = {
+    container: {
+      hidden: { opacity: 0 },
+      visible: {
+        opacity: 1,
+        transition: {
+          staggerChildren: 0.05,
+        },
+      },
+    },
+    item: {
+      hidden: () => ({
+        opacity: 0,
+        y: Math.random() * 100 - 50,
+        rotate: Math.random() * 90 - 45,
+        scale: 0.3,
+        color: getRandomColor(),
+      }),
+      visible: {
+        opacity: 1,
+        y: 0,
+        rotate: 0,
+        scale: 1,
+        color: getRandomColor(),
+        transition: {
+          type: 'spring',
+          damping: 12,
+          stiffness: 200,
+        },
+      },
+    },
+  };
+  return (
+    <div className="absolute top-0 h-screen w-full bg-black text-white pt-[40rem] md:pt-0 flex flex-col justify-center items-center gap-4">
+      <TextEffect per='char' variants={fancyVariants} className="text-center text-4xl font-bold font-dm-mono-light">
+        NexMeet
+      </TextEffect>
+      <TextEffect per='word' variants={fancyVariants} className="text-center text-2xl font-bold">
+        The Ultimate Destination for Event Enthusiasts
+      </TextEffect>
+    </div>
   );
 };
 
