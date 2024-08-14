@@ -23,6 +23,7 @@ function Header() {
       <div className="flex justify-center items-center gap-10">
         <Link href="/">Home</Link>
         <Link href="/events">Explore Events</Link>
+        <Link href="/profile">Profile</Link>
         <Link href="/">About Us</Link>
         <Link href="/">Contact</Link>
         <LoginLink>Sign in</LoginLink>

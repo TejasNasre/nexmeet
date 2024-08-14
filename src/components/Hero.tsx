@@ -10,7 +10,6 @@ const Hero: React.FC = () => {
     //   </div>
     //   <div></div>
     // </div>
-
     <div className="absolute top-0 h-screen w-full bg-black text-white flex flex-col-reverse pt-[40rem] md:pt-0 md:justify-center items-center md:flex-row">
         <div className="w-full md:w-[50%] flex flex-col justify-start p-5 md:p-10 gap-4">
           <h1 className="text-4xl font-bold">Empowering Your Green Future</h1>
