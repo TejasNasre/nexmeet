@@ -25,7 +25,7 @@ function Header() {
         {isUser ? (
           <>
             <Link href="/">Home</Link>
-            <Link href="/events">Explore Events</Link>
+            <Link href="/events" className="transition ease-in-out delay-100 hover: scale-70  hover:translate-y-1 border-double border-2 border-white shadow-[5px_5px_0px_0px_rgba(319,58,227)] rounded-md">Explore Events</Link>
             <Link href="/about">About Us</Link>
             <Link href="/contact">Contact</Link>
             <Link href="/profile">Profile</Link>
