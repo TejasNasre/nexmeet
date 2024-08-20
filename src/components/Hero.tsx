@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { TextEffect } from '../components/core/text-effect';
+import Link from "next/link";
 
 const Hero: React.FC = () => {
   const getRandomColor = () => {
@@ -44,14 +45,25 @@ const Hero: React.FC = () => {
       },
     },
   };
+
   return (
-    <div className="absolute top-0 h-screen w-full bg-black text-white pt-[40rem] md:pt-0 flex flex-col justify-center items-center gap-4">
-      <TextEffect per='char' variants={fancyVariants} className="text-center text-4xl font-bold font-dm-mono-light">
+    <div className="absolute top-0 min-h-screen w-full bg-black text-white py-20 flex flex-col justify-center items-center gap-4 px-4">
+      <TextEffect per='char' variants={fancyVariants} className="text-center text-2xl sm:text-3xl md:text-4xl font-bold font-dm-mono-light">
         NexMeet
       </TextEffect>
-      <TextEffect per='word' variants={fancyVariants} className="text-center text-2xl font-bold">
+      <TextEffect per='word' variants={fancyVariants} className="text-center text-xl sm:text-2xl font-bold">
         The Ultimate Destination for Event Enthusiasts
       </TextEffect>
+      <div className="relative mt-10 w-full flex justify-center items-center">
+        <div className="bg-new1 text-white w-full sm:w-3/4 flex flex-col sm:flex-row justify-between items-center p-4 rounded-lg shadow-[10px_10px_0px_0px_rgba(0,0,0)]">
+          <Link href='/contact' className="hover:animate-pulse bg-new p-4 sm:p-6 md:p-8 text-black font-mono flex mx-auto sm:mx-0 flex-col text-2xl sm:text-3xl md:text-4xl rounded-xl shadow-[10px_10px_0px_0px_rgba(0,0,0)] mb-4 sm:mb-0">
+            Join our Community
+          </Link>
+          <Link href="/about" className="hover:animate-pulse duration-300 bg-new p-4 sm:p-6 md:p-8 text-black font-mono mx-auto sm:mx-0 flex flex-col text-2xl sm:text-3xl md:text-4xl rounded-xl shadow-[10px_10px_0px_0px_rgba(0,0,0)]">
+            Get to know about us
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };

@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import Pagination from "../../components/Pagination";
 import data from "../../data/event.json";
 import Link from "next/link";
-
 interface EventData {
   id: number;
   title: string;
@@ -107,7 +106,7 @@ const Page: React.FC = () => {
                   className="h-64 w-full object-cover transition duration-500 group-hover:scale-105 sm:h-72"
                 />
 
-                <div className="relative bg-black p-6 text-white">
+                <div className="relative bg-black p-6 text-white h-full">
                   <span className="whitespace-nowrap bg-green-600 text-white rounded-md px-3 py-1.5 text-xs font-medium">
                     {event.status}
                   </span>
