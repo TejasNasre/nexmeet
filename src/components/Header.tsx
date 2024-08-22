@@ -34,7 +34,7 @@ function Header() {
             />
           </h1>
         </div>
-        
+
         {/* Hamburger Menu Button */}
         <button
           className="lg:hidden text-white"
@@ -63,10 +63,38 @@ function Header() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Full Viewport Height Mobile Menu */}
       {isMenuOpen && (
-        <div className="lg:hidden mt-4 flex flex-col gap-4 text-white">
-          {renderMenuItems()}
+        <div className="fixed inset-0 z-[1000] lg:hidden flex items-center justify-center">
+          <div
+            className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm"
+            onClick={toggleMenu}
+          ></div>
+          <div className="relative bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg w-full h-full flex flex-col justify-center items-center transform transition-all duration-300 ease-in-out">
+            <button
+              className="absolute top-4 right-4 text-white"
+              onClick={toggleMenu}
+              aria-label="Close menu"
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+            <div className="flex flex-col gap-8 text-white text-center">
+              {renderMenuItems()}
+            </div>
+          </div>
         </div>
       )}
     </div>
@@ -75,21 +103,41 @@ function Header() {
   function renderMenuItems() {
     return (
       <>
-        <Link href="/" className="hover:text-gray-300">Home</Link>
-        <Link href="/events" className="hover:text-gray-300 transition ease-in-out delay-100 hover:scale-105 border-double border-2 border-white shadow-[5px_5px_0px_0px_rgba(319,58,227)] rounded-md px-2 py-1">
+        <Link href="/" className="text-xl hover:text-gray-300">
+          Home
+        </Link>
+        <Link href="/events" className="text-xl hover:text-gray-300">
           Explore Events
         </Link>
-        <Link href="/about" className="hover:text-gray-300">About Us</Link>
-        <Link href="/contact" className="hover:text-gray-300">Contact</Link>
+        <Link href="/about" className="text-xl hover:text-gray-300">
+          About Us
+        </Link>
+        <Link href="/contact" className="text-xl hover:text-gray-300">
+          Contact
+        </Link>
         {isUser ? (
           <>
-            <Link href="/profile" className="hover:text-gray-300">Profile</Link>
-            <LogoutLink className="hover:text-gray-300">Log out</LogoutLink>
+            <Link href="/profile" className="text-xl hover:text-gray-300">
+              Profile
+            </Link>
+            <LogoutLink className="text-xl hover:text-gray-300">
+              Log out
+            </LogoutLink>
           </>
         ) : (
           <>
-            <LoginLink postLoginRedirectURL="/events" className="hover:text-gray-300">Sign in</LoginLink>
-            <RegisterLink postLoginRedirectURL="/events" className="hover:text-gray-300">Sign up</RegisterLink>
+            <LoginLink
+              postLoginRedirectURL="/events"
+              className="text-xl transition ease-in-out delay-100 hover:scale-105 border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1"
+            >
+              Sign in
+            </LoginLink>
+            <RegisterLink
+              postLoginRedirectURL="/events"
+              className="text-xl transition ease-in-out delay-100 hover:scale-105 border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1"
+            >
+              Sign up
+            </RegisterLink>
           </>
         )}
       </>
