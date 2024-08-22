@@ -79,7 +79,7 @@ const Page: React.FC = () => {
               />
             </svg>
           </label>
-          <select
+          {/* <select
             className="w-[8rem] bg-black text-start text-white border border-white outline-black rounded-md"
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
@@ -88,7 +88,7 @@ const Page: React.FC = () => {
             <option value="active">Active</option>
             <option value="upcoming">Upcoming</option>
             <option value="done">Done</option>
-          </select>
+          </select> */}
         </div>
         <div className="w-full flex flex-wrap gap-5 justify-evenly">
           {currentItems.length > 0 ? (
@@ -109,7 +109,7 @@ const Page: React.FC = () => {
 
                 <div className="relative bg-black p-6 text-white">
                   <span className="whitespace-nowrap bg-green-600 text-white rounded-md px-3 py-1.5 text-xs font-medium">
-                    {event.status}
+                    {/* {event.status} */} {status}
                   </span>
 
                   <h3 className="mt-4 text-lg font-medium">{event.title}</h3>
