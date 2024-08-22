@@ -33,6 +33,9 @@ const config: Config = {
           },
         },
       },
+      fontFamily : {
+        dm_mono : ['var(--font-dm_mono)']
+      }
     },
     fontFamily: {
       mono: ["dm-mono-light"],

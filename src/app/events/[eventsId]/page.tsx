@@ -46,7 +46,7 @@ function eventsId() {
 
   return (
     <>
-      <div className="w-full h-screen bg-black text-white py-[6rem] px-[2rem]">
+      <div className="absolute top-0 w-full h-auto bg-black text-white py-[8rem] px-[2rem]">
         {eventData.map((event: EventData) => (
           <div className="flex flex-row p-10" key={event.id}>
             <div className="w-[60%] p-10">

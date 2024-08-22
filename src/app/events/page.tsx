@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { useState, useEffect } from "react";
 import Pagination from "../../components/Pagination";
 import data from "../../data/event.json";
@@ -92,15 +92,12 @@ const Page: React.FC = () => {
         <div className="w-full flex flex-wrap gap-5 justify-evenly">
           {currentItems.length > 0 ? (
             currentItems.map((event) => (
-
               <Link
                 href={`/events/${event.id}`}
                 className="w-[350px] group relative block overflow-hidden rounded-lg shadow-lg transition duration-500 hover:shadow-xl text-white border border-white my-5"
                 key={event.id}
               >
-
                 <img
-
                   src={event.image}
                   alt={event.title}
                   className="h-64 w-full object-cover transition duration-500 group-hover:scale-105 sm:h-72"
@@ -108,7 +105,7 @@ const Page: React.FC = () => {
 
                 <div className="relative bg-black p-6 text-white h-full">
                   <span className="whitespace-nowrap bg-green-600 text-white rounded-md px-3 py-1.5 text-xs font-medium">
-                    {/* {event.status} */} {status}
+                    {event.status}
                   </span>
 
                   <h3 className="mt-4 text-lg font-medium">{event.title}</h3>

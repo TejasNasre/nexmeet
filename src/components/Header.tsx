@@ -4,18 +4,33 @@ import Link from "next/link";
 import {
   RegisterLink,
   LoginLink,
-  LogoutLink,
 } from "@kinde-oss/kinde-auth-nextjs/components";
 import { userAuth } from "../action/auth";
+import { userDetails } from "../action/userDetails";
+
+interface User {
+  picture: string;
+}
 
 function Header() {
   const [isUser, setIsUser] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     userAuth().then((res) => {
       setIsUser(res);
     });
+
+    userDetails()
+      .then((res: any) => {
+        // console.log(res)
+        setUser(res);
+      })
+      .catch((error) => {
+        // console.error('Error fetching user details:', error);
+        setUser(null);
+      });
   }, []);
 
   const toggleMenu = () => {
@@ -25,16 +40,7 @@ function Header() {
   return (
     <div className="relative bg-transparent w-full z-[999] px-4 sm:px-8 py-4 sm:py-8">
       <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-xl sm:text-2xl">
-            <img
-              src="https://see.fontimg.com/api/renderfont4/aDqK/eyJyIjoiZnMiLCJoIjoyNywidyI6MTAwMCwiZnMiOjI3LCJmZ2MiOiIjRjZGM0YzIiwiYmdjIjoiIzAwMDAwMCIsInQiOjF9/bmV4bWVldA/bronx-bystreets.png"
-              alt="nextmeet_logo"
-              className="h-6 sm:h-8"
-            />
-          </h1>
-        </div>
-
+        <h1 className="mono text-2xl text-white">NexMeet</h1>
         {/* Hamburger Menu Button */}
         <button
           className="lg:hidden text-white"
@@ -103,38 +109,45 @@ function Header() {
   function renderMenuItems() {
     return (
       <>
-        <Link href="/" className="text-xl hover:text-gray-300">
-          Home
-        </Link>
-        <Link href="/events" className="text-xl hover:text-gray-300">
-          Explore Events
-        </Link>
-        <Link href="/about" className="text-xl hover:text-gray-300">
-          About Us
-        </Link>
-        <Link href="/contact" className="text-xl hover:text-gray-300">
-          Contact
-        </Link>
+        <div
+          className={`flex justify-center items-center gap-6 ${
+            isMenuOpen ? `flex-col` : `flex-row`
+          }`}
+        >
+          <Link href="/" className="mono hover:text-gray-300">
+            Home
+          </Link>
+          <Link href="/events" className="mono hover:text-gray-300">
+            Explore Events
+          </Link>
+          <Link href="/about" className="mono hover:text-gray-300">
+            About Us
+          </Link>
+          <Link href="/contact" className="mono hover:text-gray-300">
+            Contact
+          </Link>
+        </div>
         {isUser ? (
           <>
-            <Link href="/profile" className="text-xl hover:text-gray-300">
-              Profile
+            <Link href="/profile" className="mono  hover:text-gray-300">
+              <img
+                src={user?.picture}
+                alt="Profile"
+                className="rounded-full w-10 border-2 border-white"
+              />
             </Link>
-            <LogoutLink className="text-xl hover:text-gray-300">
-              Log out
-            </LogoutLink>
           </>
         ) : (
           <>
             <LoginLink
               postLoginRedirectURL="/events"
-              className="text-xl transition ease-in-out delay-100 hover:scale-105 border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1"
+              className="mono transition ease-in-out delay-100 hover:scale-105 border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1"
             >
               Sign in
             </LoginLink>
             <RegisterLink
               postLoginRedirectURL="/events"
-              className="text-xl transition ease-in-out delay-100 hover:scale-105 border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1"
+              className="mono transition ease-in-out delay-100 hover:scale-105 border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1"
             >
               Sign up
             </RegisterLink>
