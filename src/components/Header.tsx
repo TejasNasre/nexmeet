@@ -1,6 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
+
 import {
   RegisterLink,
   LoginLink,
@@ -130,8 +132,8 @@ function Header() {
         {isUser ? (
           <>
             <Link href="/profile" className="mono  hover:text-gray-300">
-              <img
-                src={user?.picture}
+              <Image
+                src={user?.picture || ""}
                 alt="Profile"
                 className="rounded-full w-10 border-2 border-white"
               />
