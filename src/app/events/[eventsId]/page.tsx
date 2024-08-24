@@ -2,14 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import data from "../../../data/event.json";
-// import Timer from "@/components/Timer";
 import Loading from "../../../components/Loading";
-import Image from "next/image";
-
-// interface TimerData {
-//   start_date: string;
-//   end_date: string;
-// }
 
 interface EventData {
   id: number;
@@ -51,7 +44,7 @@ function EventsId() {
         {eventData.map((event: EventData) => (
           <div className="flex flex-row p-10" key={event.id}>
             <div className="w-[60%] p-10">
-              <Image
+              <img
                 src={event.image}
                 alt={event.title}
                 className="w-full rounded-md"
