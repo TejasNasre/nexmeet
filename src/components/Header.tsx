@@ -131,11 +131,11 @@ function Header() {
         </div>
         {isUser ? (
           <>
-            <Link href="/profile" className="mono  hover:text-gray-300">
-              <Image
+            <Link href="/profile" className="mono justify-center items-center flex hover:text-gray-300">
+              <img
                 src={user?.picture || ""}
                 alt="Profile"
-                className="rounded-full w-10 border-2 border-white"
+                className="rounded-full w-15 h-15 size-10 border-2 border-white"
               />
             </Link>
           </>

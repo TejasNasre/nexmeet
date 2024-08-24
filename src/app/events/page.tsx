@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Pagination from "../../components/Pagination";
 import data from "../../data/event.json";
 import Link from "next/link";
-import Image from "next/image";
+
 
 interface EventData {
   id: number;
@@ -99,7 +99,9 @@ const Page: React.FC = () => {
                 className="w-[350px] group relative block overflow-hidden rounded-lg shadow-lg transition duration-500 hover:shadow-xl text-white border border-white my-5"
                 key={event.id}
               >
-                <Image
+                <img
+                width="500"
+                height="500"
                   src={event.image}
                   alt={event.title}
                   className="h-64 w-full object-cover transition duration-500 group-hover:scale-105 sm:h-72"

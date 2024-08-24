@@ -4,7 +4,7 @@ import { InfiniteMovingCards } from "../components/ui/infinite-moving-cards";
 import { BackgroundBeamsWithCollision } from "../components/ui/background-beams-with-collision";
 import { RegisterLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import Link from "next/link";
-
+import { WobbleCard } from "./ui/wobble-card";
 const Hero: React.FC = () => {
   const data = [
     {
@@ -69,13 +69,13 @@ const Hero: React.FC = () => {
         <BackgroundBeamsWithCollision>
           <div className="flex flex-col justify-center items-center gap-12">
             <h2 className="text-2xl relative z-20 md:text-4xl lg:text-7xl font-bold text-center text-black dark:text-white font-sans tracking-tight">
-              What&apos;s cooler than Beams?{" "}
+              What&apos;s cooler than Networking?{" "}
               <div className="relative mx-auto inline-block w-max [filter:drop-shadow(0px_1px_3px_rgba(27,_37,_80,_0.14))]">
                 <div className="absolute left-0 top-[1px] bg-clip-text bg-no-repeat text-transparent bg-gradient-to-r py-4 from-purple-500 via-violet-500 to-pink-500 [text-shadow:0_0_rgba(0,0,0,0.1)]">
-                  <span className="">Exploding beams.</span>
+                  <span className="">Nothing dude.</span>
                 </div>
                 <div className="relative bg-clip-text text-transparent bg-no-repeat bg-gradient-to-r from-purple-500 via-violet-500 to-pink-500 py-4">
-                  <span className="">Exploding beams.</span>
+                  <span className="">Nothing dude.</span>
                 </div>
               </div>
             </h2>
@@ -97,7 +97,42 @@ const Hero: React.FC = () => {
           <h1 className="mono text-4xl">Nexmeet Community Partner</h1>
           <InfiniteMovingCards items={data} direction="right" speed="slow" />
         </div>
-        <div className="h-screen w-full bg-black"></div>
+        <div className="h-screen w-full bg-black">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 max-w-7xl mx-auto w-full">
+      <WobbleCard
+        containerClassName="col-span-1 lg:col-span-2 h-full bg-pink-800 min-h-[500px] lg:min-h-[300px]"
+        className=""
+      >
+        <div className="max-w-xs">
+          <h2 className="text-left text-balance text-base md:text-xl lg:text-3xl font-semibold tracking-[-0.015em] text-white">
+            Create events easily on the go with Nexmeet
+          </h2>
+          <p className="mt-4 text-left  text-base/6 text-neutral-200">
+          With over 100,000 monthly active users, NexMeet is the go-to platform for creating and discovering unforgettable events.
+          </p>
+        </div>
+        
+      </WobbleCard>
+      <WobbleCard containerClassName="col-span-1 min-h-[300px]">
+        <h2 className="max-w-80  text-left text-balance text-base md:text-xl lg:text-3xl font-semibold tracking-[-0.015em] text-white">
+        Virtual or In-Person, We've Got You Covered!!
+        </h2>
+        <p className="mt-4 max-w-[26rem] text-left  text-base/6 text-neutral-200">
+        Seamlessly host hybrid events that bring together audiences from around the globe.
+        </p>
+      </WobbleCard>
+      <WobbleCard containerClassName="col-span-1 lg:col-span-3 bg-blue-900 min-h-[500px] lg:min-h-[600px] xl:min-h-[300px]">
+        <div className="max-w-sm">
+          <h2 className="max-w-sm md:max-w-lg  text-left text-balance text-base md:text-xl lg:text-3xl font-semibold tracking-[-0.015em] text-white">
+            We have many more things going on for you and in todo-list for the future
+          </h2>
+          <p className="mt-4 max-w-[26rem] text-left  text-base/6 text-neutral-200">
+            Make a bigger community part of your life explore new things and grow yourself in and out.
+          </p>
+        </div>
+      </WobbleCard>
+    </div>
+        </div>
         <div className="w-full h-screen bg-black"></div>
       </div>
     </>
