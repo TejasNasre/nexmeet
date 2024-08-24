@@ -1,8 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { userDetails } from "../../action/userDetails";
-import Loading from "../../components/Loading";
+import Loading from "../../components/loading";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
+
 
 interface User {
   id: string;

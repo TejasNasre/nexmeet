@@ -4,6 +4,7 @@ import Pagination from "../../components/Pagination";
 import data from "../../data/event.json";
 import Link from "next/link";
 
+
 interface EventData {
   id: number;
   title: string;
@@ -99,6 +100,8 @@ const Page: React.FC = () => {
                 key={event.id}
               >
                 <img
+                width="500"
+                height="500"
                   src={event.image}
                   alt={event.title}
                   className="h-64 w-full object-cover transition duration-500 group-hover:scale-105 sm:h-72"

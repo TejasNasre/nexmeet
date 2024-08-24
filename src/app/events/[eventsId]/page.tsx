@@ -2,7 +2,14 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import data from "../../../data/event.json";
-import Loading from "../../../components/Loading";
+// import Timer from "@/components/Timer";
+import Loading from "../../../components/loading";
+
+
+// interface TimerData {
+//   start_date: string;
+//   end_date: string;
+// }
 
 interface EventData {
   id: number;
