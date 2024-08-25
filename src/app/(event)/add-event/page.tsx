@@ -347,7 +347,9 @@ export default function AddEvent() {
             )}
           />
 
-          <Button type="submit">Submit</Button>
+          <Button type="submit" variant="outline">
+            Submit
+          </Button>
         </form>
       </Form>
     </div>

@@ -18,8 +18,8 @@ export function DatePickerWithRange({
   className,
 }: React.HTMLAttributes<HTMLDivElement>) {
   const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(2022, 0, 20),
-    to: addDays(new Date(2022, 0, 20), 20),
+    from: new Date(),
+    to: addDays(new Date(), 7),
   });
 
   return (
@@ -30,7 +30,7 @@ export function DatePickerWithRange({
             id="date"
             variant={"outline"}
             className={cn(
-              "w-[300px] justify-center text-black text-left font-normal",
+              "w-[300px] justify-start text-left font-normal",
               !date && "text-muted-foreground"
             )}
           >

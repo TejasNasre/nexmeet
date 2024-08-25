@@ -91,6 +91,7 @@ const Hero: React.FC = () => {
                 Register
               </RegisterLink>
             </div>
+            <h1>project is in development phase</h1>
           </div>
         </BackgroundBeamsWithCollision>
         <div className="h-[40rem] flex flex-col antialiased bg-black items-center gap-10 justify-center relative overflow-hidden">
@@ -98,40 +99,43 @@ const Hero: React.FC = () => {
           <InfiniteMovingCards items={data} direction="right" speed="slow" />
         </div>
         <div className="h-screen w-full bg-black">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 max-w-7xl mx-auto w-full">
-      <WobbleCard
-        containerClassName="col-span-1 lg:col-span-2 h-full bg-pink-800 min-h-[500px] lg:min-h-[300px]"
-        className=""
-      >
-        <div className="max-w-xs">
-          <h2 className="text-left text-balance text-base md:text-xl lg:text-3xl font-semibold tracking-[-0.015em] text-white">
-            Create events easily on the go with Nexmeet
-          </h2>
-          <p className="mt-4 text-left  text-base/6 text-neutral-200">
-          With over 100,000 monthly active users, NexMeet is the go-to platform for creating and discovering unforgettable events.
-          </p>
-        </div>
-        
-      </WobbleCard>
-      <WobbleCard containerClassName="col-span-1 min-h-[300px]">
-        <h2 className="max-w-80  text-left text-balance text-base md:text-xl lg:text-3xl font-semibold tracking-[-0.015em] text-white">
-        Virtual or In-Person, We've Got You Covered!!
-        </h2>
-        <p className="mt-4 max-w-[26rem] text-left  text-base/6 text-neutral-200">
-        Seamlessly host hybrid events that bring together audiences from around the globe.
-        </p>
-      </WobbleCard>
-      <WobbleCard containerClassName="col-span-1 lg:col-span-3 bg-blue-900 min-h-[500px] lg:min-h-[600px] xl:min-h-[300px]">
-        <div className="max-w-sm">
-          <h2 className="max-w-sm md:max-w-lg  text-left text-balance text-base md:text-xl lg:text-3xl font-semibold tracking-[-0.015em] text-white">
-            We have many more things going on for you and in todo-list for the future
-          </h2>
-          <p className="mt-4 max-w-[26rem] text-left  text-base/6 text-neutral-200">
-            Make a bigger community part of your life explore new things and grow yourself in and out.
-          </p>
-        </div>
-      </WobbleCard>
-    </div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 max-w-7xl mx-auto w-full">
+            <WobbleCard
+              containerClassName="col-span-1 lg:col-span-2 h-full bg-pink-800 min-h-[500px] lg:min-h-[300px]"
+              className=""
+            >
+              <div className="max-w-xs">
+                <h2 className="text-left text-balance text-base md:text-xl lg:text-3xl font-semibold tracking-[-0.015em] text-white">
+                  Create events easily on the go with Nexmeet
+                </h2>
+                <p className="mt-4 text-left  text-base/6 text-neutral-200">
+                  With over 100,000 monthly active users, NexMeet is the go-to
+                  platform for creating and discovering unforgettable events.
+                </p>
+              </div>
+            </WobbleCard>
+            <WobbleCard containerClassName="col-span-1 min-h-[300px]">
+              <h2 className="max-w-80  text-left text-balance text-base md:text-xl lg:text-3xl font-semibold tracking-[-0.015em] text-white">
+                Virtual or In-Person, We've Got You Covered!!
+              </h2>
+              <p className="mt-4 max-w-[26rem] text-left  text-base/6 text-neutral-200">
+                Seamlessly host hybrid events that bring together audiences from
+                around the globe.
+              </p>
+            </WobbleCard>
+            <WobbleCard containerClassName="col-span-1 lg:col-span-3 bg-blue-900 min-h-[500px] lg:min-h-[600px] xl:min-h-[300px]">
+              <div className="max-w-sm">
+                <h2 className="max-w-sm md:max-w-lg  text-left text-balance text-base md:text-xl lg:text-3xl font-semibold tracking-[-0.015em] text-white">
+                  We have many more things going on for you and in todo-list for
+                  the future
+                </h2>
+                <p className="mt-4 max-w-[26rem] text-left  text-base/6 text-neutral-200">
+                  Make a bigger community part of your life explore new things
+                  and grow yourself in and out.
+                </p>
+              </div>
+            </WobbleCard>
+          </div>
         </div>
         <div className="w-full h-screen bg-black"></div>
       </div>

@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import { DayPicker } from "react-day-picker"
+import * as React from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { DayPicker } from "react-day-picker";
 
-import { cn } from "@/lib/utils"
-import { buttonVariants } from "@/components/ui/button"
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
 
-export type CalendarProps = React.ComponentProps<typeof DayPicker>
+export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
 function Calendar({
   className,
@@ -43,7 +43,7 @@ function Calendar({
         ),
         day_range_end: "day-range-end",
         day_selected:
-          "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
+          "bg-black text-white hover:bg-primary hover:text-primary-foreground focus:bg-black focus:text-white",
         day_today: "bg-accent text-accent-foreground",
         day_outside:
           "day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
@@ -59,8 +59,8 @@ function Calendar({
       }}
       {...props}
     />
-  )
+  );
 }
-Calendar.displayName = "Calendar"
+Calendar.displayName = "Calendar";
 
-export { Calendar }
+export { Calendar };
