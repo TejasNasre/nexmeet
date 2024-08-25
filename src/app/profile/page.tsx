@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { userDetails } from "../../action/userDetails";
 import Loading from "../../components/loading";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import Image from "next/image";
 
 
 interface User {
@@ -38,10 +39,12 @@ function Page() {
         <Loading />
       ) : user ? (
         <div className="flex flex-col justify-center items-center gap-4">
-          <img
+          <Image
             src={user.picture}
             alt={`${user.given_name} ${user.family_name}`}
-            className="rounded-full border-2 border-white w-24 h-24"
+            width={96}
+            height={96}
+            className="rounded-full border-2 border-white"
           />
           <h1>
             {user.given_name} {user.family_name}

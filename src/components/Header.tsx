@@ -8,6 +8,7 @@ import {
 } from "@kinde-oss/kinde-auth-nextjs/components";
 import { userAuth } from "../action/auth";
 import { userDetails } from "../action/userDetails";
+import Image from "next/image";
 
 interface User {
   picture: string;
@@ -131,10 +132,12 @@ function Header() {
         {isUser ? (
           <>
             <Link href="/profile" className="mono justify-center items-center flex hover:text-gray-300">
-              <img
+              <Image
                 src={user?.picture || ""}
                 alt="Profile"
-                className="rounded-full w-15 h-15 size-10 border-2 border-white"
+                width={56}
+                height={56}
+                className="rounded-full size-10 border-2 border-white"
               />
             </Link>
           </>
