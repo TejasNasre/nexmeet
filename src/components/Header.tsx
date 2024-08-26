@@ -42,7 +42,7 @@ function Header() {
   return (
     <div className="relative bg-transparent w-full z-[999] px-4 sm:px-8 py-4 sm:py-8">
       <div className="flex justify-between items-center">
-        <h1 className="mono text-2xl text-white">NexMeet</h1>
+        <Link href={"/"} className="mono text-2xl text-white">NexMeet</Link>
         {/* Hamburger Menu Button */}
         <button
           className="lg:hidden text-white"
@@ -133,7 +133,7 @@ function Header() {
           <>
             <Link href="/profile" className="mono justify-center items-center flex hover:text-gray-300">
               <Image
-                src={user?.picture || ""}
+                src={user?.picture || "/profile.jpg"}
                 alt="Profile"
                 width={56}
                 height={56}
