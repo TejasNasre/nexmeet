@@ -83,11 +83,11 @@ const Hero: React.FC = () => {
             <div className="flex flex-row justify-center items-center gap-8">
               <Link
                 href="/events"
-                className="mono transition ease-in-out delay-100 hover:scale-105 border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1"
+                className="mono transition ease-in-out duration-300 hover:scale-105 border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md md:px-4 py-1"
               >
                 Explore Events
               </Link>
-              <RegisterLink className="mono transition ease-in-out delay-100 hover:scale-105 border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1">
+              <RegisterLink className="mono transition ease-in-out duration-300 hover:scale-105 border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md md:px-4 py-1">
                 Register
               </RegisterLink>
             </div>
@@ -95,7 +95,7 @@ const Hero: React.FC = () => {
           </div>
         </BackgroundBeamsWithCollision>
         <div className="h-[40rem] flex flex-col antialiased bg-black items-center gap-10 justify-center relative overflow-hidden">
-          <h1 className="mono text-4xl">Nexmeet Community Partner</h1>
+          <h1 className="mono  text-center text-4xl">Nexmeet Community Partner</h1>
           <InfiniteMovingCards items={data} direction="right" speed="slow" />
         </div>
         <div className="h-screen w-full bg-black">
