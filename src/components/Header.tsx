@@ -8,6 +8,7 @@ import {
 } from "@kinde-oss/kinde-auth-nextjs/components";
 import { userAuth } from "../action/auth";
 import { userDetails } from "../action/userDetails";
+import Image from "next/image";
 
 interface User {
   picture: string;
@@ -45,7 +46,7 @@ function Header() {
   return (
     <div className="relative bg-transparent w-full z-[999] px-4 sm:px-8 py-4 sm:py-8">
       <div className="flex justify-between items-center">
-        <h1 className="mono text-2xl text-white">NexMeet</h1>
+        <Link href={"/"} className="mono text-2xl text-white">NexMeet</Link>
         {/* Hamburger Menu Button */}
         <button
           className="lg:hidden text-white"
@@ -134,11 +135,13 @@ function Header() {
         </div>
         {isUser ? (
           <>
-            <Link href="/profile" onClick={() => handleNavigation('/profile')} className="mono justify-center items-center flex hover:text-gray-300">
-              <img
-                src={user?.picture || ""}
+            <Link href="/profile" className="mono justify-center items-center flex hover:text-gray-300">
+              <Image
+                src={user?.picture || "/profile.jpg"}
                 alt="Profile"
-                className="rounded-full w-15 h-15 size-10 border-2 border-white"
+                width={56}
+                height={56}
+                className="rounded-full size-10 border-2 border-white"
               />
             </Link>
           </>

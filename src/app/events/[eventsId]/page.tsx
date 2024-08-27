@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import data from "../../../data/event.json";
 // import Timer from "@/components/Timer";
 import Loading from "../../../components/loading";
+import Image from "next/image";
 
 
 // interface TimerData {
@@ -51,9 +52,12 @@ function EventsId() {
         {eventData.map((event: EventData) => (
           <div className="flex flex-row p-10" key={event.id}>
             <div className="w-[60%] p-10">
-              <img
+              <Image
                 src={event.image}
                 alt={event.title}
+                width={700}
+                height={400}
+                layout="responsive"
                 className="w-full rounded-md"
               />
             </div>

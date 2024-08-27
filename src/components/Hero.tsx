@@ -69,7 +69,7 @@ const Hero: React.FC = () => {
         <BackgroundBeamsWithCollision>
           <div className="flex flex-col justify-center items-center gap-12">
             <h2 className="text-2xl relative z-20 md:text-4xl lg:text-7xl font-bold text-center text-white dark:text-white font-sans tracking-tight">
-              What&apos;s cooler than Networking?{" "}
+              What&lsquo;s cooler than Networking?{" "}
               <div className="mono relative mx-auto inline-block w-max [filter:drop-shadow(0px_1px_3px_rgba(27,_37,_80,_0.14))]">
                 <div className="mono absolute left-0 top-[1px] bg-clip-text bg-no-repeat text-transparent bg-gradient-to-r py-4 from-purple-500 via-violet-500 to-pink-500 [text-shadow:0_0_rgba(0,0,0,0.1)]">
                   <span className="">Nothing dude.</span>
@@ -116,7 +116,7 @@ const Hero: React.FC = () => {
             </WobbleCard>
             <WobbleCard containerClassName="col-span-1 min-h-[300px]">
               <h2 className="max-w-80  text-left text-balance text-base md:text-xl lg:text-3xl font-semibold tracking-[-0.015em] text-white">
-                Virtual or In-Person, We've Got You Covered!!
+                Virtual or In-Person, We&lsquo;ve Got You Covered!!
               </h2>
               <p className="mt-4 max-w-[26rem] text-left  text-base/6 text-neutral-200">
                 Seamlessly host hybrid events that bring together audiences from
