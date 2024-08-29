@@ -76,3 +76,6 @@
     transform: translateX(-50%);
   }
 }
+.transition {
+  transition: all 0.3s ease-in-out !important;
+}
