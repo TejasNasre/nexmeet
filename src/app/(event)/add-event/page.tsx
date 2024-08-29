@@ -1,6 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { convertBlobUrlToFile } from "../../../action/convertBlobUrlToFile";
+import { uploadImage } from "../../../action/uploadSupabase";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import {
@@ -24,15 +26,16 @@ import { Calendar } from "../../../components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { eventDetailsSchema } from "../../../schemas/eventDetailsSchema";
-import { useState } from "react";
 import Image from "next/image";
-import { v4 as uuidv4 } from "uuid";
 import { DatePickerWithRange } from "../../../components/DatePickerWithRange";
 import { supabase } from "../../../utils/supabase";
+import { useRef, ChangeEvent, useState, useTransition } from "react";
 
 export default function SignInForm() {
-  const [images, setImages] = useState<string[]>([]);
-  const [filePreview, setFilePreview] = useState<string[]>([]);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const [isPending, startTransition] = useTransition();
+
   const form = useForm<z.infer<typeof eventDetailsSchema>>({
     resolver: zodResolver(eventDetailsSchema),
     defaultValues: {
@@ -49,28 +52,19 @@ export default function SignInForm() {
     },
   });
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files) {
-      const fileArray = Array.from(files).map(
-        (file) => `${uuidv4()}.${file.name.split(".").pop()}`
-      );
-      setImages(fileArray);
-      const previews = Array.from(files).map((file) =>
-        URL.createObjectURL(file)
-      );
-      setFilePreview(previews);
-      form.setValue("event_images", fileArray);
-    } else {
-      setImages([]);
-      setFilePreview([]);
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const filesArray = Array.from(e.target.files);
+      const newImageUrls = filesArray.map((file) => URL.createObjectURL(file));
+
+      setImageUrls([...imageUrls, ...newImageUrls]);
     }
   };
 
   const onSubmit = async (
     event_details: z.infer<typeof eventDetailsSchema>
   ) => {
-    console.log(event_details);
+    // console.log(event_details);
     const { data, error } = await supabase
       .from("event_details")
       .insert([
@@ -89,27 +83,30 @@ export default function SignInForm() {
       ])
       .select();
 
-    for (const image of images) {
-      const file = image;
-      console.log(file);
-      const fileName = uuidv4();
-      const fileExt = file.split(".").pop();
-      console.log(fileExt);
-      const filePath = `${fileName}.${fileExt}`;
-      const { data, error } = await supabase.storage
-        .from("event_image")
-        .upload(`${filePath}`, file, {
-          contentType: `image/${fileExt}`,
-          upsert: false,
-        });
-      if (error) {
-        console.error("Error uploading image:", error);
-        alert("Error uploading image");
-      } else {
-        console.log("Image uploaded successfully:", data);
-        alert("Image uploaded successfully");
-      }
+    if (error) {
+      console.error(error);
+      return;
     }
+
+    startTransition(async () => {
+      let urls = [];
+      for (const url of imageUrls) {
+        const imageFile = await convertBlobUrlToFile(url);
+
+        const { imageUrl, error } = await uploadImage({
+          file: imageFile,
+          bucket: "event_image",
+        });
+
+        if (error) {
+          console.error(error);
+          return;
+        }
+
+        urls.push(imageUrl);
+      }
+      setImageUrls([]);
+    });
   };
 
   return (
@@ -152,7 +149,9 @@ export default function SignInForm() {
                   type="file"
                   accept="image/jpeg, image/png"
                   multiple={true}
-                  onChange={(e) => handleFileChange(e)}
+                  ref={imageInputRef}
+                  onChange={(e) => handleImageChange(e)}
+                  disabled={isPending}
                   className="text-white bg-black border-white"
                 />
                 <FormMessage />
@@ -160,13 +159,13 @@ export default function SignInForm() {
             )}
           />
           <div className="flex flex-wrap justify-start items-center gap-4">
-            {filePreview.map((preview, index) => (
+            {imageUrls.map((url, index) => (
               <Image
                 width={100}
                 height={100}
-                key={index}
-                src={preview}
-                alt="preview"
+                key={url}
+                src={url}
+                alt={`img-${index}`}
                 className="border border-white rounded-lg"
               />
             ))}
@@ -341,8 +340,12 @@ export default function SignInForm() {
               </FormItem>
             )}
           />
-          <Button className="w-full" type="submit">
-            Submit
+          <Button
+            type="submit"
+            className="bg-slate-600 py-2 w-full rounded-lg"
+            disabled={isPending}
+          >
+            {isPending ? "Submitting..." : "Submit"}
           </Button>
         </form>
       </Form>
