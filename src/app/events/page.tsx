@@ -1,9 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
 import Pagination from "../../components/Pagination";
-import data from "../../data/event.json";
+import { supabase } from "../../utils/supabase";
 import Link from "next/link";
-import Image from 'next/image';
+import Image from "next/image";
+import Loading from "../events/loading";
 
 interface EventData {
   id: number;
@@ -22,18 +23,32 @@ interface EventData {
   tags: string[];
 }
 
-function getData() {
-  const response = data;
-  return response;
-}
-
 const Page: React.FC = () => {
+  const [loading, setLoading] = useState(true);
+  const [event, setEvent]: any = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(9);
   const [selectedStatus, setSelectedStatus] = useState("active");
   const [searchTerm, setSearchTerm] = useState("");
 
-  const eventData = getData().filter((event) => {
+  useEffect(() => {
+    async function getData() {
+      let { data, error }: any = await supabase
+        .from("event_details")
+        .select("*,event_images(event_id,url)");
+      if (error) {
+        console.error("Error fetching event details:", error);
+      } else {
+        setEvent(data);
+        // console.log(data);
+        // console.log(data[0].event_images[0].url);
+      }
+      setLoading(false);
+    }
+    getData();
+  }, []);
+
+  const eventData = event.filter((event: any) => {
     return (
       (selectedStatus === "all" || event.status === selectedStatus) &&
       event.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -91,50 +106,55 @@ const Page: React.FC = () => {
             <option value="done">Done</option>
           </select> */}
         </div>
-        <div className="w-full flex flex-wrap gap-5 justify-evenly">
-          {currentItems.length > 0 ? (
-            currentItems.map((event) => (
-              <Link
-                href={`/events/${event.id}`}
-                className="w-[350px] group relative block overflow-hidden rounded-lg shadow-lg transition duration-500 hover:shadow-xl text-white border border-white my-5"
-                key={event.id}
-              >
-                <Image
-                width="500"
-                height="500"
-                  src={event.image}
-                  alt={event.title}
-                  className="h-64 w-full object-cover transition duration-500 group-hover:scale-105 sm:h-72"
-                />
+        {loading ? (
+          <Loading />
+        ) : (
+          <>
+            <div className="w-full flex flex-wrap gap-5 justify-evenly">
+              {event.length > 0 ? (
+                event.map((event: any) => (
+                  <Link
+                    href={`/events/${event.id}`}
+                    className="w-[350px] group relative block overflow-hidden rounded-lg shadow-lg transition duration-500 hover:shadow-xl text-white border border-white my-5"
+                    key={event.id}
+                  >
+                    <Image
+                      width="500"
+                      height="500"
+                      src={JSON.parse(event.event_images[0].url)[0]}
+                      alt={event.event_title}
+                      className="h-64 w-full object-cover transition duration-500 group-hover:scale-105 sm:h-72"
+                    />
 
-                <div className="relative bg-black p-6 text-white h-full">
-                  <span className="whitespace-nowrap bg-green-600 text-white rounded-md px-3 py-1.5 text-xs font-medium">
-                    {event.status}
-                  </span>
+                    <div className="relative bg-black p-6 text-white h-full">
+                      {/* <span className="whitespace-nowrap bg-green-600 text-white rounded-md px-3 py-1.5 text-xs font-medium">
+                        {event.status}
+                      </span> */}
 
-                  <h3 className="mt-4 text-lg font-medium">{event.title}</h3>
-
-                  <p className="mt-1.5 text-sm">$ {event.description}</p>
-
-                  <div className="card-actions justify-end">
-                    <div className="badge badge-outline flex gap-2">
-                      {/* <HiCreditCard /> */}
-                      {event.price}
+                      <h3 className="mt-4 text-lg font-medium">
+                        {event.event_title}
+                      </h3>
+                      <div className="card-actions justify-end">
+                        <div className="badge badge-outline flex gap-2">
+                          {/* <HiCreditCard /> */}${event.event_price}
+                        </div>
+                        <div className="badge badge-outline flex gap-2">
+                          {/* <FaLocationDot /> */}
+                          {event.event_location}
+                        </div>
+                      </div>
                     </div>
-                    <div className="badge badge-outline flex gap-2">
-                      {/* <FaLocationDot /> */}
-                      {event.location}
-                    </div>
-                  </div>
+                  </Link>
+                ))
+              ) : (
+                <div className="h-screen flex flex-col justify-center items-center text-3xl font-bold">
+                  Event Not Found
                 </div>
-              </Link>
-            ))
-          ) : (
-            <div className="h-screen flex flex-col justify-center items-center text-3xl font-bold">
-              Event Not Found
+              )}
             </div>
-          )}
-        </div>
+          </>
+        )}
+
         <div className="text-center mt-[3rem]">
           <Pagination
             currentPage={currentPage}
