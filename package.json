@@ -9,23 +9,36 @@
     "lint": "next lint"
   },
   "dependencies": {
-<<<<<<< HEAD
-    "@splinetool/react-spline": "^4.0.0",
-    "@tabler/icons-react": "^3.12.0",
-=======
->>>>>>> parent of 555d61d (spline thrift added)
+    "@kinde-oss/kinde-auth-nextjs": "^2.3.6",
+    "@radix-ui/react-slot": "^1.1.0",
+    "@supabase/ssr": "^0.5.0",
+    "@supabase/supabase-js": "^2.45.2",
+    "@tsparticles/engine": "^3.5.0",
+    "@tsparticles/react": "^3.0.0",
+    "@tsparticles/slim": "^3.5.0",
+    "base64-arraybuffer": "^1.0.2",
+    "browser-image-compression": "^2.0.2",
+    "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
-    "framer-motion": "^11.3.24",
+    "date-fns": "^3.6.0",
+    "embla-carousel-react": "^8.2.0",
+    "framer-motion": "^11.3.29",
+    "lucide-react": "^0.427.0",
+    "mongoose": "^8.5.3",
     "next": "14.2.5",
     "react": "^18",
     "react-dom": "^18",
+    "react-hook-form": "^7.53.0",
     "react-icons": "^5.2.1",
-    "tailwind-merge": "^2.4.0"
+    "tailwind-merge": "^2.5.2",
+    "tailwindcss-animate": "^1.0.7",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/uuid": "^10.0.0",
     "daisyui": "^4.12.10",
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
