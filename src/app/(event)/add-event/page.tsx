@@ -8,12 +8,14 @@ import { convertBlobUrlToFile } from "../../../action/convertBlobUrlToFile";
 import { uploadImage } from "../../../action/uploadSupabase";
 import { userDetails } from "../../../action/userDetails";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function AddEvent() {
   const [user, setUser]: any = useState(null);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   const {
     register,
@@ -107,6 +109,7 @@ export default function AddEvent() {
         ])
         .select();
       setImageUrls([]);
+      router.push(`/events/${data[0].id}`);
     });
   };
 
