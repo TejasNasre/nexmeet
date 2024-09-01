@@ -7,6 +7,7 @@ import Link from "next/link";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { useState, useEffect } from "react";
 import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
+
 const Hero: React.FC = () => {
   const [currentReview, setCurrentReview] = useState(0);
   const nextReview = () => {
@@ -228,6 +229,7 @@ const Hero: React.FC = () => {
       "In harmony, we innovate" - NexMeet
     </p>
   </div></div>
+        <div className="w-full h-screen bg-black"></div>
       </div>
     </>
   );
