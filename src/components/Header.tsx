@@ -154,6 +154,7 @@ function Header() {
         {isUser ? (
           <>
             <Link
+              onClick={() => handleNavigation("/dashboard")}
               href="/dashboard"
               className="mono justify-center items-center flex hover:text-gray-300"
             >

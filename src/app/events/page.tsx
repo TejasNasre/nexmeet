@@ -5,6 +5,7 @@ import { supabase } from "../../utils/supabase";
 import Link from "next/link";
 import Image from "next/image";
 import Loading from "../events/loading";
+import { CiLocationOn } from "react-icons/ci";
 
 interface EventData {
   id: number;
@@ -127,22 +128,24 @@ const Page: React.FC = () => {
                     />
 
                     <div className="relative bg-black p-6 text-white h-full">
-                      {/* <span className="whitespace-nowrap bg-green-600 text-white rounded-md px-3 py-1.5 text-xs font-medium">
-                        {event.status}
-                      </span> */}
-
-                      <h3 className="mt-4 text-lg font-medium">
-                        {event.event_title}
-                      </h3>
-                      <div className="card-actions justify-end">
-                        <div className="badge badge-outline flex gap-2">
-                          {/* <HiCreditCard /> */}${event.event_price}
-                        </div>
-                        <div className="badge badge-outline flex gap-2">
-                          {/* <FaLocationDot /> */}
-                          {event.event_location}
-                        </div>
+                      <p>{event.event_title}</p>
+                      <div className="flex flex-row gap-4">
+                        <p>
+                          {new Date(event.event_startdate).toLocaleString(
+                            undefined,
+                            {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            }
+                          )}
+                        </p>
+                        <p className="flex gap-1">
+                          <span>&#8377;</span>
+                          {event.event_price}
+                        </p>
                       </div>
+                      <p className="flex gap-1"><span><CiLocationOn className="text-xl" /></span>{event.event_location}</p>
                     </div>
                   </Link>
                 ))
