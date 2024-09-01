@@ -120,34 +120,36 @@ export default function AddEvent() {
           <label htmlFor="event_title">Event Title: </label>
           <input
             type="text"
-            placeholder="event_title"
+            placeholder="Enter Event Title"
             {...register("event_title", { required: true, max: 999, min: 39 })}
-            className="-full border border-white p-2 rounded-md"
+            className="w-full border border-white p-2 rounded-md bg-black text-white"
           />
         </div>
         <div className="flex flex-col gap-2">
           <label htmlFor="event_description">Event Description: </label>
           <textarea
-            placeholder="event_description"
+            placeholder="Enter Event Description"
+            rows={4}
+            cols={50}
             {...register("event_description", {
               required: true,
               max: 999,
               min: 39,
             })}
-            className="w-full border border-white p-2 rounded-md"
+            className="w-full border border-white p-2 rounded-md bg-black text-white"
           />
         </div>
         <div className="flex flex-col gap-2">
           <label htmlFor="event_location">Event Location: </label>
           <input
             type="text"
-            placeholder="event_location"
+            placeholder="Enter Event Location"
             {...register("event_location", {
               required: true,
               max: 999,
               min: 38,
             })}
-            className="w-full border border-white p-2 rounded-md"
+            className="w-full border border-white p-2 rounded-md bg-black text-white"
           />
         </div>
         <div className="flex flex-col gap-2">
@@ -158,7 +160,7 @@ export default function AddEvent() {
             type="datetime-local"
             placeholder="event_registration_startdate"
             {...register("event_registration_startdate", { required: true })}
-            className="w-full border border-white p-2 rounded-md"
+            className="w-full border border-white p-2 rounded-md bg-black text-white"
           />
         </div>
         <div className="flex flex-col gap-2">
@@ -169,7 +171,7 @@ export default function AddEvent() {
             type="datetime-local"
             placeholder="event_registration_enddate"
             {...register("event_registration_enddate", { required: true })}
-            className="w-full border border-white p-2 rounded-md"
+            className="w-full border border-white p-2 rounded-md bg-black text-white"
           />
         </div>
         <div className="flex flex-col gap-2">
@@ -178,7 +180,7 @@ export default function AddEvent() {
             type="datetime-local"
             placeholder="event_startdate"
             {...register("event_startdate", { required: true })}
-            className="w-full border border-white p-2 rounded-md"
+            className="w-full border border-white p-2 rounded-md bg-black text-white"
           />
         </div>
         <div className="flex flex-col gap-2">
@@ -187,61 +189,66 @@ export default function AddEvent() {
             type="datetime-local"
             placeholder="event_enddate"
             {...register("event_enddate", { required: true })}
-            className="w-full border border-white p-2 rounded-md"
+            className="w-full border border-white p-2 rounded-md bg-black text-white"
           />
         </div>
         <div className="flex flex-col gap-2">
-          <label htmlFor="event_duration">Event Duration: </label>
+          <label htmlFor="event_duration">Event Duration(In hours): </label>
           <input
             type="number"
-            placeholder="event_duration"
+            placeholder="Enter Event Duration (In hours)"
             {...register("event_duration", { required: true })}
-            className="w-full border border-white p-2 rounded-md"
+            className="w-full border border-white p-2 rounded-md bg-black text-white"
           />
         </div>
         <div className="flex flex-col gap-2">
           <label htmlFor="team_size">Event Team Size: </label>
           <input
             type="number"
-            placeholder="team_size"
+            placeholder="Enter Team Size"
             {...register("team_size", { required: true })}
-            className="w-full border border-white p-2 rounded-md"
+            className="w-full border border-white p-2 rounded-md bg-black text-white"
           />
         </div>
         <div className="flex flex-col gap-2">
           <label htmlFor="event_formlink">Event FormLink: </label>
           <input
             type="url"
-            placeholder="event_formlink"
+            placeholder="Enter Google Form Link / Website Link"
             {...register("event_formlink", { required: true })}
-            className="w-full border border-white p-2 rounded-md"
+            className="w-full border border-white p-2 rounded-md bg-black text-white"
           />
         </div>
         <div className="flex flex-col gap-2">
           <label htmlFor="event_price">Event Price: </label>
           <input
             type="number"
-            placeholder="event_price"
+            placeholder="Enter Event Price (INR)"
             {...register("event_price", { required: true })}
-            className="w-full border border-white p-2 rounded-md"
+            className="w-full border border-white p-2 rounded-md bg-black text-white"
           />
+          <p>If Free Enter 0</p>
         </div>
         <div className="flex flex-col gap-2">
-          <label htmlFor="organizer_name">Event Organizer Name: </label>
+          <label htmlFor="organizer_name">
+            Event Organizer / Organization Name:{" "}
+          </label>
           <input
             type="text"
-            placeholder="organizer_name"
+            placeholder="Enter Organizer / Organization Name"
             {...register("organizer_name", { required: true })}
-            className="w-full border border-white p-2 rounded-md"
+            className="w-full border border-white p-2 rounded-md bg-black text-white"
           />
         </div>
         <div className="flex flex-col gap-2">
-          <label htmlFor="organizer_contact">Event Organizer Contact: </label>
+          <label htmlFor="organizer_contact">
+            Event Organizer / Organization Contact:{" "}
+          </label>
           <input
             type="tel"
-            placeholder="organizer_contact"
+            placeholder="Enter Organizer / Organization Contact"
             {...register("organizer_contact", { required: true })}
-            className="w-full border border-white p-2 rounded-md"
+            className="w-full border border-white p-2 rounded-md bg-black text-white"
           />
         </div>
 
@@ -249,7 +256,7 @@ export default function AddEvent() {
           <label htmlFor="event_category">Event Category: </label>
           <select
             {...register("event_category", { required: true })}
-            className="w-full border border-white p-2 rounded-md"
+            className="w-full border border-white p-2 rounded-md bg-black text-white"
           >
             <option value="technical">technical</option>
             <option value="sports">sports</option>
@@ -260,7 +267,7 @@ export default function AddEvent() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <label htmlFor="event_image">Event Images: </label>
+          <label htmlFor="event_image">Event Poster: </label>
           <input
             id="event_image"
             type="file"
@@ -269,8 +276,9 @@ export default function AddEvent() {
             ref={imageInputRef}
             onChange={(e) => handleImageChange(e)}
             disabled={isPending}
-            className="w-full border border-white p-2 rounded-md"
+            className="w-full border border-white p-2 rounded-md bg-black text-white"
           />
+          <p>Max Images 5 (First Image Should Be Your Event Poster)</p>
         </div>
         <div className="flex flex-wrap justify-start items-center gap-4">
           {imageUrls.length > 0 ? (
@@ -294,23 +302,28 @@ export default function AddEvent() {
           <label htmlFor="event_tags">Event Tags: </label>
           <input
             type="text"
-            placeholder="event_tags"
+            placeholder="Enter Event Tags (Comma Separated)"
             {...register("event_tags", { required: true })}
-            className="w-full border border-white p-2 rounded-md"
+            className="w-full border border-white p-2 rounded-md bg-black text-white"
           />
+          <p>Enter Tags Comma Seprated Ex:(#xyz,#xyz)</p>
         </div>
         <div className="flex flex-col gap-2">
           <label htmlFor="event_social_links">Event Social Link: </label>
           <input
             type="text"
-            placeholder="event_social_links"
+            placeholder="Enter Event Social Links (Comma Separated)"
             {...register("event_social_links", { required: true })}
-            className="w-full border border-white p-2 rounded-md"
+            className="w-full border border-white p-2 rounded-md bg-black text-white"
           />
+          <p>
+            Enter Social Links Comma Seprated
+            Ex:(https://linkedin.com,https://insta.com)
+          </p>
         </div>
         <button
           type="submit"
-          className="w-full border border-white p-2 rounded-md hover:bg-white hover:text-black"
+          className="w-full border border-white p-2 rounded-md bg-black text-white hover:bg-white hover:text-black"
           disabled={isPending}
         >
           {isPending ? "Submitting..." : "Submit"}

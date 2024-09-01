@@ -121,7 +121,7 @@ const Page: React.FC = () => {
                     <Image
                       width="500"
                       height="500"
-                      src={JSON.parse(event.event_images[0].url)[0]}
+                      src={JSON.parse(event.event_images[0]?.url)[0]}
                       alt={event.event_title}
                       className="h-64 w-full object-cover transition duration-500 group-hover:scale-105 sm:h-72"
                     />
