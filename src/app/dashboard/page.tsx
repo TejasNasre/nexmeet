@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { userDetails } from "../../action/userDetails";
 import Loading from "../../components/loading";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
@@ -17,6 +17,8 @@ import {
   ChevronRight,
   ChevronLeft,
 } from "lucide-react";
+import { supabase } from "../../utils/supabase";
+import { useRouter } from "next/navigation";
 
 interface User {
   id: string;
@@ -27,8 +29,10 @@ interface User {
 }
 
 export default function Page() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState("organized");
 
+  const [organisedEvent, setOrganisedEvent] = useState<any[] | null>([]);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -45,6 +49,29 @@ export default function Page() {
         setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    const organizeEvents: any = async () => {
+      let { data: event_details, error } = await supabase
+        .from("event_details")
+        .select("*")
+        .eq("organizer_email", user?.email);
+
+      if (error) {
+        console.log(error);
+      }
+      {
+        setLoading(true);
+        setOrganisedEvent(event_details);
+        setLoading(false);
+        // console.log(event_details);
+      }
+    };
+    organizeEvents();
+  }, [user]);
+
+  const memoizedEvents = useMemo(() => organisedEvent, [organisedEvent]);
+
   return (
     <>
       <div className="absolute top-0 w-full h-auto bg-black text-white py-[8rem] flex flex-col">
@@ -142,9 +169,9 @@ export default function Page() {
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="p-0">
+              <CardContent className={`${loading ? `h-auto` : `p-0`}`}>
                 <div className="divide-y">
-                  {[1, 2, 3].map((event) => (
+                  {/* {[1, 2, 3].map((event) => (
                     <div
                       key={event}
                       className="p-4 hover:bg-muted/50 transition-colors"
@@ -183,11 +210,11 @@ export default function Page() {
                               key={i}
                               className="border-2 border-background w-8 h-8"
                             >
-                              {/* <AvatarImage
+                              <AvatarImage
                                 src={`/placeholder.?svg?height=32&width=32&text=${
                                   i + 1
                                 }`}
-                              /> */}
+                              />
                               <AvatarFallback>U{i + 1}</AvatarFallback>
                             </Avatar>
                           ))}
@@ -202,7 +229,58 @@ export default function Page() {
                         </Button>
                       </div>
                     </div>
-                  ))}
+                  ))} */}
+                  {memoizedEvents && memoizedEvents.length < 0 ? (
+                    <div className="p-4 text-center text-muted-foreground">
+                      No events found
+                    </div>
+                  ) : loading ? (
+                    <div className="py-[10rem] flex flex-col justify-center items-center">
+                      <h1>Loading....</h1>
+                    </div>
+                  ) : (
+                    <>
+                      {memoizedEvents?.map((event) => (
+                        <div
+                          key={event.id}
+                          className="p-4 hover:bg-muted/50 transition-colors flex flex-col gap-2"
+                        >
+                          <div className="flex justify-between items-start mb-2">
+                            <div>
+                              <h3 className="font-semibold text-lg">
+                                {event.event_title}
+                              </h3>
+                              <p className="text-sm text-muted-foreground">
+                                {new Date(event.event_startdate).toLocaleString(
+                                  undefined,
+                                  {
+                                    year: "numeric",
+                                    month: "short",
+                                    day: "numeric",
+                                  }
+                                )}
+                              </p>
+                              <div className="flex items-center text-sm text-muted-foreground">
+                                <MapPin size={16} className="mr-1" />
+                                {event.event_location}
+                              </div>
+                            </div>
+                            <Badge variant="outline">Organizer</Badge>
+                          </div>
+
+                          <Button
+                            onClick={() => router.push(`/events/${event.id}`)}
+                            variant="outline"
+                            size="sm"
+                            className="w-[8rem] text-white"
+                          >
+                            View Details{" "}
+                            <ChevronRight size={16} className="ml-1" />
+                          </Button>
+                        </div>
+                      ))}
+                    </>
+                  )}
                 </div>
               </CardContent>
             </Card>
