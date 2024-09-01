@@ -95,7 +95,6 @@ export const InfiniteMovingCards = ({
             key={item.name}
           >
             <Image
-              layout="responsive"
               src={item.image}
               alt={item.name}
               width={500}
