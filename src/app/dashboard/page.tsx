@@ -19,6 +19,8 @@ import {
 } from "lucide-react";
 import { supabase } from "../../utils/supabase";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { mergeConfigs } from "tailwind-merge";
 
 interface User {
   id: string;
@@ -111,8 +113,10 @@ export default function Page() {
                   <CalendarDays size={20} />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">28</div>
-                  <p className="text-xs text-purple-200">+2 this month</p>
+                  <div className="text-2xl font-bold">
+                    {memoizedEvents?.length ? memoizedEvents.length : 0}
+                  </div>
+                  {/* <p className="text-xs text-purple-200">+2 this month</p> */}
                 </CardContent>
               </Card>
               <Card className="bg-black text-white">
@@ -123,8 +127,8 @@ export default function Page() {
                   <Users size={20} />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">1,234</div>
-                  <p className="text-xs text-pink-200">+99 this week</p>
+                  <div className="text-2xl font-bold">0</div>
+                  {/* <p className="text-xs text-pink-200">+99 this week</p> */}
                 </CardContent>
               </Card>
               <Card className="bg-black text-white">
@@ -135,17 +139,26 @@ export default function Page() {
                   <Star size={20} />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">4.8</div>
-                  <p className="text-xs text-yellow-200">
+                  <div className="text-2xl font-bold">0</div>
+                  {/* <p className="text-xs text-yellow-200">
                     +0.2 from last month
-                  </p>
+                  </p> */}
                 </CardContent>
               </Card>
             </div>
 
+            <div className="w-full flex flex-col md:flex-row gap-4">
+              <Button variant="outline" className="w-full">
+                <Link href="/add-events">Organised Your Own Event</Link>
+              </Button>
+              <Button variant="outline" className="w-full">
+                <Link href="/events">View All Events</Link>
+              </Button>
+            </div>
+
             <Card className="overflow-hidden">
               <CardHeader className="border-b bg-muted">
-                <div className="flex justify-between items-center">
+                <div className="flex flex-col gap-8 md:flex-row justify-between items-center">
                   <CardTitle>Your Events</CardTitle>
                   <div className="flex space-x-2">
                     <Button
@@ -230,56 +243,58 @@ export default function Page() {
                       </div>
                     </div>
                   ))} */}
-                  {memoizedEvents && memoizedEvents.length < 0 ? (
-                    <div className="p-4 text-center text-muted-foreground">
-                      No events found
-                    </div>
-                  ) : loading ? (
-                    <div className="py-[10rem] flex flex-col justify-center items-center">
-                      <h1>Loading....</h1>
-                    </div>
-                  ) : (
-                    <>
-                      {memoizedEvents?.map((event) => (
-                        <div
-                          key={event.id}
-                          className="p-4 hover:bg-muted/50 transition-colors flex flex-col gap-2"
-                        >
-                          <div className="flex justify-between items-start mb-2">
-                            <div>
-                              <h3 className="font-semibold text-lg">
-                                {event.event_title}
-                              </h3>
-                              <p className="text-sm text-muted-foreground">
-                                {new Date(event.event_startdate).toLocaleString(
-                                  undefined,
-                                  {
+                  {memoizedEvents && memoizedEvents.length > 0 ? (
+                    loading ? (
+                      <div className="py-[10rem] flex flex-col justify-center items-center">
+                        <h1>Loading....</h1>
+                      </div>
+                    ) : (
+                      <>
+                        {memoizedEvents?.map((event) => (
+                          <div
+                            key={event.id}
+                            className="p-4 hover:bg-muted/50 transition-colors flex flex-col gap-2"
+                          >
+                            <div className="flex justify-between items-start mb-2">
+                              <div>
+                                <h3 className="font-semibold text-lg">
+                                  {event.event_title}
+                                </h3>
+                                <p className="text-sm text-muted-foreground">
+                                  {new Date(
+                                    event.event_startdate
+                                  ).toLocaleString(undefined, {
                                     year: "numeric",
                                     month: "short",
                                     day: "numeric",
-                                  }
-                                )}
-                              </p>
-                              <div className="flex items-center text-sm text-muted-foreground">
-                                <MapPin size={16} className="mr-1" />
-                                {event.event_location}
+                                  })}
+                                </p>
+                                <div className="flex items-center text-sm text-muted-foreground">
+                                  <MapPin size={16} className="mr-1" />
+                                  {event.event_location}
+                                </div>
                               </div>
+                              <Badge variant="outline">Organizer</Badge>
                             </div>
-                            <Badge variant="outline">Organizer</Badge>
-                          </div>
 
-                          <Button
-                            onClick={() => router.push(`/events/${event.id}`)}
-                            variant="outline"
-                            size="sm"
-                            className="w-[8rem] text-white"
-                          >
-                            View Details{" "}
-                            <ChevronRight size={16} className="ml-1" />
-                          </Button>
-                        </div>
-                      ))}
-                    </>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="w-[8rem] text-white"
+                            >
+                              <Link href={`/events/${event.id}`}>
+                                View Details{" "}
+                                <ChevronRight size={16} className="ml-1" />
+                              </Link>
+                            </Button>
+                          </div>
+                        ))}
+                      </>
+                    )
+                  ) : (
+                    <div className="p-10 text-center text-muted-foreground">
+                      No events found
+                    </div>
                   )}
                 </div>
               </CardContent>
