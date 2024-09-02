@@ -149,7 +149,7 @@ export default function Page() {
 
             <div className="w-full flex flex-col md:flex-row gap-4">
               <Button variant="outline" className="w-full">
-                <Link href="/add-events">Organised Your Own Event</Link>
+                <Link href="/add-event">Organised Your Own Event</Link>
               </Button>
               <Button variant="outline" className="w-full">
                 <Link href="/events">View All Events</Link>
@@ -282,7 +282,10 @@ export default function Page() {
                               size="sm"
                               className="w-[8rem] text-white"
                             >
-                              <Link href={`/events/${event.id}`}>
+                              <Link
+                                href={`/events/${event.id}`}
+                                className="flex flex-row justify-center items-center"
+                              >
                                 View Details{" "}
                                 <ChevronRight size={16} className="ml-1" />
                               </Link>
