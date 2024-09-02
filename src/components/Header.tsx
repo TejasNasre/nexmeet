@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import {
   RegisterLink,
   LoginLink,
@@ -46,7 +46,9 @@ function Header() {
   return (
     <div className="relative bg-transparent w-full z-[999] px-4 sm:px-8 py-4 sm:py-8">
       <div className="flex justify-between items-center">
-        <Link href={"/"} className="mono text-2xl text-white">NexMeet</Link>
+        <Link href={"/"} className="mono text-2xl text-white">
+          NexMeet
+        </Link>
         {/* Hamburger Menu Button */}
         <button
           className="lg:hidden text-white"
@@ -120,22 +122,42 @@ function Header() {
             isMenuOpen ? `flex-col` : `flex-row`
           }`}
         >
-          <Link href="/"  onClick={() => handleNavigation('/')} className="mono hover:text-gray-300">
+          <Link
+            href="/"
+            onClick={() => handleNavigation("/")}
+            className="mono hover:text-gray-300"
+          >
             Home
           </Link>
-          <Link href="/events" onClick={() => handleNavigation('/events')} className="mono hover:text-gray-300">
+          <Link
+            href="/events"
+            onClick={() => handleNavigation("/events")}
+            className="mono hover:text-gray-300"
+          >
             Explore Events
           </Link>
-          <Link href="/about" onClick={() => handleNavigation('/about')} className="mono hover:text-gray-300">
+          <Link
+            href="/about"
+            onClick={() => handleNavigation("/about")}
+            className="mono hover:text-gray-300"
+          >
             About Us
           </Link>
-          <Link href="/contact" onClick={() => handleNavigation('/contact')} className="mono hover:text-gray-300">
+          <Link
+            href="/contact"
+            onClick={() => handleNavigation("/contact")}
+            className="mono hover:text-gray-300"
+          >
             Contact
           </Link>
         </div>
         {isUser ? (
           <>
-            <Link href="/profile" className="mono justify-center items-center flex hover:text-gray-300">
+            <Link
+              onClick={() => handleNavigation("/dashboard")}
+              href="/dashboard"
+              className="mono justify-center items-center flex hover:text-gray-300"
+            >
               <Image
                 src={user?.picture || "/profile.jpg"}
                 alt="Profile"

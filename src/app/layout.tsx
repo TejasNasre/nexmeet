@@ -23,7 +23,7 @@ export default function RootLayout({
     <html lang="en">
       <body suppressHydrationWarning={true} className={mono.className}>
         <Header />
-        {children}
+        <main>{children}</main>
       </body>
     </html>
   );
