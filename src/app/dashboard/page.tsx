@@ -54,9 +54,9 @@ export default function Page() {
 
   useEffect(() => {
     const organizeEvents: any = async () => {
-      let { data: event_details, error } = await supabase
+      let { data: organised_events, error } = await supabase
         .from("event_details")
-        .select("*")
+        .select("*,event_participants(*)")
         .eq("organizer_email", user?.email);
 
       if (error) {
@@ -64,13 +64,22 @@ export default function Page() {
       }
       {
         setLoading(true);
-        setOrganisedEvent(event_details);
+        setOrganisedEvent(organised_events);
         setLoading(false);
-        // console.log(event_details);
+        // console.log(organised_events);
       }
     };
+
     organizeEvents();
   }, [user]);
+
+  const participatedEvents = useMemo(() => {
+    return organisedEvent?.filter((event) =>
+      event.event_participants.filter(
+        (participant: any) => participant.email === user?.email
+      )
+    );
+  }, [organisedEvent, user?.email]);
 
   const memoizedEvents = useMemo(() => organisedEvent, [organisedEvent]);
 
@@ -184,65 +193,6 @@ export default function Page() {
               </CardHeader>
               <CardContent className={`${loading ? `h-auto` : `p-0`}`}>
                 <div className="divide-y">
-                  {/* {[1, 2, 3].map((event) => (
-                    <div
-                      key={event}
-                      className="p-4 hover:bg-muted/50 transition-colors"
-                    >
-                      <div className="flex justify-between items-start mb-2">
-                        <div>
-                          <h3 className="font-semibold text-lg">
-                            {activeTab === "organized"
-                              ? `Tech Conference ${event}`
-                              : `Workshop ${event}`}
-                          </h3>
-                          <p className="text-sm text-muted-foreground">
-                            {new Date().toLocaleDateString("en-US", {
-                              month: "long",
-                              day: "numeric",
-                              year: "numeric",
-                            })}
-                          </p>
-                        </div>
-                        <Badge
-                          variant={
-                            activeTab === "organized" ? "default" : "secondary"
-                          }
-                        >
-                          {activeTab === "organized" ? "Organizer" : "Attendee"}
-                        </Badge>
-                      </div>
-                      <div className="flex items-center text-sm text-muted-foreground">
-                        <MapPin size={16} className="mr-1" />
-                        Virtual Event
-                      </div>
-                      <div className="mt-2 flex justify-between items-center">
-                        <div className="flex -space-x-2">
-                          {[...Array(3)].map((_, i) => (
-                            <Avatar
-                              key={i}
-                              className="border-2 border-background w-8 h-8"
-                            >
-                              <AvatarImage
-                                src={`/placeholder.?svg?height=32&width=32&text=${
-                                  i + 1
-                                }`}
-                              />
-                              <AvatarFallback>U{i + 1}</AvatarFallback>
-                            </Avatar>
-                          ))}
-                        </div>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-primary"
-                        >
-                          View Details{" "}
-                          <ChevronRight size={16} className="ml-1" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))} */}
                   {memoizedEvents && memoizedEvents.length > 0 ? (
                     loading ? (
                       <div className="py-[10rem] flex flex-col justify-center items-center">
@@ -258,7 +208,11 @@ export default function Page() {
                             <div className="flex justify-between items-start mb-2">
                               <div>
                                 <h3 className="font-semibold text-lg">
-                                  {event.event_title}
+                                  {activeTab === "organized"
+                                    ? `${event.event_title}`
+                                    : `${participatedEvents?.map(
+                                        (event) => event.event_title
+                                      )}`}
                                 </h3>
                                 <p className="text-sm text-muted-foreground">
                                   {new Date(
