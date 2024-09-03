@@ -2,15 +2,12 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { supabase } from "../../../utils/supabase";
+import { supabase } from "../../../../utils/supabase";
 import Loading from "../loading";
 import { useParams } from "next/navigation";
-import { Badge } from "../../../components/ui/badge";
+import { Badge } from "../../../../components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { FaCalendarAlt } from "react-icons/fa";
-import { FaRegClock } from "react-icons/fa";
-import { FaLocationDot } from "react-icons/fa6";
 
 const EventPage = () => {
   const params = useParams();
@@ -136,7 +133,7 @@ const EventPage = () => {
                 </div>
                 <div>
                   <Button variant="outline" className="w-full">
-                    Register
+                    <Link href={`/register-event/${eventsId}`}>Register</Link>
                   </Button>
                 </div>
               </div>

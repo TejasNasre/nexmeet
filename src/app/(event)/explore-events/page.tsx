@@ -1,10 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
-import Pagination from "../../components/Pagination";
-import { supabase } from "../../utils/supabase";
+import Pagination from "../../../components/Pagination";
+import { supabase } from "../../../utils/supabase";
 import Link from "next/link";
 import Image from "next/image";
-import Loading from "../events/loading";
+import Loading from "../../../components/loading";
 import { CiLocationOn } from "react-icons/ci";
 
 interface EventData {
@@ -115,7 +115,7 @@ const Page: React.FC = () => {
               {event.length > 0 ? (
                 event.map((event: any) => (
                   <Link
-                    href={`/events/${event.id}`}
+                    href={`/explore-events/${event.id}`}
                     className="w-[350px] group relative block overflow-hidden rounded-lg shadow-lg transition duration-500 hover:shadow-xl text-white border border-white my-5"
                     key={event.id}
                   >

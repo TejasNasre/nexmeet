@@ -37,7 +37,7 @@ const Hero: React.FC = () => {
       setCurrentReview((prev) => (prev + 1) % reviews.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, [reviews.length]);
+  }, []);
 
   return (
     <>
@@ -58,7 +58,7 @@ const Hero: React.FC = () => {
 
             <div className="flex flex-row justify-center items-center gap-8">
               <Link
-                href="/events"
+                href="/explore-events"
                 className="mono transition ease-in-out duration-300 hover:scale-105 border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md p-1 md:p-2"
               >
                 Explore Events
@@ -147,6 +147,6 @@ const Hero: React.FC = () => {
       </div>
     </>
   );
-}
+};
 
 export default Hero;
