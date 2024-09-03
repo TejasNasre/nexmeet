@@ -145,7 +145,12 @@ const Page: React.FC = () => {
                           {event.event_price}
                         </p>
                       </div>
-                      <p className="flex gap-1"><span><CiLocationOn className="text-xl" /></span>{event.event_location}</p>
+                      <p className="flex gap-1">
+                        <span>
+                          <CiLocationOn className="text-xl" />
+                        </span>
+                        {event.event_location}
+                      </p>
                     </div>
                   </Link>
                 ))
