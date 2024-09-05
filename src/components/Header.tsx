@@ -1,7 +1,7 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   RegisterLink,
   LoginLink,
@@ -18,7 +18,7 @@ function Header() {
   const [isUser, setIsUser] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const router = useRouter();
   useEffect(() => {
     userAuth().then((res) => {
       setIsUser(res);
@@ -37,6 +37,10 @@ function Header() {
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+  const handleNavigation = (path: string) => {
+    router.push(path);
+    setIsMenuOpen(false); // Close the menu
   };
 
   return (
@@ -118,22 +122,39 @@ function Header() {
             isMenuOpen ? `flex-col` : `flex-row`
           }`}
         >
-          <Link href="/" className="mono hover:text-gray-300">
+          <Link
+            href="/"
+            onClick={() => handleNavigation("/")}
+            className="mono hover:text-gray-300"
+          >
             Home
           </Link>
-          <Link href="/explore-events" className="mono hover:text-gray-300">
+          <Link
+            href="/explore-events"
+            onClick={() => handleNavigation("/explore-events")}
+            className="mono hover:text-gray-300"
+          >
             Explore Events
           </Link>
-          <Link href="/about" className="mono hover:text-gray-300">
+          <Link
+            href="/about"
+            onClick={() => handleNavigation("/about")}
+            className="mono hover:text-gray-300"
+          >
             About Us
           </Link>
-          <Link href="/contact" className="mono hover:text-gray-300">
+          <Link
+            href="/contact"
+            onClick={() => handleNavigation("/contact")}
+            className="mono hover:text-gray-300"
+          >
             Contact
           </Link>
         </div>
         {isUser ? (
           <>
             <Link
+              onClick={() => handleNavigation("/dashboard")}
               href="/dashboard"
               className="mono justify-center items-center flex hover:text-gray-300"
             >

@@ -17,7 +17,7 @@ function Participatedevent({ user }: any) {
       let { data: event_participants, error } = await supabase
         .from("event_participants")
         .select("*,event_details(*)")
-        .eq("participant_email", "tejasnasre.dev@gmail.com");
+        .eq("participant_email", user);
 
       if (error) {
         console.log(error);
