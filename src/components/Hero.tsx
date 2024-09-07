@@ -9,8 +9,11 @@ import { useState, useEffect } from "react";
 import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
 import reviews from "../data/reviews.json";
 import data from "../data/community.json";
+import { userStore } from "@/store/user";
 
 const Hero: React.FC = () => {
+  const userAuthStore = userStore((state: any) => state.user);
+
   const [currentReview, setCurrentReview] = useState(0);
   const nextReview = () => {
     setCurrentReview((prev) => (prev + 1) % reviews.length);
@@ -19,6 +22,7 @@ const Hero: React.FC = () => {
   const prevReview = () => {
     setCurrentReview((prev) => (prev - 1 + reviews.length) % reviews.length);
   };
+
   const handleDragEnd = (
     event: MouseEvent | TouchEvent | PointerEvent,
     info: PanInfo
@@ -63,9 +67,18 @@ const Hero: React.FC = () => {
               >
                 Explore Events
               </Link>
-              <RegisterLink className="mono transition ease-in-out duration-300 hover:scale-105 border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md p-1 md:p-2">
-                Register
-              </RegisterLink>
+              {userAuthStore ? (
+                <Link
+                  href="/dashboard"
+                  className="mono transition ease-in-out duration-300 hover:scale-105 border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md p-1 md:p-2"
+                >
+                  Dashboard
+                </Link>
+              ) : (
+                <RegisterLink className="mono transition ease-in-out duration-300 hover:scale-105 border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md p-1 md:p-2">
+                  Register
+                </RegisterLink>
+              )}
             </div>
             <h1>project is in development phase</h1>
           </div>

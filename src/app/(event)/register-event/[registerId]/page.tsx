@@ -5,8 +5,10 @@ import { useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { supabase } from "../../../../utils/supabase";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 function Registerevent() {
+  const router = useRouter();
   const [loading, setLoading]: any = useState(true);
   const [eventDetails, setEventDetails]: any = useState([]);
   const [submit, setSubmit]: any = useState(null);

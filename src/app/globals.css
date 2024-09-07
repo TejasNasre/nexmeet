@@ -79,3 +79,7 @@
 .transition {
   transition: all 0.3s ease-in-out !important;
 }
+
+body {
+  background-color: black;
+}

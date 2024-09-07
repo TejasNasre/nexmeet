@@ -8,8 +8,13 @@ import { useParams } from "next/navigation";
 import { Badge } from "../../../../components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { userStore } from "../../../../store/user";
+import { useRouter } from "next/navigation";
 
 const EventPage = () => {
+  const userAuthStore = userStore((state: any) => state.user);
+
+  const router = useRouter();
   const params = useParams();
   const { eventsId } = params;
   const [eventData, setEventData]: any = useState([]);
@@ -32,6 +37,14 @@ const EventPage = () => {
       getData();
     }
   }, [eventsId]);
+
+  const userAuth = () => {
+    if (userAuthStore) {
+      router.push(`/register-event/${eventsId}`);
+    } else {
+      router.push("/unauthorized");
+    }
+  };
 
   if (isLoading) {
     return <Loading />;
@@ -73,7 +86,7 @@ const EventPage = () => {
             <div className="w-full flex flex-col md:flex-row gap-4">
               <div className="w-full border border-white rounded-lg p-6 flex flex-col gap-2 md:gap-4">
                 <h1 className="text-2xl font-extrabold">About The Event</h1>
-                <p>{event.event_description}</p>
+                <p className="text-justify">{event.event_description}</p>
                 <div className="w-full flex flex-col md:flex-row gap-4">
                   <h1 className="flex flex-row items-center gap-2">
                     Event Start&apos;s Form :{" "}
@@ -132,8 +145,12 @@ const EventPage = () => {
                   </h1>
                 </div>
                 <div>
-                  <Button variant="outline" className="w-full">
-                    <Link href={`/register-event/${eventsId}`}>Register</Link>
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => userAuth()}
+                  >
+                    Register
                   </Button>
                 </div>
               </div>

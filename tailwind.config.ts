@@ -25,6 +25,7 @@ const config: Config = {
       animation: {
         scroll:
           "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite",
+        "spin-slow": "spin 3s linear infinite",
       },
       keyframes: {
         scroll: {
