@@ -39,7 +39,7 @@ export const InfiniteMovingCards = ({
       }
     }
   }, [direction]);
-  
+
   const getSpeed = useCallback(() => {
     if (containerRef.current) {
       if (speed === "fast") {
@@ -91,15 +91,15 @@ export const InfiniteMovingCards = ({
       >
         {items.map((item, idx) => (
           <li
-            className="w-[350px] max-w-full relative flex-shrink-0-700 px-8 py-6 md:w-[250px]"
+            className="w-[100] max-w-full relative md:w-[200px]"
             key={item.name}
           >
             <Image
               src={item.image}
               alt={item.name}
-              width={500}
-              height={500}
-              className="w-full h-full"
+              width={150}
+              height={150}
+              className="bject-cover"
             />
           </li>
         ))}

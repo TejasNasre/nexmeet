@@ -10,6 +10,7 @@ import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
 import reviews from "../data/reviews.json";
 import data from "../data/community.json";
 import { userStore } from "@/store/user";
+import { Button } from "./ui/button";
 
 const Hero: React.FC = () => {
   const userAuthStore = userStore((state: any) => state.user);
@@ -83,13 +84,15 @@ const Hero: React.FC = () => {
             <h1>project is in development phase</h1>
           </div>
         </BackgroundBeamsWithCollision>
-        <div className="h-[40rem] flex flex-col antialiased bg-black items-center gap-10 justify-center relative overflow-hidden">
-          <h1 className="mono  text-center text-4xl">
+
+        <div className="py-20 flex flex-col antialiased bg-black items-center gap-10 justify-center relative overflow-hidden">
+          <h1 className="mono m-10 text-center text-4xl">
             Nexmeet Community Partner
           </h1>
           <InfiniteMovingCards items={data} direction="right" speed="slow" />
         </div>
-        <div className="min-h-screen w-auto bg-black py-20">
+
+        <div className="w-auto bg-black py-20 px-4">
           <h1 className="text-center text-4xl mb-10 text-white">
             Community Reviews
           </h1>
@@ -140,23 +143,167 @@ const Hero: React.FC = () => {
           </div>
         </div>
 
-        <div className="h-screen w-full bg-black flex items-center mt-0 justify-center">
-          <div className="text-center space-y-8">
-            <h2 className="text-4xl font-bold text-white font-serif">
-              NexMeet: Where Connections Bloom
-            </h2>
-            <div className="space-y-4 text-xl text-gray-300 font-light">
-              <p>🌸 Join inspiring events</p>
-              <p>🍵 Build together at hackathons</p>
-              <p>🎋 Grow at dev conferences</p>
-              <p>🏮 Illuminate your network</p>
+        <div className="w-full px-4 py-20 bg-black">
+          <div className="mx-auto max-w-screen-xl py-8">
+            <div className="mx-auto max-w-3xl text-center">
+              <h2 className="text-3xl font-bold text-white sm:text-4xl">
+                Trusted by eCommerce Businesses
+              </h2>
+
+              <p className="mt-4 text-white sm:text-xl">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione
+                dolores laborum labore provident impedit esse recusandae facere
+                libero harum sequi.
+              </p>
             </div>
-            <p className="text-lg text-purple-400 italic">
-              &quot;In harmony, we innovate&quot; - NexMeet
-            </p>
+
+            <div className="mg-6 grid grid-cols-1 gap-4 sm:mt-8 sm:grid-cols-2  sm:divide-y-0 lg:grid-cols-4">
+              <div className="flex flex-col px-4 py-8 text-center">
+                <dt className="order-last text-lg font-medium text-white">
+                  Total Sales
+                </dt>
+
+                <dd className="text-4xl font-extrabold text-blue-600 md:text-5xl">
+                  $4.8m
+                </dd>
+              </div>
+
+              <div className="flex flex-col px-4 py-8 text-center">
+                <dt className="order-last text-lg font-medium text-white">
+                  Official Addons
+                </dt>
+
+                <dd className="text-4xl font-extrabold text-blue-600 md:text-5xl">
+                  24
+                </dd>
+              </div>
+
+              <div className="flex flex-col px-4 py-8 text-center">
+                <dt className="order-last text-lg font-medium text-white">
+                  Total Addons
+                </dt>
+
+                <dd className="text-4xl font-extrabold text-blue-600 md:text-5xl">
+                  86
+                </dd>
+              </div>
+
+              <div className="flex flex-col px-4 py-8 text-center">
+                <dt className="order-last text-lg font-medium text-white">
+                  Downloads
+                </dt>
+
+                <dd className="text-4xl font-extrabold text-blue-600 md:text-5xl">
+                  86k
+                </dd>
+              </div>
+            </div>
           </div>
         </div>
-        <div className="w-full h-screen bg-black"></div>
+
+        <div className="w-full bg-black text-white px-4 md:px-10 py-20">
+          <h1 className="text-center text-3xl font-bold text-white sm:text-4xl py-10">
+            FAQ
+          </h1>
+          <div className="rounded-xl text-white bg-black">
+            <details
+              className="group p-6 [&_summary::-webkit-details-marker]:hidden"
+              open
+            >
+              <summary className="flex cursor-pointer items-center justify-between gap-1.5 text-white">
+                <h2 className="text-lg font-medium">
+                  Lorem ipsum dolor sit amet consectetur adipisicing?
+                </h2>
+
+                <span className="relative size-5 shrink-0">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="absolute inset-0 size-5 opacity-100 group-open:opacity-0"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="absolute inset-0 size-5 opacity-0 group-open:opacity-100"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </span>
+              </summary>
+
+              <p className="mt-4 leading-relaxed text-justify text-white">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ab hic
+                veritatis molestias culpa in, recusandae laboriosam neque
+                aliquid libero nesciunt voluptate dicta quo officiis explicabo
+                consequuntur distinctio corporis earum similique!
+              </p>
+            </details>
+
+            <details className="group p-6 [&_summary::-webkit-details-marker]:hidden">
+              <summary className="flex cursor-pointer items-center justify-between gap-1.5 text-white">
+                <h2 className="text-lg font-medium">
+                  Lorem ipsum dolor sit amet consectetur adipisicing?
+                </h2>
+
+                <span className="relative size-5 shrink-0">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="absolute inset-0 size-5 opacity-100 group-open:opacity-0"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="absolute inset-0 size-5 opacity-0 group-open:opacity-100"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </span>
+              </summary>
+
+              <p className="mt-4 leading-relaxed text-justify text-white">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ab hic
+                veritatis molestias culpa in, recusandae laboriosam neque
+                aliquid libero nesciunt voluptate dicta quo officiis explicabo
+                consequuntur distinctio corporis earum similique!
+              </p>
+            </details>
+          </div>
+        </div>
       </div>
     </>
   );
