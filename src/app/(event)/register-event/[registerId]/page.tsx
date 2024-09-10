@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { supabase } from "../../../../utils/supabase";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Loading from "@/app/loading";
 
 function Registerevent() {
   const router = useRouter();
@@ -63,6 +64,10 @@ function Registerevent() {
 
     // router.push(`/events/${data[0].id}`);
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <>

@@ -8,12 +8,10 @@ import { useParams } from "next/navigation";
 import { Badge } from "../../../../components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { userStore } from "../../../../store/user";
 import { useRouter } from "next/navigation";
+import { userAuth } from "../../../../action/auth";
 
 const EventPage = () => {
-  const userAuthStore = userStore((state: any) => state.user);
-
   const router = useRouter();
   const params = useParams();
   const { eventsId } = params;
@@ -38,13 +36,15 @@ const EventPage = () => {
     }
   }, [eventsId]);
 
-  const userAuth = () => {
-    if (userAuthStore) {
-      router.push(`/register-event/${eventsId}`);
-    } else {
-      router.push("/unauthorized");
-    }
-  };
+  async function isUser() {
+    userAuth().then((res) => {
+      if (!res) {
+        router.push("/unauthorized");
+      } else {
+        router.push(`/register-event/${eventsId}`);
+      }
+    });
+  }
 
   if (isLoading) {
     return <Loading />;
@@ -148,7 +148,7 @@ const EventPage = () => {
                   <Button
                     variant="outline"
                     className="w-full"
-                    onClick={() => userAuth()}
+                    onClick={() => isUser()}
                   >
                     Register
                   </Button>

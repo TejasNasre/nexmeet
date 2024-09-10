@@ -9,26 +9,20 @@ import {
 import { userAuth } from "../action/auth";
 import { userDetails } from "../action/userDetails";
 import Image from "next/image";
-import { userStore } from "../store/user";
 
 interface User {
   picture: string;
 }
 
 function Header() {
-  //zustand store global userAuth state Management
-
-  const userAuthStore = userStore((state: any) => state.user);
-  const setUserAuthStore = userStore((state: any) => state.updateUser);
-  // console.log(userAuthStore);
-
+  const [isUser, setIsUser] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    userAuth().then((res: any) => {
-      setUserAuthStore(res);
+    userAuth().then((res) => {
+      setIsUser(res);
     });
 
     userDetails()
@@ -40,7 +34,7 @@ function Header() {
         // console.error('Error fetching user details:', error);
         setUser(null);
       });
-  }, [setUserAuthStore]);
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -159,7 +153,7 @@ function Header() {
             Contact
           </Link>
         </div>
-        {userAuthStore ? (
+        {isUser ? (
           <>
             <Link
               onClick={() => handleNavigation("/dashboard")}

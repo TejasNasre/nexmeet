@@ -9,12 +9,10 @@ import { useState, useEffect } from "react";
 import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
 import reviews from "../data/reviews.json";
 import data from "../data/community.json";
-import { userStore } from "@/store/user";
-import { Button } from "./ui/button";
+import { userAuth } from "@/action/auth";
 
 const Hero: React.FC = () => {
-  const userAuthStore = userStore((state: any) => state.user);
-
+  const [isUser, setIsUser] = useState(false);
   const [currentReview, setCurrentReview] = useState(0);
   const nextReview = () => {
     setCurrentReview((prev) => (prev + 1) % reviews.length);
@@ -44,6 +42,12 @@ const Hero: React.FC = () => {
     return () => clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    userAuth().then((res) => {
+      setIsUser(res);
+    });
+  }, []);
+
   return (
     <>
       <div className="absolute top-0 h-[100vh] w-full bg-black text-white">
@@ -68,7 +72,7 @@ const Hero: React.FC = () => {
               >
                 Explore Events
               </Link>
-              {userAuthStore ? (
+              {isUser ? (
                 <Link
                   href="/dashboard"
                   className="mono transition ease-in-out duration-300 hover:scale-105 border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md p-1 md:p-2"
