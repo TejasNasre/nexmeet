@@ -130,8 +130,8 @@ function Header() {
             Home
           </Link>
           <Link
-            href="/explore-events"
-            onClick={() => handleNavigation("/explore-events")}
+            href="/events"
+            onClick={() => handleNavigation("/events")}
             className="mono hover:text-gray-300"
           >
             Explore Events
@@ -170,13 +170,13 @@ function Header() {
         ) : (
           <>
             <LoginLink
-              postLoginRedirectURL="/dashboard"
+              postLoginRedirectURL="/events"
               className="mono transition ease-in-out delay-100 hover:scale-105 border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1"
             >
               Sign in
             </LoginLink>
             <RegisterLink
-              postLoginRedirectURL="/dashboard"
+              postLoginRedirectURL="/events"
               className="mono transition ease-in-out delay-100 hover:scale-105 border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1"
             >
               Sign up
