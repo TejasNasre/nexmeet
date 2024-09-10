@@ -1,11 +1,13 @@
 "use client";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Pagination from "../../../components/Pagination";
 import { supabase } from "../../../utils/supabase";
 import Link from "next/link";
 import Image from "next/image";
 import Loading from "../../../components/loading";
 import { CalendarIcon, MapPinIcon } from "lucide-react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const Page: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -13,7 +15,11 @@ const Page: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(9);
   const [selectedStatus, setSelectedStatus] = useState("active");
+  const [numberOfLikes, setNumberOfLikes] = useState("0");
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchCategory, setSearchCategory] = useState("");
+  const [startDate, setStartDate] = useState<Date>();
+  const [endDate, setEndDate] = useState<Date>();
 
   useEffect(() => {
     async function getData() {
@@ -33,9 +39,13 @@ const Page: React.FC = () => {
   }, []);
 
   const eventData = event.filter((event: any) => {
+    const date = new Date(event.event_startdate);
     return (
-      (selectedStatus === "all" || event.status === selectedStatus) &&
-      event.title.toLowerCase().includes(searchTerm.toLowerCase())
+      parseInt(numberOfLikes) * 50 <= event.likes &&
+      event.event_title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      event.event_category.includes(searchCategory) &&
+      (startDate == null || new Date(startDate) < date) &&
+      (endDate == null || date < new Date(endDate))
     );
   });
 
@@ -44,6 +54,18 @@ const Page: React.FC = () => {
   const currentItems = eventData.slice(indexOfFirstItem, indexOfLastItem);
 
   const totalPages = Math.ceil(eventData.length / itemsPerPage);
+
+  const handleStartDateChange = (date: Date) => {
+    setStartDate(date); // Update the start date
+    if (endDate && date > endDate) {
+      setEndDate(undefined); // Reset the end date if it's before the start date
+    }
+    return date;
+  };
+
+  const handleEndDateChange = (date: Date) => {
+    setEndDate(date); // Update the end date
+  };
 
   useEffect(() => {
     if (currentPage > totalPages) {
@@ -62,9 +84,16 @@ const Page: React.FC = () => {
             <input
               type="text"
               className="text-white grow w-full"
-              placeholder="Search"
+              placeholder="Search Name"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <input
+              type="text"
+              className="text-white grow w-full"
+              placeholder="Search Category"
+              value={searchCategory}
+              onChange={(e) => setSearchCategory(e.target.value)}
             />
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -79,24 +108,39 @@ const Page: React.FC = () => {
               />
             </svg>
           </label>
-          {/* <select
-            className="w-[8rem] bg-black text-start text-white border border-white outline-black rounded-md"
-            value={selectedStatus}
-            onChange={(e) => setSelectedStatus(e.target.value)}
-          >
-            <option value="all">All</option>
-            <option value="active">Active</option>
-            <option value="upcoming">Upcoming</option>
-            <option value="done">Done</option>
-          </select> */}
+          <DatePicker
+            className="date-picker w-full border border-white p-2 rounded-md bg-black text-white h-12"
+            selected={startDate}
+            onChange={(date) => date && handleStartDateChange(date)}
+            placeholderText="Start Date"
+          />
+          <DatePicker
+            className="date-picker w-full border border-white p-2 rounded-md bg-black text-white h-12"
+            selected={endDate}
+            onChange={(date) => date && handleEndDateChange(date)}
+            placeholderText="End Date"
+            minDate={startDate} // Prevent end date from being before start date
+          />
+          {
+            <select
+              className="w-[8rem] bg-black text-start text-white border border-white outline-black rounded-md"
+              value={numberOfLikes}
+              onChange={(e) => setNumberOfLikes(e.target.value)}
+            >
+              <option value={0}>Likes</option>
+              <option value={1}>50+</option>
+              <option value={2}>100+</option>
+              <option value={3}>150+</option>
+            </select>
+          }
         </div>
         {loading ? (
           <Loading />
         ) : (
           <>
             <div className="w-full flex flex-wrap gap-5 justify-evenly py-[4rem]">
-              {event.length > 0 ? (
-                event.map((event: any) => (
+              {eventData.length > 0 ? (
+                eventData.map((event: any) => (
                   <div
                     className="cursor-pointer w-[350px] mx-auto bg-black text-white rounded-xl shadow-md overflow-hidden transition duration-300 ease-in-out transform hover:scale-105"
                     key={event.id}
@@ -105,7 +149,7 @@ const Page: React.FC = () => {
                       <Image
                         width="500"
                         height="500"
-                        src={JSON.parse(event.event_images[0]?.url)[0]}
+                        src={event.event_images[0]?.url[0]}
                         alt={event.event_title}
                         className="w-full h-full object-cover"
                       />
