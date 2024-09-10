@@ -79,3 +79,40 @@
 .transition {
   transition: all 0.3s ease-in-out !important;
 }
+@keyframes gradientSlide {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, #000 50%, #ffeb3b 50%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientSlide 1s ease-out forwards;
+}
+.bg-grid-white {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+}
+
+@keyframes highlight {
+  0% {
+    background-position: -100% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.highlight-text {
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.1) 50%, transparent 50%);
+  background-size: 200% 100%;
+  background-position: 100% 0;
+  animation: highlight 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+}
