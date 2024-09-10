@@ -26,6 +26,7 @@ export default function AboutUs() {
   }
 
   return (
+    <div className="absolute top-0 w-full h-auto bg-black text-white py-[8rem] flex flex-col">
     <section className={`${spaceGrotesk.className} bg-black text-white min-h-screen relative overflow-hidden`}>
       <div className="absolute inset-0 bg-grid-white/[0.05] bg-[length:20px_20px]" />
       
@@ -46,7 +47,7 @@ export default function AboutUs() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
           >
-            Born from a vision in our second year of B.Tech, our event management platform aims to revolutionize how college communities organize and experience events. Now in our third year, we're turning that vision into reality.
+            Born from a vision in our second year of B.Tech, our event management platform aims to revolutionize how college communities organize and experience events. Now in our third year, we&apos;re turning that vision into reality.
           </motion.p>
           <motion.p 
             className="text-xl leading-relaxed font-light"
@@ -54,7 +55,7 @@ export default function AboutUs() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.8 }}
           >
-            Our goal is to create a seamless, intuitive platform that brings people together, fostering vibrant college communities. We're starting local, but our ambitions are set on broader horizons.
+            Our goal is to create a seamless, intuitive platform that brings people together, fostering vibrant college communities. We&apos;re starting local, but our ambitions are set on broader horizons.
           </motion.p>
         </div>
         
@@ -122,6 +123,7 @@ export default function AboutUs() {
         </motion.div>
       </div>
     </section>
+    </div>
   )
 }
 

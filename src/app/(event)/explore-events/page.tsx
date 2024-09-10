@@ -8,13 +8,13 @@ import Loading from "../../../components/loading";
 import { CalendarIcon, MapPinIcon } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { json } from "stream/consumers";
 
 const Page: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [event, setEvent]: any = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(9);
-  const [selectedStatus, setSelectedStatus] = useState("active");
   const [numberOfLikes, setNumberOfLikes] = useState("0");
   const [searchTerm, setSearchTerm] = useState("");
   const [startDate, setStartDate] = useState<Date>();
@@ -29,7 +29,7 @@ const Page: React.FC = () => {
         console.error("Error fetching event details:", error);
       } else {
         setEvent(data);
-        // console.log(data);
+        console.log(data);
         // console.log(data[0].event_images[0].url);
       }
       setLoading(false);
@@ -40,10 +40,12 @@ const Page: React.FC = () => {
   const eventData = event.filter((event: any) => {
     const date = new Date(event.event_startdate);
     return (
-      parseInt(numberOfLikes) * 50 <= event.likes &&
-      (event.event_title.toLowerCase().includes(searchTerm.toLowerCase()) 
-        || event.event_category.includes(searchTerm.toLowerCase())
-        || event.event_location.toLowerCase().includes(searchTerm.toLowerCase())) &&      
+      parseInt(numberOfLikes) * 50 <= event.event_likes &&
+      (event.event_title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        event.event_category.includes(searchTerm.toLowerCase()) ||
+        event.event_location
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())) &&
       (startDate == null || new Date(startDate) < date) &&
       (endDate == null || date < new Date(endDate))
     );
@@ -79,42 +81,44 @@ const Page: React.FC = () => {
         <div className="text-center my-10 text-4xl font-bold">
           Explore Events
         </div>
-        <div className="w-full my-[3rem] flex flex-row gap-4 justify-end">
-          <label className="input input-bordered flex items-center gap-2 bg-black border border-white w-full">
-            <input
-              type="text"
-              className="text-white grow w-full"
-              placeholder="Search Name, Category or Location"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 16 16"
-              fill="currentColor"
-              className="h-4 w-4 opacity-70 text-white"
-            >
-              <path
-                fillRule="evenodd"
-                d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                clipRule="evenodd"
+        <div className="w-full my-[3rem] flex flex-col gap-4 justify-end">
+          <div>
+            <label className="input input-bordered flex items-center gap-2 bg-black border border-white w-full">
+              <input
+                type="text"
+                className="text-white grow w-full"
+                placeholder="Search Name, Category or Location"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
-            </svg>
-          </label>
-          <DatePicker
-            className="date-picker w-full border border-white p-2 rounded-md bg-black text-white h-12"
-            selected={startDate}
-            onChange={(date) => date && handleStartDateChange(date)}
-            placeholderText="Start Date"
-          />
-          <DatePicker
-            className="date-picker w-full border border-white p-2 rounded-md bg-black text-white h-12"
-            selected={endDate}
-            onChange={(date) => date && handleEndDateChange(date)}
-            placeholderText="End Date"
-            minDate={startDate} // Prevent end date from being before start date
-          />
-          {
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                className="h-4 w-4 opacity-70 text-white"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </label>
+          </div>
+          <div className="w-full flex justify-end items-center gap-4">
+            <DatePicker
+              className="date-picker w-full border border-white p-2 rounded-md bg-black text-white h-12"
+              selected={startDate}
+              onChange={(date) => date && handleStartDateChange(date)}
+              placeholderText="Start Date"
+            />
+            <DatePicker
+              className="date-picker w-full border border-white p-2 rounded-md bg-black text-white h-12"
+              selected={endDate}
+              onChange={(date) => date && handleEndDateChange(date)}
+              placeholderText="End Date"
+              minDate={startDate} // Prevent end date from being before start date
+            />
             <select
               className="w-[8rem] bg-black text-start text-white border border-white outline-black rounded-md"
               value={numberOfLikes}
@@ -125,7 +129,7 @@ const Page: React.FC = () => {
               <option value={2}>100+</option>
               <option value={3}>150+</option>
             </select>
-          }
+          </div>
         </div>
         {loading ? (
           <Loading />
@@ -142,7 +146,7 @@ const Page: React.FC = () => {
                       <Image
                         width="500"
                         height="500"
-                        src={event.event_images[0]?.url[0]}
+                        src={JSON.parse(event.event_images[0]?.url)[0]}
                         alt={event.event_title}
                         className="w-full h-full object-cover"
                       />

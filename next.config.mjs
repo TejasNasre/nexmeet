@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['media.giphy.com', 'i.giphy.com'],
+    domains: ["media.giphy.com", "i.giphy.com"],
     remotePatterns: [
       {
         protocol: "https",
@@ -28,7 +28,17 @@ const nextConfig = {
         protocol: "https",
         hostname: "jzhgfowuznosxtwzkbkx.supabase.co",
         pathname: "/**",
-      }
+      },
+      {
+        protocol: "https",
+        hostname: "media.giphy.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "i.giphy.com",
+        pathname: "/**",
+      },
     ],
   },
 };
