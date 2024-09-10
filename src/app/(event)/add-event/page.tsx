@@ -13,8 +13,10 @@ import { useRouter } from "next/navigation";
 export default function AddEvent() {
   const [user, setUser]: any = useState(null);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
-  const imageInputRef = useRef<HTMLInputElement>(null);
   const [isPending, startTransition] = useTransition();
+  const [isError, setIsError] = useState("");
+  const imageInputRef = useRef<HTMLInputElement>(null);
+
   const router = useRouter();
 
   const {
@@ -36,10 +38,20 @@ export default function AddEvent() {
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      const filesArray = Array.from(e.target.files);
-      const newImageUrls = filesArray.map((file) => URL.createObjectURL(file));
+      const file = e.target.files[0];
 
-      setImageUrls([...imageUrls, ...newImageUrls]);
+      if (file) {
+        const maxSizeInBytes = 2 * 1024 * 1024; // 2MB
+        if (file.size > maxSizeInBytes) {
+          setIsError("File size should be less than 2MB.");
+          e.target.value = "";
+          return;
+        }
+
+        const newImageUrls = [URL.createObjectURL(file)];
+
+        setImageUrls(newImageUrls);
+      }
     }
   };
 
@@ -119,13 +131,19 @@ export default function AddEvent() {
         onSubmit={handleSubmit(onSubmit)}
         className="w-full flex flex-col flex-wrap gap-10 md:w-2/3"
       >
-        <h1 className="text-2xl md:text-4xl font-extrabold text-center">Organise Event</h1>
+        <h1 className="text-2xl md:text-4xl font-extrabold text-center">
+          Organise Event
+        </h1>
         <div className="w-full flex flex-col gap-2">
           <label htmlFor="event_title">Event Title: </label>
           <input
             type="text"
             placeholder="Enter Event Title"
-            {...register("event_title", { required: true, max: 999, min: 39 })}
+            {...register("event_title", {
+              required: true,
+              max: 999,
+              min: 39,
+            })}
             className="w-full border border-white p-2 rounded-md bg-black text-white"
           />
         </div>
@@ -173,7 +191,7 @@ export default function AddEvent() {
 
         <div className="w-full flex flex-col gap-2">
           <label htmlFor="event_registration_enddate">
-            Event Registration Start Date:{" "}
+            Event Registration End Date:{" "}
           </label>
           <input
             type="datetime-local"
@@ -288,13 +306,12 @@ export default function AddEvent() {
             id="event_image"
             type="file"
             accept="image/jpeg, image/png"
-            multiple={true}
             ref={imageInputRef}
             onChange={(e) => handleImageChange(e)}
             disabled={isPending}
             className="w-full border border-white p-2 rounded-md bg-black text-white"
           />
-          <p>Max Images 5 (First Image Should Be Your Event Poster)</p>
+          <p className="text-red-500">{isError}</p>
         </div>
 
         <div className="w-full flex flex-wrap justify-start items-center gap-4">
@@ -307,7 +324,7 @@ export default function AddEvent() {
                   key={url}
                   src={url}
                   alt={`img-${index}`}
-                  className="border border-white rounded-lg"
+                  className="w-auto h-auto border border-white rounded-lg object-contain"
                 />
               ))}
             </>
