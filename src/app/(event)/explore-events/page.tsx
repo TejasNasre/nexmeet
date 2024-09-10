@@ -17,7 +17,6 @@ const Page: React.FC = () => {
   const [selectedStatus, setSelectedStatus] = useState("active");
   const [numberOfLikes, setNumberOfLikes] = useState("0");
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchCategory, setSearchCategory] = useState("");
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
 
@@ -42,8 +41,9 @@ const Page: React.FC = () => {
     const date = new Date(event.event_startdate);
     return (
       parseInt(numberOfLikes) * 50 <= event.likes &&
-      event.event_title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      event.event_category.includes(searchCategory) &&
+      (event.event_title.toLowerCase().includes(searchTerm.toLowerCase()) 
+        || event.event_category.includes(searchTerm.toLowerCase())
+        || event.event_location.toLowerCase().includes(searchTerm.toLowerCase())) &&      
       (startDate == null || new Date(startDate) < date) &&
       (endDate == null || date < new Date(endDate))
     );
@@ -84,16 +84,9 @@ const Page: React.FC = () => {
             <input
               type="text"
               className="text-white grow w-full"
-              placeholder="Search Name"
+              placeholder="Search Name, Category or Location"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <input
-              type="text"
-              className="text-white grow w-full"
-              placeholder="Search Category"
-              value={searchCategory}
-              onChange={(e) => setSearchCategory(e.target.value)}
             />
             <svg
               xmlns="http://www.w3.org/2000/svg"
