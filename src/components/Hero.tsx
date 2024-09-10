@@ -10,6 +10,7 @@ import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
 import reviews from "../data/reviews.json";
 import data from "../data/community.json";
 import { userAuth } from "@/action/auth";
+import FeatureCards from "./FeatureCards";
 
 const Hero: React.FC = () => {
   const [isUser, setIsUser] = useState(false);
@@ -88,6 +89,11 @@ const Hero: React.FC = () => {
             <h1>project is in development phase</h1>
           </div>
         </BackgroundBeamsWithCollision>
+       
+        {/* Feature cards section */}
+        <div className="flex flex-col items-center justify-center w-full h-screen bg-black sm:flex sm:flex-row">
+          <FeatureCards />
+        </div>
 
         <div className="py-20 flex flex-col antialiased bg-black items-center gap-10 justify-center relative overflow-hidden">
           <h1 className="mono m-10 text-center text-4xl">
@@ -129,23 +135,23 @@ const Hero: React.FC = () => {
               </div>
             </div>
 
-            {/* Navigation buttons (hidden on mobile) */}
-            <button
-              onClick={prevReview}
-              className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white/10 p-2 rounded-full hidden sm:block"
-              aria-label="Previous review"
-            >
-              <IoChevronBackOutline className="h-6 w-6 text-white" />
-            </button>
-            <button
-              onClick={nextReview}
-              className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white/10 p-2 rounded-full hidden sm:block"
-              aria-label="Next review"
-            >
-              <IoChevronForwardOutline className="h-6 w-6 text-white" />
-            </button>
-          </div>
-        </div>
+           {/* Navigation buttons */}
+    <button
+      onClick={prevReview}
+      className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white/10 p-2 rounded-full"
+      aria-label="Previous review"
+    >
+      <IoChevronBackOutline className="h-6 w-6 text-white" />
+    </button>
+    <button
+      onClick={nextReview}
+      className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white/10 p-2 rounded-full"
+      aria-label="Next review"
+    > 
+      <IoChevronForwardOutline className="h-6 w-6 text-white" />
+    </button>
+  </div>
+</div>
 
         <div className="w-full px-4 py-20 bg-black">
           <div className="mx-auto max-w-screen-xl py-8">
