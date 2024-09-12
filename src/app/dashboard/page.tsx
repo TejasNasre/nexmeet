@@ -17,6 +17,26 @@ import { supabase } from "@/utils/supabase";
 import { useRouter } from "next/navigation";
 import { userAuth } from "../../action/auth";
 
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  LineChart,
+  Line,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  RadarChart,
+  Radar,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+} from "recharts";
+
 interface User {
   id: string;
   given_name: string;
@@ -30,7 +50,7 @@ export default function Page() {
 
   const [isUser, setIsUser] = useState(false);
   const [activeTab, setActiveTab] = useState("organized");
-  const [organisedEvent, setOrganisedEvent] = useState<any[] | null>([]);
+  const [organisedEvent, setOrganisedEvent]: any = useState([]);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -69,6 +89,7 @@ export default function Page() {
         console.log(error);
       }
       {
+        console.log(organised_events);
         setLoading(true);
         setOrganisedEvent(organised_events);
         setLoading(false);
@@ -77,6 +98,34 @@ export default function Page() {
 
     organizeEvents();
   }, [user]);
+
+  const COLORS = ["#FF6B6B", "#4ECDC4", "#45B7D1", "#FFA07A", "#98D8C8"];
+
+  const data = organisedEvent.map((event: any) => ({
+    name: event.event_title,
+    value: 1,
+    category: event.event_category,
+  }));
+
+  const CustomTooltip = ({
+    active,
+    payload,
+    label,
+  }: {
+    active: boolean;
+    payload: any[];
+    label: string;
+  }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="custom-tooltip bg-black text-white p-2 rounded shadow-lg">
+          <p className="label">{`${payload[0].name}`}</p>
+          <p className="intro">{`Category: ${payload[0].payload.category}`}</p>
+        </div>
+      );
+    }
+    return null;
+  };
 
   if (loading) {
     return <Loading />;
@@ -162,6 +211,11 @@ export default function Page() {
               <Button variant="outline" className="w-full">
                 <Link href="/explore-events">View All Events</Link>
               </Button>
+              <Button variant="outline" className="w-full">
+                <Link href="/explore-event-space">
+                  Find Space For Your Next Event
+                </Link>
+              </Button>
             </div>
 
             <Card className="overflow-hidden">
@@ -202,6 +256,44 @@ export default function Page() {
             </Card>
           </div>
         </main>
+
+        <div className="flex-grow container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8">
+          <Card className="w-full">
+            <CardHeader>
+              <CardTitle>Event Categories</CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              <ResponsiveContainer width="100%" height={400}>
+                <PieChart className="py-10 md:p-0">
+                  <Pie
+                    data={data}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    outerRadius={150}
+                    fill="#8884d8"
+                    dataKey="value"
+                    label={({ percent }) => `(${(percent * 100).toFixed(0)}%)`}
+                  >
+                    {data.map((entry: any, index: any) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    content={
+                      <CustomTooltip active={false} payload={[]} label={""} />
+                    }
+                    cursor={{ fill: "transparent" }}
+                  />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </>
   );

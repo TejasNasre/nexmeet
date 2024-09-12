@@ -29,11 +29,12 @@
     "mongoose": "^8.5.3",
     "next": "14.2.5",
     "react": "^18",
-    "react-dom": "^18",
     "react-datepicker": "^7.3.0",
+    "react-dom": "^18",
     "react-hook-form": "^7.53.0",
     "react-icons": "^5.2.1",
     "react-intersection-observer": "^9.13.1",
+    "recharts": "^2.12.7",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^10.0.0"

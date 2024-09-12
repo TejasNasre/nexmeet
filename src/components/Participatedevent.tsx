@@ -26,7 +26,7 @@ function Participatedevent({ user }: any) {
         setLoading(true);
         setParticipatEvent(event_participants);
         setLoading(false);
-        // console.log(event_participants);
+        console.log(event_participants);
       }
     };
     participatedEvents();

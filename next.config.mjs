@@ -39,6 +39,11 @@ const nextConfig = {
         hostname: "i.giphy.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "gravatar.com",
+        pathname: "/**",
+      },
     ],
   },
 };

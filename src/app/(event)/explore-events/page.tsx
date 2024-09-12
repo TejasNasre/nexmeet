@@ -186,7 +186,7 @@ const Page: React.FC = () => {
                         <div className="flex items-center space-x-2 text-xs">
                           <MapPinIcon className="h-3 w-3" />
                           <span className="truncate">
-                            Silicon Valley Conference Center, SF
+                            {event.event_location}
                           </span>
                         </div>
                       </div>
