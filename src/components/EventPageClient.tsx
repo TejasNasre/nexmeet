@@ -57,7 +57,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
   const tags = eventData[0].event_tags;
   const social = eventData[0].event_social_links;
 
-  const shareUrl = `${process.env.NEXT_BASE_URL}/explore-events/${eventsId}`;
+  const shareUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/explore-events/${eventsId}`;
   const title = "Check out this event on Nexmeet";
 
   return (

@@ -89,7 +89,7 @@ export default function Page() {
         console.log(error);
       }
       {
-        console.log(organised_events);
+        // console.log(organised_events);
         setLoading(true);
         setOrganisedEvent(organised_events);
         setLoading(false);

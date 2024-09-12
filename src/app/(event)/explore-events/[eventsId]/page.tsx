@@ -35,7 +35,7 @@ export async function generateMetadata({
     openGraph: {
       title: eventTitle,
       description: eventDescription,
-      url: `${process.env.NEXT_BASE_URL}/explore-events/${params.eventsId}`,
+      url: `${process.env.NEXT_PUBLIC_BASE_URL}/explore-events/${params.eventsId}`,
       images: [
         {
           url: eventImageUrl,
