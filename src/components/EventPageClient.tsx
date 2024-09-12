@@ -57,12 +57,12 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
   const tags = eventData[0].event_tags;
   const social = eventData[0].event_social_links;
 
-  const shareUrl = `https://nexmeet-lake.vercel.app/explore-events/${eventsId}`;
-  const title = "Check out this amazing Event!";
+  const shareUrl = `${process.env.NEXT_BASE_URL}/explore-events/${eventsId}`;
+  const title = "Check out this event on Nexmeet";
 
   return (
     <>
-      <div className="absolute top-0 w-full h-auto bg-black text-white py-[8rem] px-[1rem] md:px-[2rem]">
+      <div className="absolute top-0 w-full h-auto bg-black text-white py-[5rem] md:py-[8rem] px-[1rem] md:px-[2rem]">
         {eventData.map((event: any) => (
           <div
             className="flex flex-wrap justify-center items-center"
@@ -72,7 +72,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
               {event.event_title}
             </h1>
 
-            <div className="w-full md:w-[80%] p-10">
+            <div className="w-full md:w-[80%] py-6 md:p-10">
               {img.map((i: any) => {
                 return (
                   <div key={i}>
@@ -92,7 +92,9 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
             <div className="w-full flex flex-col md:flex-row gap-4">
               <div className="w-full border border-white rounded-lg p-6 flex flex-col gap-2 md:gap-4">
                 <h1 className="text-2xl font-extrabold">About The Event</h1>
-                <p className="text-justify">{event.event_description}</p>
+                <p className="text-justify leading-relaxed">
+                  {event.event_description}
+                </p>
                 <div className="w-full flex flex-col md:flex-row gap-4">
                   <h1 className="flex flex-row items-center gap-2">
                     Event Start&apos;s Form :{" "}
@@ -199,19 +201,19 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                     ))}
                   </h1>
                 </div>
-                <div className="border border-white rounded-lg p-6">
+                <div className="border border-white rounded-lg p-6 flex flex-col gap-4">
                   <h1 className="text-xl font-bold">
                     Share This Event On Socials
                   </h1>
                   <div className="flex gap-4">
                     {/* Twitter Share Button */}
                     <TwitterShareButton url={shareUrl} title={title}>
-                      <TwitterIcon size={40} round />
+                      <TwitterIcon size={30} round />
                     </TwitterShareButton>
 
                     {/* WhatsApp Share Button */}
                     <WhatsappShareButton url={shareUrl} title={title}>
-                      <WhatsappIcon size={40} round />
+                      <WhatsappIcon size={30} round />
                     </WhatsappShareButton>
                   </div>
                 </div>

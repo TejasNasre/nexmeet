@@ -16,25 +16,26 @@ export async function generateMetadata({
     .select("*,event_images(event_id,url)")
     .eq("id", params.eventsId);
 
-  // console.log(eventData);
-
   if (!eventData) return {};
 
-  const eventTitle = eventData.event_title || "Event";
+  const eventTitle = eventData[0].event_title || "Nexmeet Event";
+
   const eventDescription =
-    eventData.event_description || "Check out this event!";
+    eventData[0].event_description ||
+    "Join events, connect with people, and make memories with NexMeet.";
+
   const eventImageUrl =
     JSON.parse(eventData[0].event_images[0].url)[0] ||
     "https://jzhgfowuznosxtwzkbkx.supabase.co/storage/v1/object/public/event_image/_Black_And_Yellow_Modern_Event_Producer_Initial_Logo-removebg-preview.png"; // Default image
 
   // Meta tags for WhatsApp will use OpenGraph tags
   return {
-    title: `${eventTitle} | Your Event Platform`,
+    title: `${eventTitle} - NexMeet`,
     description: eventDescription,
     openGraph: {
       title: eventTitle,
       description: eventDescription,
-      url: `https://nexmeet-lake.vercel.app/explore-events/${params.eventsId}`,
+      url: `${process.env.NEXT_BASE_URL}/explore-events/${params.eventsId}`,
       images: [
         {
           url: eventImageUrl,

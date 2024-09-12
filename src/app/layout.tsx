@@ -12,12 +12,12 @@ const mono = DM_Mono({
 export const metadata: Metadata = {
   title: "NexMeet",
   description: "Make Your Events Memorable With NexMeet",
-  metadataBase: new URL("https://nexmeet-lake.vercel.app"), // Add this line
+  metadataBase: new URL(`${process.env.NEXT_BASE_URL}`), // Base Url
   openGraph: {
     title: "NexMeet - Make Your Events Memorable",
     description:
       "Join events, connect with people, and make memories with NexMeet.",
-    url: "https://nexmeet-lake.vercel.app",
+    url: `${process.env.NEXT_BASE_URL}`,
     images: [
       {
         url: "https://jzhgfowuznosxtwzkbkx.supabase.co/storage/v1/object/public/event_image/_Black_And_Yellow_Modern_Event_Producer_Initial_Logo-removebg-preview.png",
