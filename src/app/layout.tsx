@@ -44,9 +44,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={mono.variable}>
+      <body suppressHydrationWarning={true} className={mono.className}>
         <Header />
-        {children}
+        <main>{children}</main>
       </body>
     </html>
   );
