@@ -152,7 +152,7 @@ export default function Page() {
                   {user.given_name} {user.family_name}
                 </h1>
                 <h2>{user.email}</h2>
-                <LogoutLink className="mono transition ease-in-out delay-100 hover:scale-105 border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1">
+                <LogoutLink className="mono transition ease-in-out delay-100 hover:scale-105 border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1" postLogoutRedirectURL="/">
                   Log out
                 </LogoutLink>
               </div>

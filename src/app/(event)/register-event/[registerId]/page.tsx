@@ -6,8 +6,7 @@ import { useForm } from "react-hook-form";
 import { supabase } from "../../../../utils/supabase";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Loading from "@/app/loading";
-import ConfirmationDialog from "../../../../components/ConfirmationDialog";
+
 function Registerevent() {
   const router = useRouter();
   const [loading, setLoading]: any = useState(true);
@@ -15,14 +14,7 @@ function Registerevent() {
   const [submit, setSubmit]: any = useState(null);
   const params = useParams();
   const { registerId } = params;
-  const [showConfirmation, setShowConfirmation] = useState(false);
-  const [isRegistered, setIsRegistered] = useState(false);
-  const handleRegistrationSubmit = (event:any) => {
-    // Logic to submit registration details
-event.preventDefault();
-    // Show the confirmation dialog after submitting
-    setShowConfirmation(true);
-  };
+
   useEffect(() => {
     async function fetchEventDetails() {
       let { data: event_details, error } = await supabase
@@ -37,19 +29,7 @@ event.preventDefault();
     }
     fetchEventDetails();
   }, [registerId]);
-  const handleConfirmation = (confirmed:any) => {
-    if (confirmed) {
-      // Perform registration
-      setIsRegistered(true);
-      router.push('/dashboard')
-    } else {
-      // Cancel registration
-      setIsRegistered(false);
-    }
 
-    // Hide the confirmation dialog
-    setShowConfirmation(false);
-  };
   const {
     register,
     handleSubmit,
@@ -66,6 +46,7 @@ event.preventDefault();
           participant_name: event_participants.participant_name,
           participant_email: event_participants.participant_email,
           participant_contact: event_participants.participant_contact,
+          is_registered: true,
         },
       ])
       .select();
@@ -81,18 +62,14 @@ event.preventDefault();
       return;
     }
 
-    // router.push(`/events/${data[0].id}`);
+    router.push(`/dashboard`);
   };
-
-  if (loading) {
-    return <Loading />;
-  }
 
   return (
     <>
       <div className="absolute top-0 w-full h-auto bg-black text-white py-[8rem] px-[2rem] flex flex-col justify-center items-center">
         <form
-          onSubmit={handleRegistrationSubmit}
+          onSubmit={handleSubmit(onSubmit)}
           className="w-full flex flex-col flex-wrap gap-10 md:w-2/3"
         >
           {loading ? (
@@ -151,14 +128,6 @@ event.preventDefault();
             {submit === false ? "Submitting..." : "Submit"}
           </button>
         </form>
-        {showConfirmation && (
-        <ConfirmationDialog
-          message="Do you want to confirm the registration?"
-          onConfirm={() =>handleConfirmation(true)}
-          onCancel={() =>handleConfirmation(false)}
-        />
-      )}
-       {isRegistered && <p>Registration successful!</p>}
       </div>
     </>
   );

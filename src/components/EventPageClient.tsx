@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { userAuth } from "../action/auth";
+import { userDetails } from "../action/userDetails";
+
 import {
   TwitterShareButton,
   TwitterIcon,
@@ -20,12 +22,16 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
   const router = useRouter();
   const [eventData, setEventData]: any = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser]: any = useState(null);
+  const [userData, setUserData]: any = useState([]);
 
   useEffect(() => {
     async function getData() {
       let { data, error }: any = await supabase
         .from("event_details")
-        .select("*,event_images(event_id,url)")
+        .select(
+          "*,event_images(event_id,url),event_participants(participant_email,is_registered)"
+        )
         .eq("id", eventsId);
       if (error) {
         console.error("Error fetching event details:", error);
@@ -39,19 +45,37 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
     }
   }, [eventsId]);
 
-  async function isUser() {
+  useEffect(() => {
     userAuth().then((res) => {
-      if (!res) {
-        router.push("/unauthorized");
-      } else {
-        router.push(`/register-event/${eventsId}`);
-      }
+      setUser(res);
     });
+
+    userDetails().then((res: any) => {
+      setUserData(res);
+    });
+  }, []);
+
+  async function isUser() {
+    if (!user) {
+      router.push("/unauthorized");
+    } else {
+      router.push(`/register-event/${eventsId}`);
+    }
   }
 
   if (isLoading) {
     return <Loading />;
   }
+
+  const isRegistered = eventData[0]?.event_participants.some(
+    (register: any) => {
+      const isMatch =
+        register.participant_email === userData?.email &&
+        register.is_registered === true;
+
+      return isMatch;
+    }
+  );
 
   const img = JSON.parse(eventData[0].event_images[0].url);
   const tags = eventData[0].event_tags;
@@ -157,9 +181,25 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                     variant="outline"
                     className="w-full"
                     onClick={() => isUser()}
+                    disabled={isRegistered}
                   >
-                    Register
+                    {isRegistered
+                      ? "Registered Waiting For Approval"
+                      : "Register Now"}
                   </Button>
+                </div>
+                <div>
+                  {isRegistered ? (
+                    <>
+                      <Link href={`${event.event_formlink}`}>
+                        <Button variant="outline" className="w-full">
+                          Actual For Link
+                        </Button>
+                      </Link>
+                    </>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
 
