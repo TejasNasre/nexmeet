@@ -67,18 +67,33 @@ function Organisedevent({ user }: any) {
                   <Badge variant="outline">Organizer</Badge>
                 </div>
 
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-[8rem] text-white"
-                >
-                  <Link
-                    href={`/explore-events/${event.id}`}
-                    className="flex flex-row justify-center items-center"
+                <div className="flex flex-col gap-4 md:flex-row">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-[8rem] text-white"
                   >
-                    View Details <ChevronRight size={16} className="ml-1" />
-                  </Link>
-                </Button>
+                    <Link
+                      href={`/explore-events/${event.id}`}
+                      className="flex flex-row justify-center items-center"
+                    >
+                      View Details <ChevronRight size={16} className="ml-1" />
+                    </Link>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-[15rem] text-white"
+                  >
+                    <Link
+                      href={`/participants-details/${event.id}`}
+                      className="flex flex-row justify-center items-center"
+                    >
+                      View Participant Details{" "}
+                      <ChevronRight size={16} className="ml-1" />
+                    </Link>
+                  </Button>
+                </div>
               </div>
             ))}
           </>

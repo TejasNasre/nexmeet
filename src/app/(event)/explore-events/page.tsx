@@ -29,7 +29,7 @@ const Page: React.FC = () => {
         console.error("Error fetching event details:", error);
       } else {
         setEvent(data);
-        console.log(data);
+        // console.log(data);
         // console.log(data[0].event_images[0].url);
       }
       setLoading(false);
