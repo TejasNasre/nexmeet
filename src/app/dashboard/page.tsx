@@ -44,10 +44,14 @@ interface User {
   picture: string;
   email: string;
 }
-
+type Event = {
+  id: string
+  event_title: string
+  organizer_email: string
+}
 export default function Page() {
   const router = useRouter();
-
+  const [organizedEvents, setOrganizedEvents] = useState<Event[]>([])
   const [isUser, setIsUser] = useState(false);
   const [activeTab, setActiveTab] = useState("organized");
   const [organisedEvent, setOrganisedEvent]: any = useState([]);
@@ -231,6 +235,13 @@ export default function Page() {
                       onClick={() => setActiveTab("organized")}
                     >
                       Organized
+                    </Button>
+                    <Button
+                      variant={activeTab === "edit" ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => router.push('/edit-event')}
+                    >
+                      Edit/Delete Event
                     </Button>
                     <Button
                       variant={
