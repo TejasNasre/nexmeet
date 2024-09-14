@@ -45,13 +45,12 @@ interface User {
   email: string;
 }
 type Event = {
-  id: string
-  event_title: string
-  organizer_email: string
-}
+  id: string;
+  event_title: string;
+  organizer_email: string;
+};
 export default function Page() {
   const router = useRouter();
-  const [organizedEvents, setOrganizedEvents] = useState<Event[]>([])
   const [isUser, setIsUser] = useState(false);
   const [activeTab, setActiveTab] = useState("organized");
   const [organisedEvent, setOrganisedEvent]: any = useState([]);
@@ -156,7 +155,10 @@ export default function Page() {
                   {user.given_name} {user.family_name}
                 </h1>
                 <h2>{user.email}</h2>
-                <LogoutLink className="mono transition ease-in-out delay-100 hover:scale-105 border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1" postLogoutRedirectURL="/">
+                <LogoutLink
+                  className="mono transition ease-in-out delay-100 hover:scale-105 border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1"
+                  postLogoutRedirectURL="/"
+                >
                   Log out
                 </LogoutLink>
               </div>
@@ -222,6 +224,12 @@ export default function Page() {
               </Button>
             </div>
 
+            <div>
+              <Button variant="outline" className="w-full">
+                <Link href="/manage-event">Manage Your Events</Link>
+              </Button>
+            </div>
+
             <Card className="overflow-hidden">
               <CardHeader className="border-b bg-muted">
                 <div className="flex flex-col gap-8 md:flex-row justify-between items-center">
@@ -235,13 +243,6 @@ export default function Page() {
                       onClick={() => setActiveTab("organized")}
                     >
                       Organized
-                    </Button>
-                    <Button
-                      variant={activeTab === "edit" ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => router.push('/edit-event')}
-                    >
-                      Edit/Delete Event
                     </Button>
                     <Button
                       variant={
