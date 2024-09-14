@@ -20,17 +20,25 @@ const Pagination: React.FC<PaginationProps> = ({
   };
 
   return (
-    <div className="join">
-      <button onClick={handlePreviousClick} className="join-item btn">
-        «
-      </button>
-      <span className="join-item btn">
-        {" "}
-        Page {currentPage} of {totalPages}{" "}
-      </span>
-      <button onClick={handleNextClick} className="join-item btn">
-        »
-      </button>
+    <div className="w-full  flex flex-row justify-center items-center">
+      <div className="w-[12rem] bg-white text-black rounded-lg">
+        <button
+          onClick={handlePreviousClick}
+          className="bg-white text-black border-r border-black p-2"
+        >
+          «
+        </button>
+        <span className="bg-white text-black">
+          {" "}
+          Page {currentPage} of {totalPages}{" "}
+        </span>
+        <button
+          onClick={handleNextClick}
+          className="bg-white text-black border-l border-black p-2"
+        >
+          »
+        </button>
+      </div>
     </div>
   );
 };
