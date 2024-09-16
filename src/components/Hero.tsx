@@ -9,12 +9,14 @@ import { useState, useEffect } from "react";
 import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
 import reviews from "../data/reviews.json";
 import data from "../data/community.json";
-import { userAuth } from "@/action/auth";
 import FeatureCards from "./FeatureCards";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
 const Hero: React.FC = () => {
-  const [isUser, setIsUser] = useState(false);
+  const { isAuthenticated } = useKindeBrowserClient();
+
   const [currentReview, setCurrentReview] = useState(0);
+
   const nextReview = () => {
     setCurrentReview((prev) => (prev + 1) % reviews.length);
   };
@@ -43,12 +45,6 @@ const Hero: React.FC = () => {
     return () => clearInterval(timer);
   }, []);
 
-  useEffect(() => {
-    userAuth().then((res) => {
-      setIsUser(res);
-    });
-  }, []);
-
   return (
     <>
       <div className="absolute top-0 h-[100vh] w-full bg-black text-white">
@@ -73,7 +69,7 @@ const Hero: React.FC = () => {
               >
                 Explore Events
               </Link>
-              {isUser ? (
+              {isAuthenticated ? (
                 <Link
                   href="/dashboard"
                   className="mono transition ease-in-out duration-300 hover:scale-105 border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md p-1 md:p-2"
@@ -89,7 +85,7 @@ const Hero: React.FC = () => {
             <h1>project is in development phase</h1>
           </div>
         </BackgroundBeamsWithCollision>
-       
+
         {/* Feature cards section */}
         <div className="flex flex-col items-center justify-center w-full h-screen bg-black sm:flex sm:flex-row">
           <FeatureCards />
@@ -135,23 +131,23 @@ const Hero: React.FC = () => {
               </div>
             </div>
 
-           {/* Navigation buttons */}
-    <button
-      onClick={prevReview}
-      className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white/10 p-2 rounded-full"
-      aria-label="Previous review"
-    >
-      <IoChevronBackOutline className="h-6 w-6 text-white" />
-    </button>
-    <button
-      onClick={nextReview}
-      className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white/10 p-2 rounded-full"
-      aria-label="Next review"
-    > 
-      <IoChevronForwardOutline className="h-6 w-6 text-white" />
-    </button>
-  </div>
-</div>
+            {/* Navigation buttons */}
+            <button
+              onClick={prevReview}
+              className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white/10 p-2 rounded-full"
+              aria-label="Previous review"
+            >
+              <IoChevronBackOutline className="h-6 w-6 text-white" />
+            </button>
+            <button
+              onClick={nextReview}
+              className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white/10 p-2 rounded-full"
+              aria-label="Next review"
+            >
+              <IoChevronForwardOutline className="h-6 w-6 text-white" />
+            </button>
+          </div>
+        </div>
 
         <div className="w-full px-4 py-20 bg-black">
           <div className="mx-auto max-w-screen-xl py-8">

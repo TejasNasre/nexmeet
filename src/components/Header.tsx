@@ -6,25 +6,22 @@ import {
   RegisterLink,
   LoginLink,
 } from "@kinde-oss/kinde-auth-nextjs/components";
-import { userAuth } from "../action/auth";
 import { userDetails } from "../action/userDetails";
 import Image from "next/image";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
 interface User {
   picture: string;
 }
 
 function Header() {
-  const [isUser, setIsUser] = useState(false);
+  const { isAuthenticated } = useKindeBrowserClient();
+
   const [user, setUser] = useState<User | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    userAuth().then((res) => {
-      setIsUser(res);
-    });
-
     userDetails()
       .then((res: any) => {
         // console.log(res)
@@ -153,7 +150,7 @@ function Header() {
             Contact
           </Link>
         </div>
-        {isUser ? (
+        {isAuthenticated ? (
           <>
             <Link
               onClick={() => handleNavigation("/dashboard")}

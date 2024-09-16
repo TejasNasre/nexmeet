@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/utils/supabase";
-import { userAuth } from "@/action/auth";
 import { userDetails } from "@/action/userDetails";
 import Loading from "@/components/loading";
 import { Button } from "@/components/ui/button";
@@ -20,6 +19,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import Link from "next/link";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
 interface User {
   id: string;
@@ -34,22 +34,14 @@ interface Event {
 }
 
 export default function EditEvent() {
+  const router = useRouter();
+  const { isAuthenticated, isLoading } = useKindeBrowserClient();
+
   const [user, setUser] = useState<User | null>(null);
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleteEventId, setDeleteEventId] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const router = useRouter();
-
-  useEffect(() => {
-    userAuth().then((res) => {
-      if (!res) {
-        router.replace("/unauthorized");
-      } else {
-        setLoading(false);
-      }
-    });
-  }, [router]);
 
   useEffect(() => {
     userDetails()
@@ -122,77 +114,81 @@ export default function EditEvent() {
     setDeleteEventId(null);
   };
 
-  if (loading) {
+  if (isLoading) {
     return <Loading />;
   }
 
-  return (
-    <div className="absolute top-0 w-full h-auto bg-black text-white py-[8rem] px-4 flex flex-col">
-      <div className="flex flex-col justify-center items-center gap-4">
-        <h1 className="text-3xl font-bold text-center my-10">
-          Edit Your Events
-        </h1>
-        {successMessage && (
-          <div className="mb-4 p-4 bg-green-500 text-white rounded">
-            {successMessage}
-          </div>
-        )}
-        <div className="grid gap-6">
-          {loading ? (
-            <Loading />
-          ) : (
-            <>
-              {events.map((event) => (
-                <Card key={event.id} className="bg-black">
-                  <CardHeader>
-                    <CardTitle>{event.event_title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="mb-4">{event.event_description}</p>
-                    <div className="flex space-x-4">
-                      <Button variant="outline">
-                        <Link href={`/update-event?eventId=${event.id}`}>
-                          Edit Event
-                        </Link>
-                      </Button>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button
-                            variant="outline"
-                            onClick={() => setDeleteEventId(event.id)}
-                          >
-                            Delete Event
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent className="bg-black text-white p-4">
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>
-                              Are you absolutely sure?
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                              This action cannot be undone. This will
-                              permanently delete your event and remove all data
-                              associated with it.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => handleDeleteEvent()}
-                            >
-                              Delete
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </>
+  return isAuthenticated ? (
+    <>
+      <div className="absolute top-0 w-full h-auto bg-black text-white py-[8rem] px-4 flex flex-col">
+        <div className="flex flex-col justify-center items-center gap-4">
+          <h1 className="text-3xl font-bold text-center my-10">
+            Edit Your Events
+          </h1>
+          {successMessage && (
+            <div className="mb-4 p-4 bg-green-500 text-white rounded">
+              {successMessage}
+            </div>
           )}
+          <div className="grid gap-6">
+            {loading ? (
+              <Loading />
+            ) : (
+              <>
+                {events.map((event) => (
+                  <Card key={event.id} className="bg-black">
+                    <CardHeader>
+                      <CardTitle>{event.event_title}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="mb-4">{event.event_description}</p>
+                      <div className="flex space-x-4">
+                        <Button variant="outline">
+                          <Link href={`/update-event?eventId=${event.id}`}>
+                            Edit Event
+                          </Link>
+                        </Button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              variant="outline"
+                              onClick={() => setDeleteEventId(event.id)}
+                            >
+                              Delete Event
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent className="bg-black text-white p-4">
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                Are you absolutely sure?
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This action cannot be undone. This will
+                                permanently delete your event and remove all
+                                data associated with it.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => handleDeleteEvent()}
+                              >
+                                Delete
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
+  ) : (
+    router.push("/unauthorized")
   );
 }

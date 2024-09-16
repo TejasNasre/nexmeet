@@ -4,16 +4,21 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { supabase } from "../../../../utils/supabase";
+import Loading from "@/components/loading";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
 function Registerevent() {
+  const params = useParams();
+  const { registerId } = params;
+
   const router = useRouter();
+  const { isAuthenticated, isLoading } = useKindeBrowserClient();
+
   const [loading, setLoading]: any = useState(true);
   const [eventDetails, setEventDetails]: any = useState([]);
   const [submit, setSubmit]: any = useState(null);
-  const params = useParams();
-  const { registerId } = params;
 
   useEffect(() => {
     async function fetchEventDetails() {
@@ -65,7 +70,11 @@ function Registerevent() {
     router.push(`/dashboard`);
   };
 
-  return (
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  return isAuthenticated ? (
     <>
       <div className="absolute top-0 w-full h-auto bg-black text-white py-[8rem] px-[2rem] flex flex-col justify-center items-center">
         <form
@@ -130,6 +139,8 @@ function Registerevent() {
         </form>
       </div>
     </>
+  ) : (
+    router.push("/unauthorized")
   );
 }
 

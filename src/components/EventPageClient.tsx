@@ -8,8 +8,8 @@ import { Badge } from "./ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { userAuth } from "../action/auth";
 import { userDetails } from "../action/userDetails";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
 import {
   TwitterShareButton,
@@ -20,9 +20,10 @@ import {
 
 const EventPageClient = ({ eventsId }: { eventsId: string }) => {
   const router = useRouter();
+  const { isAuthenticated } = useKindeBrowserClient();
+
   const [eventData, setEventData]: any = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser]: any = useState(null);
   const [userData, setUserData]: any = useState([]);
 
   useEffect(() => {
@@ -46,17 +47,13 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
   }, [eventsId]);
 
   useEffect(() => {
-    userAuth().then((res) => {
-      setUser(res);
-    });
-
     userDetails().then((res: any) => {
       setUserData(res);
     });
   }, []);
 
   async function isUser() {
-    if (!user) {
+    if (!isAuthenticated) {
       router.push("/unauthorized");
     } else {
       router.push(`/register-event/${eventsId}`);
@@ -180,8 +177,8 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                   <Button
                     variant="outline"
                     className="w-full"
-                    onClick={() => isUser()}
                     disabled={isRegistered}
+                    onClick={isUser}
                   >
                     {isRegistered
                       ? "Registered Waiting For Approval"

@@ -10,35 +10,23 @@ import { userDetails } from "../../../action/userDetails";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Loading from "@/components/loading";
-import { userAuth } from "../../../action/auth";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
 export default function AddEvent() {
-  const [isUser, setIsUser] = useState(false);
+  const router = useRouter();
+  const { isAuthenticated, isLoading } = useKindeBrowserClient();
+
   const [user, setUser]: any = useState(null);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [isPending, startTransition] = useTransition();
   const [isError, setIsError] = useState("");
-  const [loading, setLoading] = useState(true);
   const imageInputRef = useRef<HTMLInputElement>(null);
-
-  const router = useRouter();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-
-  useEffect(() => {
-    userAuth().then((res) => {
-      if (!res) {
-        router.replace("/unauthorized");
-      } else {
-        setIsUser(res);
-        setLoading(false);
-      }
-    });
-  }, [router]);
 
   useEffect(() => {
     userDetails()
@@ -140,11 +128,11 @@ export default function AddEvent() {
     });
   };
 
-  if (loading) {
+  if (isLoading) {
     return <Loading />;
   }
 
-  return (
+  return isAuthenticated ? (
     <>
       <div className="absolute top-0 w-full h-auto bg-black text-white py-[8rem] px-[2rem] flex flex-col justify-center items-center">
         <form
@@ -387,5 +375,7 @@ export default function AddEvent() {
         </form>
       </div>
     </>
+  ) : (
+    router.push("/unauthorized")
   );
 }

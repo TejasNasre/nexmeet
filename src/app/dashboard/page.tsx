@@ -15,7 +15,7 @@ import Organisedevent from "@/components/Organisedevent";
 import Participatedevent from "@/components/Participatedevent";
 import { supabase } from "@/utils/supabase";
 import { useRouter } from "next/navigation";
-import { userAuth } from "../../action/auth";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
 import {
   ResponsiveContainer,
@@ -44,29 +44,15 @@ interface User {
   picture: string;
   email: string;
 }
-type Event = {
-  id: string;
-  event_title: string;
-  organizer_email: string;
-};
+
 export default function Page() {
   const router = useRouter();
-  const [isUser, setIsUser] = useState(false);
+  const { isAuthenticated, isLoading } = useKindeBrowserClient();
+
   const [activeTab, setActiveTab] = useState("organized");
   const [organisedEvent, setOrganisedEvent]: any = useState([]);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    userAuth().then((res) => {
-      if (!res) {
-        router.replace("/unauthorized");
-      } else {
-        setIsUser(res);
-        setLoading(false);
-      }
-    });
-  }, [router]);
 
   useEffect(() => {
     userDetails()
@@ -130,11 +116,11 @@ export default function Page() {
     return null;
   };
 
-  if (loading) {
+  if (isLoading) {
     return <Loading />;
   }
 
-  return (
+  return isAuthenticated ? (
     <>
       <div className="absolute top-0 w-full h-auto bg-black text-white py-[8rem] flex flex-col">
         <main className="flex-grow container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8">
@@ -308,5 +294,7 @@ export default function Page() {
         </div>
       </div>
     </>
+  ) : (
+    router.push("/unauthorized")
   );
 }
