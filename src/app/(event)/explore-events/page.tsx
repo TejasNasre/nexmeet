@@ -97,7 +97,11 @@ const Page: React.FC = () => {
 
   return (
     <>
-      <div className="absolute top-0 w-full h-auto bg-black text-white py-[8rem] px-4">
+      <div
+        className={`absolute top-0 w-full h-auto bg-black text-white py-[8rem] ${
+          loading ? `px-0` : `px-4`
+        }`}
+      >
         <div className="text-center my-10 text-4xl font-bold">
           Explore Events
         </div>
