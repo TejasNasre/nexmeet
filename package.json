@@ -5,9 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "prepare": "husky install"
+    "start": "next start"
   },
   "dependencies": {
     "@kinde-oss/kinde-auth-nextjs": "^2.3.6",
@@ -57,7 +55,6 @@
     "eslint-config-next": "14.2.5",
     "eslint-plugin-react": "^7.37.0",
     "globals": "^15.9.0",
-    "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
     "postcss": "^8",
     "prettier": "3.3.3",
