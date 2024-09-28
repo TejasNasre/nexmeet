@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@kinde-oss/kinde-auth-nextjs": "^2.3.6",
@@ -39,21 +40,29 @@
     "react-intersection-observer": "^9.13.1",
     "react-share": "^5.1.0",
     "recharts": "^2.13.0-alpha.5",
+    "resend": "^4.0.0",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^10.0.0",
     "zustand": "^4.5.5"
   },
   "devDependencies": {
+    "@eslint/js": "^9.11.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/uuid": "^10.0.0",
     "daisyui": "^4.12.10",
-    "eslint": "^8",
+    "eslint": "^8.57.1",
     "eslint-config-next": "14.2.5",
+    "eslint-plugin-react": "^7.37.0",
+    "globals": "^15.9.0",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
     "postcss": "^8",
+    "prettier": "3.3.3",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "typescript": "^5",
+    "typescript-eslint": "^8.7.0"
   }
 }
