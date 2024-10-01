@@ -47,7 +47,7 @@ const Hero: React.FC = () => {
 
   return (
     <>
-      <div className="absolute top-0 h-[100vh] w-full bg-black text-white">
+      <div className="flex flex-col min-h-screen bg-black text-white">
         <BackgroundBeamsWithCollision>
           <div className="flex flex-col justify-center items-center gap-12">
             <h2 className="text-2xl relative z-20 md:text-4xl lg:text-7xl font-bold text-center text-white dark:text-white font-sans tracking-tight">
