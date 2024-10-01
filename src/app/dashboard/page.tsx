@@ -37,6 +37,7 @@ export default function Page() {
   useEffect(() => {
     userDetails()
       .then((res: any) => {
+        // console.log(res);
         setUser(res);
         setLoading(false);
       })
@@ -83,7 +84,7 @@ export default function Page() {
             ) : user ? (
               <div className="flex flex-col justify-center items-center gap-4">
                 <Image
-                  src={user.picture}
+                  src={user.picture || "/profile.jpg"}
                   alt={`${user.given_name} ${user.family_name}`}
                   width={96}
                   height={96}
