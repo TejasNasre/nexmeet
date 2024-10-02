@@ -301,7 +301,7 @@ const Hero: React.FC = () => {
               </summary>
 
               <p className="mt-4 leading-relaxed text-justify text-white">
-                Browse events on the "Explore Events" tab, click "Register," and fill in the details to sign up.
+                Browse events on the &quot;Explore Events&quot; tab, click &quot;Register,&quot; and fill in the details to sign up.
                 Now, all you have to do is show up and have fun!
               </p>
             </details>
@@ -347,7 +347,7 @@ const Hero: React.FC = () => {
               </summary>
 
               <p className="mt-4 leading-relaxed text-justify text-white"> 
-                Sign in, go to your profile, and view all your registered events under "Your Events."
+                Sign in, go to your profile, and view all your registered events under &quot;Your Events.&quot;
               </p>
             </details>
 
@@ -392,7 +392,7 @@ const Hero: React.FC = () => {
               </summary>
 
               <p className="mt-4 leading-relaxed text-justify text-white"> 
-                Yes, go to your profile, click "Organize Your Own Event," and fill in the details.
+                Yes, go to your profile, click &quot;Organize Your Own Event,&quot; and fill in the details.
                 You are ready to go!
               </p>
             </details>
@@ -438,7 +438,7 @@ const Hero: React.FC = () => {
               </summary>
 
               <p className="mt-4 leading-relaxed text-justify text-white"> 
-              Go to "Your Events" in Profile, select the event, and click "Cancel Registration."
+              Go to &quot;Your Events&quot; in Profile, select the event, and click &quot;Cancel Registration&quot;
               </p>
             </details>
 
@@ -483,7 +483,7 @@ const Hero: React.FC = () => {
               </summary>
 
               <p className="mt-4 leading-relaxed text-justify text-white"> 
-                Yes! You can update your event details anytime using "Manage your Events" in Profile section.
+                Yes! You can update your event details anytime using &quot;Manage your Events&quot; in Profile section.
               </p>
             </details>
 
