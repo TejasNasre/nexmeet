@@ -10,15 +10,17 @@ const mono = DM_Mono({
   variable: "--font-dm_mono",
 });
 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://nexmeet-lake.vercel.app'; 
+
 export const metadata: Metadata = {
   title: "NexMeet",
   description: "Make Your Events Memorable With NexMeet",
-  metadataBase: new URL(`${process.env.NEXT_PUBLIC_BASE_URL}`), 
+  metadataBase: new URL(baseUrl), 
   keywords: "events, NexMeet, memorable events, networking, event management", 
   openGraph: {
     title: "NexMeet - Make Your Events Memorable",
     description: "Join events, connect with people, and make memories with NexMeet.",
-    url: `${process.env.NEXT_PUBLIC_BASE_URL}`,
+    url: baseUrl,
     images: [
       {
         url: "https://jzhgfowuznosxtwzkbkx.supabase.co/storage/v1/object/public/event_image/_Black_And_Yellow_Modern_Event_Producer_Initial_Logo-removebg-preview.png",
@@ -57,7 +59,7 @@ export default function RootLayout({
         <meta name="keywords" content="events, NexMeet, memorable events, networking, event management" />
         <meta property="og:title" content="NexMeet - Make Your Events Memorable" />
         <meta property="og:description" content="Join events, connect with people, and make memories with NexMeet." />
-        <meta property="og:url" content={process.env.NEXT_PUBLIC_BASE_URL} />
+        <meta property="og:url" content={baseUrl} />
         <meta property="og:image" content="https://jzhgfowuznosxtwzkbkx.supabase.co/storage/v1/object/public/event_image/_Black_And_Yellow_Modern_Event_Producer_Initial_Logo-removebg-preview.png" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="NexMeet" />
