@@ -4,7 +4,7 @@ import React from "react";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="w-full bg-transparent text-white py-10 px-4 md:px-10 z-[999]">
+    <footer className="w-full bg-black text-white py-10 px-4 md:px-10 z-[999]">
       <div className="container mx-auto flex flex-col gap-8 md:flex-row justify-between items-center">
         <div className="text-center md:text-left">
           <h2 className="text-2xl font-bold text-white">Nexmeet</h2>
@@ -13,21 +13,21 @@ const Footer: React.FC = () => {
 
         <div className="flex justify-center md:justify-end gap-6">
           <Link
-            href="https://twitter.com"
+            href="/"
             target="_blank"
             className="transition hover:scale-110 hover:text-blue-500"
           >
             <IoLogoTwitter className="h-6 w-6 text-white" />
           </Link>
           <Link
-            href="https://github.com"
+            href="https://github.com/TejasNasre/nexmeet"
             target="_blank"
             className="transition hover:scale-110 hover:text-blue-500"
           >
             <IoLogoGithub className="h-6 w-6 text-white" />
           </Link>
           <Link
-            href="https://linkedin.com"
+            href="/"
             target="_blank"
             className="transition hover:scale-110 hover:text-blue-500"
           >
