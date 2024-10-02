@@ -56,7 +56,7 @@ const EventPage = () => {
 
   return (
     <>
-      <div className="absolute top-0 w-full h-auto bg-black text-white py-[8rem] px-[1rem] md:px-[2rem]">
+      <div className="  w-full h-auto bg-black text-white py-[8rem] px-[1rem] md:px-[2rem]">
         {spaceData.map((space: any) => (
           <div
             className="flex flex-wrap justify-center items-center"

@@ -167,7 +167,7 @@ export default function EditEvent() {
         </>
       ) : (
         <>
-          <div className="absolute top-0 w-full h-auto bg-black text-white py-[8rem] px-4 flex flex-col">
+          <div className="  w-full h-auto bg-black text-white py-[8rem] px-4 flex flex-col">
             <div className="flex flex-col justify-center items-center gap-4">
               <h1 className="text-3xl font-bold text-center my-10">
                 Edit Your Events

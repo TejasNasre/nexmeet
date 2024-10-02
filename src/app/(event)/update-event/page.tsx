@@ -136,7 +136,7 @@ export default function UpdateEvent() {
 
   return isAuthenticated ? (
     <>
-      <div className="absolute top-0 w-full h-auto bg-black text-white py-[8rem] px-[2rem] flex flex-col justify-center items-center">
+      <div className="  w-full h-auto bg-black text-white py-[8rem] px-[2rem] flex flex-col justify-center items-center">
         <form
           onSubmit={handleUpdateEvent}
           className="w-full flex flex-col flex-wrap gap-10 md:w-2/3"

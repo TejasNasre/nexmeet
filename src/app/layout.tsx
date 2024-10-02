@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DM_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const mono = DM_Mono({
   subsets: ["latin"],
@@ -45,8 +46,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body suppressHydrationWarning={true} className={mono.className}>
-        <Header />
-        <main>{children}</main>
+
+          <Header />
+          <main>{children}</main>
+          <Footer />
+        
+
       </body>
     </html>
   );
