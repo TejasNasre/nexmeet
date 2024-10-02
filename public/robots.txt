@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://nexmeet-lake.vercel.app/sitemap.xml
