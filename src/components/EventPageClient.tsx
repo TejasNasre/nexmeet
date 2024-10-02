@@ -83,7 +83,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
 
   return (
     <>
-      <div className="absolute top-0 w-full h-auto bg-black text-white py-[5rem] md:py-[8rem] px-[1rem] md:px-[2rem]">
+      <div className="  w-full h-auto bg-black text-white py-[5rem] md:py-[8rem] px-[1rem] md:px-[2rem]">
         {eventData.map((event: any) => (
           <div
             className="flex flex-wrap justify-center items-center"

@@ -98,7 +98,7 @@ const Page: React.FC = () => {
   return (
     <>
       <div
-        className={`absolute top-0 w-full h-auto bg-black text-white py-[8rem] ${
+        className={`  w-full h-auto bg-black text-white py-[8rem] ${
           loading ? `px-0` : `px-4`
         }`}
       >

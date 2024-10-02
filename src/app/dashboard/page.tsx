@@ -75,7 +75,7 @@ export default function Page() {
 
   return isAuthenticated ? (
     <>
-      <div className="absolute top-0 w-full h-auto bg-black text-white py-[8rem] flex flex-col">
+      <div className="  w-full h-auto bg-black text-white py-[8rem] flex flex-col">
         <main className="flex-grow container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8">
           <div className="flex flex-col justify-start items-center gap-24 md:border md:border-white rounded-md p-10">
             <h1 className="text-center text-4xl font-bold">Your Profile</h1>

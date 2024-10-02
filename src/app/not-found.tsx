@@ -3,7 +3,7 @@ import { Ticket, Users, ArrowLeft } from "lucide-react";
 
 export default function Custom404() {
   return (
-    <div className="absolute top-0 w-full h-auto bg-black text-white py-[8rem] px-[1rem] flex flex-col justify-center items-center">
+    <div className="  w-full h-auto bg-black text-white py-[8rem] px-[1rem] flex flex-col justify-center items-center">
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-purple-500 rounded-full blur-[128px] opacity-20 animate-pulse"></div>
         <div className="absolute left-1/4 top-1/4 w-[400px] h-[400px] bg-pink-500 rounded-full blur-[96px] opacity-20 animate-pulse"></div>
@@ -27,8 +27,8 @@ export default function Custom404() {
             Oops! This event seems to have vanished into thin air!
           </p>
           <p className="text-sm text-gray-400 mb-8 text-center">
-            Don&apos;t worry, there are plenty of other exciting events waiting for
-            you. Let&apos;s find you a great one!
+            Don&apos;t worry, there are plenty of other exciting events waiting
+            for you. Let&apos;s find you a great one!
           </p>
           <Link
             href="/"

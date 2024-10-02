@@ -112,7 +112,7 @@ function Page({ params }: { params: { id: any } }) {
       {loading ? (
         <Loading />
       ) : (
-        <div className="absolute top-0 w-full min-h-screen bg-black text-white py-[8rem] px-0 md:px-8 flex flex-col gap-10">
+        <div className="  w-full min-h-screen bg-black text-white py-[8rem] px-0 md:px-8 flex flex-col gap-10">
           <h1 className="text-3xl font-bold text-center mb-6">
             Participant Details
           </h1>
