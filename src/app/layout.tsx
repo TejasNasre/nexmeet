@@ -10,15 +10,17 @@ const mono = DM_Mono({
   variable: "--font-dm_mono",
 });
 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://nexmeet-lake.vercel.app'; 
+
 export const metadata: Metadata = {
   title: "NexMeet",
   description: "Make Your Events Memorable With NexMeet",
-  metadataBase: new URL(`${process.env.NEXT_PUBLIC_BASE_URL}`), // Base Url
+  metadataBase: new URL(baseUrl), 
+  keywords: "events, NexMeet, memorable events, networking, event management", 
   openGraph: {
     title: "NexMeet - Make Your Events Memorable",
-    description:
-      "Join events, connect with people, and make memories with NexMeet.",
-    url: `${process.env.NEXT_PUBLIC_BASE_URL}`,
+    description: "Join events, connect with people, and make memories with NexMeet.",
+    url: baseUrl,
     images: [
       {
         url: "https://jzhgfowuznosxtwzkbkx.supabase.co/storage/v1/object/public/event_image/_Black_And_Yellow_Modern_Event_Producer_Initial_Logo-removebg-preview.png",
@@ -36,6 +38,10 @@ export const metadata: Metadata = {
       "https://jzhgfowuznosxtwzkbkx.supabase.co/storage/v1/object/public/event_image/_Black_And_Yellow_Modern_Event_Producer_Initial_Logo-removebg-preview.png",
     ],
   },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
@@ -45,13 +51,26 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <meta charSet="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="robots" content="index, follow" />
+        <meta name="description" content="Make Your Events Memorable With NexMeet" />
+        <meta name="keywords" content="events, NexMeet, memorable events, networking, event management" />
+        <meta property="og:title" content="NexMeet - Make Your Events Memorable" />
+        <meta property="og:description" content="Join events, connect with people, and make memories with NexMeet." />
+        <meta property="og:url" content={baseUrl} />
+        <meta property="og:image" content="https://jzhgfowuznosxtwzkbkx.supabase.co/storage/v1/object/public/event_image/_Black_And_Yellow_Modern_Event_Producer_Initial_Logo-removebg-preview.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="NexMeet" />
+        <meta name="twitter:description" content="Make Your Events Memorable With NexMeet" />
+        <meta name="twitter:image" content="https://jzhgfowuznosxtwzkbkx.supabase.co/storage/v1/object/public/event_image/_Black_And_Yellow_Modern_Event_Producer_Initial_Logo-removebg-preview.png" />
+        <title>NexMeet</title>
+      </head>
       <body suppressHydrationWarning={true} className={mono.className}>
-
-          <Header />
-          <main>{children}</main>
-          <Footer />
-        
-
+        <Header />
+        <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );
