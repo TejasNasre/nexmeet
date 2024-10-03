@@ -25,6 +25,7 @@ import { parseISO, format } from "date-fns";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { useRouter } from "next/navigation";
 import Loading from "@/components/loading";
+import { toast } from "sonner";
 
 function Page({ params }: { params: { id: any } }) {
   const router = useRouter();
@@ -44,6 +45,7 @@ function Page({ params }: { params: { id: any } }) {
 
       if (error) {
         console.log(error);
+        toast.error("Failed to fetch participants. Please try again.");
       } else {
         setParticipants(event_participants || []);
         processChartData(event_participants ?? []);
@@ -94,7 +96,7 @@ function Page({ params }: { params: { id: any } }) {
   }> = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700">
+        <div className="p-4 bg-gray-800 border border-gray-700 rounded-lg shadow-md">
           <p className="text-sm font-semibold text-gray-300">{`Date: ${label}`}</p>
           <p className="text-sm text-cyan-400">{`Participants: ${payload[0].value}`}</p>
         </div>
@@ -113,12 +115,12 @@ function Page({ params }: { params: { id: any } }) {
         <Loading />
       ) : (
         <div className="  w-full min-h-screen bg-black text-white py-[8rem] px-0 md:px-8 flex flex-col gap-10">
-          <h1 className="text-3xl font-bold text-center mb-6">
+          <h1 className="mb-6 text-3xl font-bold text-center">
             Participant Details
           </h1>
 
           <div className="w-full h-auto mb-8">
-            <h2 className="text-2xl font-bold mb-4 text-center text-cyan-400">
+            <h2 className="mb-4 text-2xl font-bold text-center text-cyan-400">
               Participant Growth Over Time
             </h2>
             <ResponsiveContainer width="100%" height={400}>
@@ -187,10 +189,10 @@ function Page({ params }: { params: { id: any } }) {
           </div>
 
           <div className="px-8">
-            <label className="flex items-center gap-2 bg-black border border-white w-full rounded-md px-4">
+            <label className="flex items-center w-full gap-2 px-4 bg-black border border-white rounded-md">
               <input
                 type="text"
-                className="bg-black text-white w-full p-2 rounded-md border-0 outline-none"
+                className="w-full p-2 text-white bg-black border-0 rounded-md outline-none"
                 placeholder="Search by name or email"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -199,7 +201,7 @@ function Page({ params }: { params: { id: any } }) {
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 16 16"
                 fill="currentColor"
-                className="h-4 w-4 opacity-70 text-white"
+                className="w-4 h-4 text-white opacity-70"
               >
                 <path
                   fillRule="evenodd"
@@ -211,7 +213,7 @@ function Page({ params }: { params: { id: any } }) {
           </div>
 
           <div className="px-8">
-            <div className="rounded-lg border h-full border-white overflow-auto">
+            <div className="h-full overflow-auto border border-white rounded-lg">
               <ScrollArea className="h-full overflow-auto">
                 <Table className="min-w-full">
                   <TableHeader>

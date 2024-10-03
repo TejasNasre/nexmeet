@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import Loading from "@/components/loading";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { toast } from "sonner";
 
 interface Event {
   id: string;
@@ -104,6 +105,7 @@ export default function UpdateEvent() {
       !event.event_category
     ) {
       setErrorMessage("Please fill out all required fields.");
+      toast.error("Please fill out all required fields.");
       return;
     }
 
@@ -121,8 +123,10 @@ export default function UpdateEvent() {
 
     if (error) {
       console.error("Error updating event:", error);
+      toast.error("Error updating event. Please try again.")
     } else {
       setSuccessMessage("Event updated successfully.");
+      toast.success("Event updated successfully!");
       setTimeout(() => {
         setSuccessMessage(null);
         router.push("/edit-event");
@@ -139,24 +143,24 @@ export default function UpdateEvent() {
       <div className="  w-full h-auto bg-black text-white py-[8rem] px-[2rem] flex flex-col justify-center items-center">
         <form
           onSubmit={handleUpdateEvent}
-          className="w-full flex flex-col flex-wrap gap-10 md:w-2/3"
+          className="flex flex-col flex-wrap w-full gap-10 md:w-2/3"
         >
-          <h1 className="text-2xl md:text-4xl font-extrabold text-center">
+          <h1 className="text-2xl font-extrabold text-center md:text-4xl">
             Update Event
           </h1>
           {successMessage && (
-            <div className="mb-4 p-4 bg-green-500 text-white rounded">
+            <div className="p-4 mb-4 text-white bg-green-500 rounded">
               {successMessage}
             </div>
           )}
           {errorMessage && (
-            <div className="mb-4 p-4 bg-red-500 text-white rounded">
+            <div className="p-4 mb-4 text-white bg-red-500 rounded">
               {errorMessage}
             </div>
           )}
           {event && (
             <>
-              <div className="w-full flex flex-col gap-2">
+              <div className="flex flex-col w-full gap-2">
                 <label htmlFor="event_title">Event Title: </label>
                 <input
                   required
@@ -166,10 +170,10 @@ export default function UpdateEvent() {
                   onChange={(e) =>
                     setEvent({ ...event, event_title: e.target.value })
                   }
-                  className="w-full border border-white p-2 rounded-md bg-black text-white"
+                  className="w-full p-2 text-white bg-black border border-white rounded-md"
                 />
               </div>
-              <div className="w-full flex flex-col gap-2">
+              <div className="flex flex-col w-full gap-2">
                 <label htmlFor="event_description">Event Description: </label>
                 <textarea
                   required
@@ -180,10 +184,10 @@ export default function UpdateEvent() {
                   onChange={(e) =>
                     setEvent({ ...event, event_description: e.target.value })
                   }
-                  className="w-full border border-white p-2 rounded-md bg-black text-white"
+                  className="w-full p-2 text-white bg-black border border-white rounded-md"
                 />
               </div>
-              <div className="w-full flex flex-col gap-2">
+              <div className="flex flex-col w-full gap-2">
                 <label htmlFor="event_location">Event Location: </label>
                 <input
                   required
@@ -193,10 +197,10 @@ export default function UpdateEvent() {
                   onChange={(e) =>
                     setEvent({ ...event, event_location: e.target.value })
                   }
-                  className="w-full border border-white p-2 rounded-md bg-black text-white"
+                  className="w-full p-2 text-white bg-black border border-white rounded-md"
                 />
               </div>
-              <div className="w-full flex flex-col gap-2">
+              <div className="flex flex-col w-full gap-2">
                 <label htmlFor="event_registration_startdate">
                   Event Registration Start Date:{" "}
                 </label>
@@ -211,10 +215,10 @@ export default function UpdateEvent() {
                       event_registration_startdate: e.target.value,
                     })
                   }
-                  className="w-full border border-white p-2 rounded-md bg-black text-white"
+                  className="w-full p-2 text-white bg-black border border-white rounded-md"
                 />
               </div>
-              <div className="w-full flex flex-col gap-2">
+              <div className="flex flex-col w-full gap-2">
                 <label htmlFor="event_registration_enddate">
                   Event Registration End Date:{" "}
                 </label>
@@ -229,10 +233,10 @@ export default function UpdateEvent() {
                       event_registration_enddate: e.target.value,
                     })
                   }
-                  className="w-full border border-white p-2 rounded-md bg-black text-white"
+                  className="w-full p-2 text-white bg-black border border-white rounded-md"
                 />
               </div>
-              <div className="w-full flex flex-col gap-2">
+              <div className="flex flex-col w-full gap-2">
                 <label htmlFor="event_startdate">Event Start Date: </label>
                 <input
                   required
@@ -242,10 +246,10 @@ export default function UpdateEvent() {
                   onChange={(e) =>
                     setEvent({ ...event, event_startdate: e.target.value })
                   }
-                  className="w-full border border-white p-2 rounded-md bg-black text-white"
+                  className="w-full p-2 text-white bg-black border border-white rounded-md"
                 />
               </div>
-              <div className="w-full flex flex-col gap-2">
+              <div className="flex flex-col w-full gap-2">
                 <label htmlFor="event_enddate">Event End Date: </label>
                 <input
                   required
@@ -255,10 +259,10 @@ export default function UpdateEvent() {
                   onChange={(e) =>
                     setEvent({ ...event, event_enddate: e.target.value })
                   }
-                  className="w-full border border-white p-2 rounded-md bg-black text-white"
+                  className="w-full p-2 text-white bg-black border border-white rounded-md"
                 />
               </div>
-              <div className="w-full flex flex-col gap-2">
+              <div className="flex flex-col w-full gap-2">
                 <label htmlFor="event_duration">
                   Event Duration(In hours):{" "}
                 </label>
@@ -270,10 +274,10 @@ export default function UpdateEvent() {
                   onChange={(e) =>
                     setEvent({ ...event, event_duration: e.target.value })
                   }
-                  className="w-full border border-white p-2 rounded-md bg-black text-white"
+                  className="w-full p-2 text-white bg-black border border-white rounded-md"
                 />
               </div>
-              <div className="w-full flex flex-col gap-2">
+              <div className="flex flex-col w-full gap-2">
                 <label htmlFor="team_size">Event Team Size: </label>
                 <input
                   required
@@ -283,10 +287,10 @@ export default function UpdateEvent() {
                   onChange={(e) =>
                     setEvent({ ...event, team_size: e.target.value })
                   }
-                  className="w-full border border-white p-2 rounded-md bg-black text-white"
+                  className="w-full p-2 text-white bg-black border border-white rounded-md"
                 />
               </div>
-              <div className="w-full flex flex-col gap-2">
+              <div className="flex flex-col w-full gap-2">
                 <label htmlFor="event_formlink">Event Form Link: </label>
                 <input
                   required
@@ -296,10 +300,10 @@ export default function UpdateEvent() {
                   onChange={(e) =>
                     setEvent({ ...event, event_formlink: e.target.value })
                   }
-                  className="w-full border border-white p-2 rounded-md bg-black text-white"
+                  className="w-full p-2 text-white bg-black border border-white rounded-md"
                 />
               </div>
-              <div className="w-full flex flex-col gap-2">
+              <div className="flex flex-col w-full gap-2">
                 <label htmlFor="event_price">Event Price: </label>
                 <input
                   required
@@ -309,11 +313,11 @@ export default function UpdateEvent() {
                   onChange={(e) =>
                     setEvent({ ...event, event_price: e.target.value })
                   }
-                  className="w-full border border-white p-2 rounded-md bg-black text-white"
+                  className="w-full p-2 text-white bg-black border border-white rounded-md"
                 />
                 <p>If Free Enter 0</p>
               </div>
-              <div className="w-full flex flex-col gap-2">
+              <div className="flex flex-col w-full gap-2">
                 <label htmlFor="organizer_name">
                   Event Organizer / Organization Name:{" "}
                 </label>
@@ -325,10 +329,10 @@ export default function UpdateEvent() {
                   onChange={(e) =>
                     setEvent({ ...event, organizer_name: e.target.value })
                   }
-                  className="w-full border border-white p-2 rounded-md bg-black text-white"
+                  className="w-full p-2 text-white bg-black border border-white rounded-md"
                 />
               </div>
-              <div className="w-full flex flex-col gap-2">
+              <div className="flex flex-col w-full gap-2">
                 <label htmlFor="organizer_contact">
                   {" "}
                   Event Organizer / Organization Contact:{" "}
@@ -340,10 +344,10 @@ export default function UpdateEvent() {
                   onChange={(e) =>
                     setEvent({ ...event, organizer_contact: e.target.value })
                   }
-                  className="w-full border border-white p-2 rounded-md bg-black text-white"
+                  className="w-full p-2 text-white bg-black border border-white rounded-md"
                 />
               </div>
-              <div className="w-full flex flex-col gap-2">
+              <div className="flex flex-col w-full gap-2">
                 <label htmlFor="event_category">Event Category: </label>
                 <select
                   required
@@ -351,7 +355,7 @@ export default function UpdateEvent() {
                   onChange={(e) =>
                     setEvent({ ...event, event_category: e.target.value })
                   }
-                  className="w-full border border-white p-2 rounded-md bg-black text-white"
+                  className="w-full p-2 text-white bg-black border border-white rounded-md"
                 >
                   <option value="technical">technical</option>
                   <option value="sports">sports</option>
@@ -360,7 +364,7 @@ export default function UpdateEvent() {
                   <option value="conference">conference</option>
                 </select>
               </div>
-              <div className="w-full flex flex-col gap-2">
+              <div className="flex flex-col w-full gap-2">
                 <label htmlFor="event_tags">Event Tags: </label>
                 <input
                   required
@@ -373,10 +377,10 @@ export default function UpdateEvent() {
                       event_tags: e.target.value.split(","),
                     })
                   }
-                  className="w-full border border-white p-2 rounded-md bg-black text-white"
+                  className="w-full p-2 text-white bg-black border border-white rounded-md"
                 />
               </div>
-              <div className="w-full flex flex-col gap-2">
+              <div className="flex flex-col w-full gap-2">
                 <label htmlFor="event_social_links">Event Social Links: </label>
                 <input
                   required
@@ -389,14 +393,14 @@ export default function UpdateEvent() {
                       event_social_links: e.target.value.split(","),
                     })
                   }
-                  className="w-full border border-white p-2 rounded-md bg-black text-white"
+                  className="w-full p-2 text-white bg-black border border-white rounded-md"
                 />
               </div>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button
                     variant="destructive"
-                    className="bg-blue-500 text-white p-2 rounded-md"
+                    className="p-2 text-white bg-blue-500 rounded-md"
                   >
                     Update Event
                   </Button>
