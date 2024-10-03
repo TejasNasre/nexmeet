@@ -141,7 +141,7 @@ Follow these steps to set up NexMeet your local machine:
 
 Contributions are welcome! Please open an issue or submit a pull request if you would like to help improve the project.
 
-> NOTE 1: Please abide by the [Contributing Guidelines]().
+> NOTE 1: Please abide by the [Contributing Guidelines](https://github.com/TejasNasre/nexmeet/blob/main/CONTRIBUTING.md).
 
 > NOTE 2: Please abide by the [Code of Conduct](https://github.com/TejasNasre/nexmeet/blob/main/CODE_OF_CONDUCT.md).
 

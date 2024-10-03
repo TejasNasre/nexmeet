@@ -42,10 +42,10 @@ NEXT_PUBLIC_BASE_URL=http://localhost:3000
 - Go To Your [Supabase Dashboard](https://supabase.com/dashboard).
 - Select Your Project.
 - Navigate To The `SQL Editor` Tab In The Sidebar.
-  <img width="1366" alt="SQL QUERY" src="">
+  <img width="1366" alt="SQL QUERY" src="https://raw.githubusercontent.com/TejasNasre/nexmeet/refs/heads/main/public/sql%20editor.PNG">
 - Run The Following SQL Query:
 
-#### `Table For Event Details : `
+### `Table For Event Details : `
 
 ```sql
 create table
@@ -81,11 +81,11 @@ create table
 
 - Navigate To The `Storage` In The Sidebar Of Your Newly Created Project.
 - Now Go To `New Bucket` And Create A `Public Buckets` Named `event_images` And `event_space`.
-  <img width="1366" alt="NEW BUCKET" src="">
-  <img width="1366" alt="NEW BUCKET" src="">
+  <img width="1366" alt="STORAGE SETUP" src="https://raw.githubusercontent.com/TejasNasre/nexmeet/refs/heads/main/public/storage.PNG">
+  <img width="1366" alt="NEW BUCKET" src="https://raw.githubusercontent.com/TejasNasre/nexmeet/refs/heads/main/public/image%20setup.PNG">
 
 - Then Under The Buckets We Have `CONFIGURATION` Select `Policies` Make New Policy With `For Full Customization` For `event_images` And `event_space` With `all` Permissions.
-  <img width="1366" alt="BUCKET POLICIES" src="">
+  <img width="1366" alt="BUCKET POLICIES" src="https://raw.githubusercontent.com/TejasNasre/nexmeet/refs/heads/main/public/poilicy%20storage.PNG">
 
 ### `Table For Event Images : `
 
@@ -174,7 +174,7 @@ create table
 - This Will Create A Table Named `event_details`, `event_images`, `event_participants`, `event_space`, `event_space_img_vid`, `event_space_request`.
 
 - Navigate To The `Authentication` Tab In The Sidebar.
-  <img width="1366" alt="TABLE POILICY" src="">
+  <img width="1366" alt="TABLE POILICY" src="https://raw.githubusercontent.com/TejasNasre/nexmeet/refs/heads/main/public/policy%20setup.PNG">
 
 - Now Go To `Policies` Under `CONFIGURATION` Section.
 - Create Policy for `event_details`, `event_images`, `event_participants`, `event_space`, `event_space_img_vid`, `event_space_request` With `all` Permissions.
