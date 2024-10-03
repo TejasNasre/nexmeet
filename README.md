@@ -1,6 +1,6 @@
 <div align="center">
 
-# NexMeet Event Platform
+# `NexMeet Event Platform`
 
 <i>NexMeet is an open-source event platform where you can discover a wide range of events, from non-technical to technical. We cover it all! The best part is, we offer an easy-to-use event management system for organizers, and they can also find event spaces nearby.</i>
 
@@ -35,7 +35,7 @@
 
 <div align="center">
 
-## 💻 Tech Stack
+## 💻 `Tech Stack`
 
 ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)
 ![Shadcn UI](https://img.shields.io/badge/Shadcn%20UI-%23FF69B4?style=for-the-badge&logo=github&logoColor=white)
@@ -44,7 +44,7 @@
 
 </div>
 
-<!-- ## 🏆 Featured In
+## 🏆 `Featured In`
 
 <div align="center">
 
@@ -56,34 +56,24 @@
       <th>Event Description</th>
    </tr>
    <tr>
-      <td><img src=".github/assets/gssoc24.png" width="200" height="auto" loading="lazy" alt="GSSoC 24"/></td>
-      <td>GirlScript Summer of Code 2024</td>
-      <td>GirlScript Summer of Code is a three-month-long Open Source Program conducted every summer by GirlScript Foundation. It is an initiative to bring more beginners to Open-Source Software Development.</td>
+      <td><img src="https://gssoc.girlscript.tech/GS_logo_White.svg" width="200" height="auto" loading="lazy" alt="GSSoC-EXT"/></td>
+      <td>GirlScript Summer of Code EXT</td>
+      <td>GirlScript Summer of Code Extd is a 1-month long
+#OpenSource  program by GirlScript Foundation.
+1st Oct - 10th Nov 2024</td>
    </tr>
 
 </table>
 
-</div> -->
+</div>
 
-## Table of Contents
-
-- [Features](https://github.com/ashutosh-rath02/git-re?tab=readme-ov-file#features)
-- [Setup and Installation](https://github.com/ashutosh-rath02/git-re?tab=readme-ov-file#setup-and-installation)
-  - [Setup Supabase](https://github.com/ashutosh-rath02/git-re/blob/main/LEARN.md)
-- [Tech Used](https://github.com/ashutosh-rath02/git-re?tab=readme-ov-file#tech-used)
-- [Screenshots](https://github.com/ashutosh-rath02/git-re?tab=readme-ov-file#screenshot)
-- [Upcoming Features](https://github.com/ashutosh-rath02/git-re?tab=readme-ov-file#upcoming-features)
-- [Contributing](https://github.com/ashutosh-rath02/git-re?tab=readme-ov-file#contributing)
-- [License](https://github.com/ashutosh-rath02/git-re?tab=readme-ov-file#license)
-- [Contributors](https://github.com/ashutosh-rath02/git-re?tab=readme-ov-file#contributors)
-
-## Key Features
+## `Key Features`
 
 - Discover Events - Find a wide range of events from non-technical to technical
 - Event Management System - Organizers can easily manage their events
 - Event Spaces - Find event spaces nearby
 
-## Setup and Installation
+## `Setup and Installation`
 
 <!-- YOU CAN REFER TO THE FOLLOWING VIDEO FOR GUIDED SETUP :
 <video controls src="public/GIT-RE Project Setup.mp4" title="Git-re Setup and Installation Video"></video> -->
@@ -134,35 +124,40 @@ Follow these steps to set up NexMeet your local machine:
 6. **You're Good to Go:**
    - With the setup complete, you're ready to start exploring.
 
-## Upcoming Features🎉
+# `MAKE PR TO DEV BRANCH ONLY`
 
-- [] add events to the gogle calendar
-- [] add event reminders
-- [] add event notifications
-- [] add event feedback
-- [] add event likes
-- [] add event comments
-- [] add event chat
-- [] add event attendees
+## `Upcoming Features`🎉
 
-## Contributing
+- [ ] add events to the gogle calendar
+- [ ] add event reminders
+- [ ] add event notifications
+- [ ] add event feedback
+- [ ] add event likes
+- [ ] add event comments
+- [ ] add event chat
+- [ ] add event attendees
+
+## `Contributing`
 
 Contributions are welcome! Please open an issue or submit a pull request if you would like to help improve the project.
 
-> NOTE 1: Please abide by the [Contributing Guidelines](https://github.com/ashutosh-rath02/git-re/blob/master/CONTRIBUTING.md).
+> NOTE 1: Please abide by the [Contributing Guidelines]().
 
-> NOTE 2: Please abide by the [Code of Conduct](https://github.com/ashutosh-rath02/git-re/blob/master/CODE_OF_CONDUCT.md).
+> NOTE 2: Please abide by the [Code of Conduct](https://github.com/TejasNasre/nexmeet/blob/main/CODE_OF_CONDUCT.md).
 
 > NOTE 3: We follow the following [coventional commit types](https://github.com/pvdlg/conventional-commit-types)
 
-## License
+## `License`
 
 This project is licensed under the Apache 2.0 License & all rights reserved to author [TejasNasre](https://github.com/TejasNasre)
 
-## Contributors 🌟
+## `Contributors`💖
 
-Thanks goes to these wonderful people ✨✨:
+<div align = "center">
+ <h3>Thank you for being a part of this project!</h3>
 
-<a href="https://github.com/TejasNasre/nexmeet/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=TejasNasre/nexmeet" />
-</a>
+![Contributors](https://contrib.rocks/image?repo=TejasNasre/nexmeet)<br>
+
+</div>
+
+<p align="right">(<a href="#top">Back to top</a>)</p>
