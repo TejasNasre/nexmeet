@@ -49,7 +49,7 @@ function Header() {
         <Link href={"/"} className="mono text-2xl text-white">
         <Image
     src={Logo} 
-    alt="NavNeet Logo" 
+    alt="NexMeet Logo" 
     className="h-11 w-auto"
         />
         {/* NexMeet */}
