@@ -50,7 +50,7 @@ function Header() {
         <Image
     src={Logo} 
     alt="NexMeet Logo" 
-    className="h-11 w-auto"
+    className="h-8 w-auto"
         />
         {/* NexMeet */}
         </Link>
