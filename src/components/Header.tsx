@@ -8,6 +8,7 @@ import {
 } from "@kinde-oss/kinde-auth-nextjs/components";
 import { userDetails } from "../action/userDetails";
 import Image from "next/image";
+import Logo from "./images/nexmeet.png"
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
 interface User {
@@ -46,7 +47,12 @@ function Header() {
     <div className="absolute top-0 bg-transparent w-full z-[999] px-4 sm:px-8 py-4 sm:py-8">
       <div className="flex justify-between items-center">
         <Link href={"/"} className="mono text-2xl text-white">
-          NexMeet
+        <Image
+    src={Logo} 
+    alt="NexMeet Logo" 
+    className="h-8 w-auto"
+        />
+        {/* NexMeet */}
         </Link>
         {/* Hamburger Menu Button */}
         <button
