@@ -4,8 +4,8 @@ import React from "react";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="w-full bg-black text-white py-10 px-4 md:px-10 z-[999]">
-      <div className="container mx-auto flex flex-col gap-8 md:flex-row justify-between items-center">
+    <footer className="w-full  bg-black text-white py-10 px-4 md:px-10 z-[999]">
+      <div className="container mt-52 mx-auto flex flex-col gap-8 md:flex-row justify-between items-center">
         <div className="text-center md:text-left">
           <h2 className="text-2xl font-bold text-white">Nexmeet</h2>
           <p className="text-gray-400 mt-2">Your Next Meetup Platform</p>
