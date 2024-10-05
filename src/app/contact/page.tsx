@@ -31,7 +31,6 @@ function Page() {
           <textarea
             id="message"
             name="message"
-            rows="5"
             required
             className="w-full p-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:border-gray-500"
           ></textarea>
