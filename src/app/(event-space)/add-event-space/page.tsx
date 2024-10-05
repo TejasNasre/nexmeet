@@ -11,6 +11,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Loading from "@/components/loading";
 import { userAuth } from "@/action/auth";
+import { toast } from "sonner";
 
 export default function AddEvent() {
   const [isUser, setIsUser] = useState(false);
@@ -90,11 +91,13 @@ export default function AddEvent() {
 
     if (error) {
       console.error(error);
+      toast.error("Submission failed. Please try again.");
       return;
     }
 
     if (data.length === 0) {
       console.error("No data returned from the insert operation.");
+      toast.error("No data returned from the insert operation.");
       return;
     }
 
@@ -110,6 +113,7 @@ export default function AddEvent() {
 
         if (error) {
           console.error(error);
+          toast.error("Image upload failed.");
           return;
         }
 
@@ -125,7 +129,14 @@ export default function AddEvent() {
           },
         ])
         .select();
+      if (imageError) {
+        console.error(imageError);
+        toast.error("Failed to save images."); // Extra added
+        return;
+      }
+
       setImageUrls([]);
+      toast.success("Event space added successfully!"); // If it succeeds
       router.push(`/explore-event-space`);
     });
   };
@@ -139,12 +150,12 @@ export default function AddEvent() {
       <div className="  w-full h-auto bg-black text-white py-[8rem] px-[2rem] flex flex-col justify-center items-center">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="w-full flex flex-col flex-wrap gap-10 md:w-2/3"
+          className="flex flex-col flex-wrap w-full gap-10 md:w-2/3"
         >
-          <h1 className="text-2xl md:text-4xl font-extrabold text-center">
+          <h1 className="text-2xl font-extrabold text-center md:text-4xl">
             Add Your Event Space
           </h1>
-          <div className="w-full flex flex-col gap-2">
+          <div className="flex flex-col w-full gap-2">
             <label htmlFor="event_title">Event Space Name: </label>
             <input
               type="text"
@@ -154,11 +165,11 @@ export default function AddEvent() {
                 max: 999,
                 min: 39,
               })}
-              className="w-full border border-white p-2 rounded-md bg-black text-white"
+              className="w-full p-2 text-white bg-black border border-white rounded-md"
             />
           </div>
 
-          <div className="w-full flex flex-col gap-2">
+          <div className="flex flex-col w-full gap-2">
             <label htmlFor="description">Event Space Description: </label>
             <textarea
               placeholder="Enter Space Description"
@@ -169,11 +180,11 @@ export default function AddEvent() {
                 max: 999,
                 min: 39,
               })}
-              className="w-full border border-white p-2 rounded-md bg-black text-white"
+              className="w-full p-2 text-white bg-black border border-white rounded-md"
             />
           </div>
 
-          <div className="w-full flex flex-col gap-2">
+          <div className="flex flex-col w-full gap-2">
             <label htmlFor="location">Event Space Location: </label>
             <input
               type="text"
@@ -183,21 +194,21 @@ export default function AddEvent() {
                 max: 999,
                 min: 38,
               })}
-              className="w-full border border-white p-2 rounded-md bg-black text-white"
+              className="w-full p-2 text-white bg-black border border-white rounded-md"
             />
           </div>
 
-          <div className="w-full flex flex-col gap-2">
+          <div className="flex flex-col w-full gap-2">
             <label htmlFor="capacity">Event Space Capacity: </label>
             <input
               type="number"
               placeholder="Enter Space Capacity"
               {...register("capacity", { required: true })}
-              className="w-full border border-white p-2 rounded-md bg-black text-white"
+              className="w-full p-2 text-white bg-black border border-white rounded-md"
             />
           </div>
 
-          <div className="w-full flex flex-col gap-2">
+          <div className="flex flex-col w-full gap-2">
             <label htmlFor="price_per_hour">
               Event Space Price (Per Hour):{" "}
             </label>
@@ -205,32 +216,32 @@ export default function AddEvent() {
               type="number"
               placeholder="Enter Space Price (INR)"
               {...register("price_per_hour", { required: true })}
-              className="w-full border border-white p-2 rounded-md bg-black text-white"
+              className="w-full p-2 text-white bg-black border border-white rounded-md"
             />
           </div>
 
-          <div className="w-full flex flex-col gap-2">
+          <div className="flex flex-col w-full gap-2">
             <label htmlFor="owner_contact">Event Space Owner Contact: </label>
             <input
               type="tel"
               placeholder="Enter Owner Contact"
               {...register("owner_contact", { required: true })}
-              className="w-full border border-white p-2 rounded-md bg-black text-white"
+              className="w-full p-2 text-white bg-black border border-white rounded-md"
             />
           </div>
 
-          <div className="w-full flex flex-col gap-2">
+          <div className="flex flex-col w-full gap-2">
             <label htmlFor="amenities">Event Amenities: </label>
             <input
               type="text"
               placeholder="Enter Amenities (Comma Separated)"
               {...register("amenities", { required: true })}
-              className="w-full border border-white p-2 rounded-md bg-black text-white"
+              className="w-full p-2 text-white bg-black border border-white rounded-md"
             />
             <p>Enter Amenities Comma Seprated</p>
           </div>
 
-          <div className="w-full flex flex-col gap-2">
+          <div className="flex flex-col w-full gap-2">
             <label htmlFor="event_image">Event Space Image: </label>
             <input
               id="event_space_img"
@@ -239,12 +250,12 @@ export default function AddEvent() {
               ref={imageInputRef}
               onChange={(e) => handleImageChange(e)}
               disabled={isPending}
-              className="w-full border border-white p-2 rounded-md bg-black text-white"
+              className="w-full p-2 text-white bg-black border border-white rounded-md"
             />
             <p className="text-red-500">{isError}</p>
           </div>
 
-          <div className="w-full flex flex-wrap justify-start items-center gap-4">
+          <div className="flex flex-wrap items-center justify-start w-full gap-4">
             {imageUrls.length > 0 ? (
               <>
                 {imageUrls.map((url, index) => (
@@ -254,7 +265,7 @@ export default function AddEvent() {
                     key={url}
                     src={url}
                     alt={`img-${index}`}
-                    className="w-auto h-auto border border-white rounded-lg object-contain"
+                    className="object-contain w-auto h-auto border border-white rounded-lg"
                   />
                 ))}
               </>
@@ -265,7 +276,7 @@ export default function AddEvent() {
 
           <button
             type="submit"
-            className="w-full border border-white p-2 rounded-md bg-black text-white hover:bg-white hover:text-black"
+            className="w-full p-2 text-white bg-black border border-white rounded-md hover:bg-white hover:text-black"
             disabled={isPending}
           >
             {isPending ? "Submitting..." : "Submit"}

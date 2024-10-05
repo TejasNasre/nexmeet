@@ -7,6 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Loading from "../../../components/loading";
 import { CalendarIcon, MapPinIcon } from "lucide-react";
+import { toast } from "sonner";
 
 const Page: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -23,10 +24,12 @@ const Page: React.FC = () => {
         .select("*,event_space_img_vid(event_space_id,url)");
       if (error) {
         console.error("Error fetching event details:", error);
+        toast.error("Failed to load event spaces.");
       } else {
         setSpace(data);
         // console.log(data);
         // console.log(data[0].event_images[0].url);
+        toast.success("Event spaces loaded successfully!");
       }
       setLoading(false);
     }
@@ -56,14 +59,14 @@ const Page: React.FC = () => {
   return (
     <>
       <div className="  w-full h-auto bg-black text-white py-[8rem] px-[2rem]">
-        <div className="text-center my-10 text-4xl font-bold">
+        <div className="my-10 text-4xl font-bold text-center">
           Explore Event Space
         </div>
         <div className="w-full my-[3rem] flex flex-row gap-4">
-          <label className="input input-bordered flex items-center gap-2 bg-black border border-white w-full">
+          <label className="flex items-center w-full gap-2 bg-black border border-white input input-bordered">
             <input
               type="text"
-              className="text-white grow w-full"
+              className="w-full text-white grow"
               placeholder="Search Name, Category or Location"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -72,7 +75,7 @@ const Page: React.FC = () => {
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 16 16"
               fill="currentColor"
-              className="h-4 w-4 opacity-70 text-white"
+              className="w-4 h-4 text-white opacity-70"
             >
               <path
                 fillRule="evenodd"
@@ -110,36 +113,36 @@ const Page: React.FC = () => {
                         height="500"
                         src={JSON.parse(space.event_space_img_vid[0]?.url)[0]}
                         alt={space.name}
-                        className="w-full h-full object-cover"
+                        className="object-cover w-full h-full"
                       />
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
+                      <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent">
                         <h2 className="text-lg font-bold leading-tight text-white">
                           {space.name}
                         </h2>
                       </div>
                     </div>
                     <div className="p-4 text-white">
-                      <div className="flex justify-between items-start mb-2">
-                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800">
+                      <div className="flex items-start justify-between mb-2">
+                        <span className="px-2 py-1 text-xs font-semibold text-purple-800 bg-purple-100 rounded-full">
                           {space.capacity} seats
                         </span>
                         <span className="text-sm font-semibold">
                           ${space.price_per_hour}
                         </span>
                       </div>
-                      <p className="text-xs mb-3 line-clamp-2">
+                      <p className="mb-3 text-xs line-clamp-2">
                         {space.description}
                       </p>
                       <div className="space-y-2">
                         <div className="flex items-center space-x-2 text-xs">
-                          <MapPinIcon className="h-3 w-3" />
+                          <MapPinIcon className="w-3 h-3" />
                           <span className="truncate">{space.location}</span>
                         </div>
                       </div>
                     </div>
                     <div className="px-4 pb-4">
                       <Link href={`/explore-event-space/${space.id}`}>
-                        <button className="w-full bg-black border text-white text-sm font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out">
+                        <button className="w-full px-4 py-2 text-sm font-semibold text-white transition duration-300 ease-in-out bg-black border rounded-lg">
                           View Details
                         </button>
                       </Link>
@@ -147,7 +150,7 @@ const Page: React.FC = () => {
                   </div>
                 ))
               ) : (
-                <div className="h-screen flex flex-col justify-center items-center text-3xl font-bold">
+                <div className="flex flex-col items-center justify-center h-screen text-3xl font-bold">
                   Event Space Not Found
                 </div>
               )}

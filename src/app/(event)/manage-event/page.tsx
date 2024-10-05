@@ -28,6 +28,7 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
+import { toast } from "sonner";
 
 interface User {
   id: string;
@@ -103,7 +104,7 @@ export default function EditEvent() {
   }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="custom-tooltip bg-black text-white p-2 rounded shadow-lg">
+        <div className="p-2 text-white bg-black rounded shadow-lg custom-tooltip">
           <p className="label">{`${payload[0].name}`}</p>
           <p className="intro">{`Category: ${payload[0].payload.category}`}</p>
         </div>
@@ -126,6 +127,7 @@ export default function EditEvent() {
         "Error deleting related participants:",
         deleteParticipantsError
       );
+      toast.error("Failed to delete participants for the event.");
       return;
     }
 
@@ -137,6 +139,7 @@ export default function EditEvent() {
 
     if (deleteImagesError) {
       console.error("Error deleting related images:", deleteImagesError);
+      toast.error("Failed to delete images for the event.");
       return;
     }
 
@@ -148,8 +151,10 @@ export default function EditEvent() {
 
     if (deleteEventError) {
       console.error("Error deleting event:", deleteEventError);
+      toast.error("Failed to delete the event.");
     } else {
       setSuccessMessage("Event deleted successfully.");
+      toast.success("Event deleted successfully!");
     }
 
     setDeleteEventId(null);
@@ -168,12 +173,12 @@ export default function EditEvent() {
       ) : (
         <>
           <div className="  w-full h-auto bg-black text-white py-[8rem] px-4 flex flex-col">
-            <div className="flex flex-col justify-center items-center gap-4">
-              <h1 className="text-3xl font-bold text-center my-10">
+            <div className="flex flex-col items-center justify-center gap-4">
+              <h1 className="my-10 text-3xl font-bold text-center">
                 Edit Your Events
               </h1>
               {successMessage && (
-                <div className="mb-4 p-4 bg-green-500 text-white rounded">
+                <div className="p-4 mb-4 text-white bg-green-500 rounded">
                   {successMessage}
                 </div>
               )}
@@ -204,7 +209,7 @@ export default function EditEvent() {
                                   Delete Event
                                 </Button>
                               </AlertDialogTrigger>
-                              <AlertDialogContent className="bg-black text-white p-4">
+                              <AlertDialogContent className="p-4 text-white bg-black">
                                 <AlertDialogHeader>
                                   <AlertDialogTitle>
                                     Are you absolutely sure?
@@ -233,7 +238,7 @@ export default function EditEvent() {
                 )}
               </div>
             </div>
-            <div className="flex-grow container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8">
+            <div className="container flex flex-col flex-grow gap-8 px-4 py-8 mx-auto lg:flex-row">
               <Card className="w-full border-0">
                 <CardHeader>
                   <CardTitle className="text-center">
