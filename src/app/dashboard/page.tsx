@@ -6,16 +6,40 @@ import Loading from "../../components/loading";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { CalendarDays, Users, Star } from "lucide-react";
-
 import Link from "next/link";
 import Organisedevent from "@/components/Organisedevent";
 import Participatedevent from "@/components/Participatedevent";
 import { supabase } from "@/utils/supabase";
 import { useRouter } from "next/navigation";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { TrendingUp } from "lucide-react";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  RadialBarChart,
+  RadialBar,
+  Legend as RadialLegend,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  LabelList,
+} from "recharts";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 
 interface User {
   id: string;
@@ -24,6 +48,31 @@ interface User {
   picture: string;
   email: string;
 }
+
+const registrationData = [
+  { name: "18-24", value: 300 },
+  { name: "25-34", value: 400 },
+  { name: "35-44", value: 200 },
+  { name: "45+", value: 100 },
+];
+
+const demographicData = [
+  { name: "North America ", value: 35 },
+  { name: "Europe", value: 30 },
+  { name: "Asia", value: 25 },
+  { name: "Other", value: 10 },
+];
+
+const engagementData = [
+  { month: "Jan", rate: 65 },
+  { month: "Feb", rate: 59 },
+  { month: "Mar", rate: 80 },
+  { month: "Apr", rate: 72 },
+  { month: "May", rate: 78 },
+  { month: "Jun", rate: 85 },
+];
+
+const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 export default function Page() {
   const router = useRouter();
@@ -37,7 +86,6 @@ export default function Page() {
   useEffect(() => {
     userDetails()
       .then((res: any) => {
-        // console.log(res);
         setUser(res);
         setLoading(false);
       })
@@ -59,7 +107,6 @@ export default function Page() {
         console.log(error);
       }
       {
-        // console.log(organised_events);
         setLoading(true);
         setOrganisedEvent(organised_events);
         setLoading(false);
@@ -105,48 +152,188 @@ export default function Page() {
               <h1>No user details available</h1>
             )}
           </div>
+
           <div className="flex-grow space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Card className="bg-black text-white">
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Total Events
-                  </CardTitle>
-                  <CalendarDays size={20} />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 overflow-hidden">
+              <Card className="flex-col justify-center">
+                <CardHeader className="items-center pb-0">
+                  <CardTitle>Total Registrations</CardTitle>
+                  <CardDescription className="text-center">
+                    Registrations categorized by age groups.
+                  </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">
-                    {organisedEvent?.length ? organisedEvent.length : 0}
-                  </div>
-                  {/* <p className="text-xs text-purple-200">+2 this month</p> */}
+                <CardContent className="flex-1 pb-0">
+                  <ChartContainer
+                    config={{
+                      value: {
+                        label: "Registrations: ",
+                        color: "hsl(var(--foreground))",
+                      },
+                    }}
+                    className="w-full aspect-square max-h-[300px]"
+                  >
+                    <ResponsiveContainer width="100%" height="100%">
+                      <RadialBarChart
+                        data={registrationData}
+                        startAngle={-90}
+                        endAngle={380}
+                        innerRadius="30%"
+                        outerRadius="80%"
+                      >
+                        <ChartTooltip
+                          content={
+                            <ChartTooltipContent hideLabel
+                              className="bg-black text-foreground"
+                            />
+                          }
+                        />
+                        <RadialBar
+                          dataKey="value"
+                          background
+                          label={false}
+                        >
+                          {registrationData.map((entry, index) => (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={`hsl(0, 0%, ${100 - (index * 55)}%)`}
+                            />
+                          ))}
+                        </RadialBar>
+                        <Legend
+                          iconSize={10}
+                          layout="vertical"
+                          verticalAlign="middle"
+                          align="right"
+                          wrapperStyle={{
+                            fontSize: '12px',
+                            color: 'hsl(var(--foreground))'
+                          }}
+                          formatter={(value, entry, index) => (
+                            <span style={{ color: 'hsl(0, 0%, 100%)' }}>
+                              {value}
+                            </span>
+                          )}
+                        />
+                      </RadialBarChart>
+                    </ResponsiveContainer>
+                  </ChartContainer>
                 </CardContent>
               </Card>
-              <Card className="bg-black text-white">
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Total Attendees
-                  </CardTitle>
-                  <Users size={20} />
+              <Card>
+                <CardHeader className="items-center pb-0">
+                  <CardTitle>Attendee Demographics</CardTitle>
+                  <CardDescription className="text-center">
+                    Registrations categorized by location.
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">0</div>
-                  {/* <p className="text-xs text-pink-200">+99 this week</p> */}
+                  <ChartContainer
+                    config={{
+                      value: {
+                        label: "Percentage",
+                        color: "hsl(var(--foreground))",
+                      },
+                    }}
+                    className="w-full aspect-square max-h-[300px]"
+                  >
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={demographicData}
+                          cx="50%"
+                          cy="50%"
+                          labelLine={false}
+                          outerRadius="80%"
+                          dataKey="value"
+                        >
+                          {demographicData.map((entry, index) => (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={`hsl(0, 0%, ${100 - (index * 15)}%)`}
+                            />
+                          ))}
+                        </Pie>
+                        <ChartTooltip
+                          content={<ChartTooltipContent className="bg-black" />}
+                        />
+                        <Legend
+                          wrapperStyle={{ fontSize: '12px', bottom: 0 }}
+                          formatter={(value, entry, index) => (
+                            <span style={{ color: 'text-foreground' }}>
+                              {value}
+                            </span>
+                          )}
+                        />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </ChartContainer>
                 </CardContent>
               </Card>
-              <Card className="bg-black text-white">
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Avg. Rating
-                  </CardTitle>
-                  <Star size={20} />
+              <Card>
+                <CardHeader className="items-center">
+                  <CardTitle>Engagement Rate</CardTitle>
+                  <CardDescription className="text-center">
+                    Engagement rate of people.
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">0</div>
-                  {/* <p className="text-xs text-yellow-200">
-                    +0.2 from last month
-                  </p> */}
+                  <ChartContainer
+                    config={{
+                      value: {
+                        label: "Engagement Rate",
+                        color: "hsl(var(--foreground))",
+                      },
+                    }}
+                    className="w-full aspect-square max-h-[300px]"
+                  >
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={engagementData}>
+                        <CartesianGrid
+                          strokeDasharray="3 3"
+                          stroke="hsl(var(--muted-foreground))"
+                          opacity={0.5}
+                        />
+                        <XAxis
+                          dataKey="month"
+                          stroke="hsl(var(--muted-foreground))"
+                          tick={{ fontSize: 12, fill: "hsl(var(--foreground))" }}
+                        />
+                        <YAxis
+                          stroke="hsl(var(--muted-foreground))"
+                          tick={{ fontSize: 12, fill: "hsl(var(--foreground))" }}
+                        />
+                        <ChartTooltip
+                          content={
+                            <ChartTooltipContent
+                              className="bg-black text-foreground"
+                            />
+                          }
+                        />
+                        <Legend
+                          wrapperStyle={{
+                            fontSize: '12px',
+                            bottom: 0,
+                            color: "hsl(var(--foreground))"
+                          }}
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="rate"
+                          stroke="hsl(0, 0%, 100%)"
+                          strokeWidth={2}
+                          dot={{
+                            r: 4,
+                            strokeWidth: 2,
+                            fill: "hsl(var(--background))",
+                            stroke: "hsl(0, 0%, 100%)"
+                          }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </ChartContainer>
                 </CardContent>
               </Card>
+
             </div>
 
             <div className="w-full flex flex-col md:flex-row gap-4">
@@ -198,9 +385,9 @@ export default function Page() {
               <CardContent className={`${loading ? `h-auto` : `p-0`}`}>
                 <div className="divide-y">
                   {activeTab === "organized" ? (
-                    <Organisedevent user={user?.email} />
+                    <Organisedevent eventDetails={organisedEvent} />
                   ) : (
-                    <Participatedevent user={user?.email} />
+                    <Participatedevent email={user?.email} />
                   )}
                 </div>
               </CardContent>
