@@ -1,5 +1,6 @@
 "use client";
 
+import React from 'react';
 import { Space_Grotesk } from "next/font/google";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -26,6 +27,7 @@ export default function AboutUs() {
   };
 
   return (
+ 
     <div className="  w-full h-auto bg-black text-white py-[8rem] flex flex-col">
       <section
         className={`${spaceGrotesk.className} bg-black text-white min-h-screen relative overflow-hidden`}

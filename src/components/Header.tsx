@@ -29,7 +29,7 @@ function Header() {
         setUser(res);
       })
       .catch((error) => {
-        // console.error('Error fetching user details:', error);
+        console.error('Error fetching user details:', error);
         setUser(null);
       });
   }, []);
