@@ -29,6 +29,15 @@ export default function AddEvent() {
     formState: { errors },
   } = useForm();
 
+  const [minDate, setMinDate] = useState("");
+  useEffect(() => {
+    // Get the current date and time
+    const now = new Date();
+    const isoDate = now.toISOString().slice(0, 16); // Format as 'YYYY-MM-DDTHH:MM'
+  
+    setMinDate(isoDate); // Set the minimum date and time to the current time
+  }, []);
+  
   useEffect(() => {
     userDetails()
       .then((res: any) => {
@@ -198,51 +207,57 @@ export default function AddEvent() {
             />
           </div>
 
-          <div className="flex flex-col w-full gap-2">
-            <label htmlFor="event_registration_startdate">
-              Event Registration Start Date:{" "}
-            </label>
-            <input
-              type="datetime-local"
-              placeholder="event_registration_startdate"
-              {...register("event_registration_startdate", {
-                required: true,
-              })}
-              className="w-full p-2 text-white bg-black border border-white rounded-md"
-            />
-          </div>
+          {/* Event Registration Start Date */}
+        <div className="flex flex-col w-full gap-2">
+          <label htmlFor="event_registration_startdate">
+            Event Registration Start Date:{" "}
+          </label>
+          <input
+            type="datetime-local"
+            placeholder="event_registration_startdate"
+            {...register("event_registration_startdate", { required: true })}
+            className="w-full p-2 text-white bg-black border border-white rounded-md"
+            min={minDate} // Set minimum date to current date and time
+          />
+        </div>
 
-          <div className="flex flex-col w-full gap-2">
-            <label htmlFor="event_registration_enddate">
-              Event Registration End Date:{" "}
-            </label>
-            <input
-              type="datetime-local"
-              placeholder="event_registration_enddate"
-              {...register("event_registration_enddate", { required: true })}
-              className="w-full p-2 text-white bg-black border border-white rounded-md"
-            />
-          </div>
+        {/* Event Registration End Date */}
+        <div className="flex flex-col w-full gap-2">
+          <label htmlFor="event_registration_enddate">
+            Event Registration End Date:{" "}
+          </label>
+          <input
+            type="datetime-local"
+            placeholder="event_registration_enddate"
+            {...register("event_registration_enddate", { required: true })}
+            className="w-full p-2 text-white bg-black border border-white rounded-md"
+            min={minDate} // Set minimum date to current date and time
+          />
+        </div>
 
-          <div className="flex flex-col w-full gap-2">
-            <label htmlFor="event_startdate">Event Start Date: </label>
-            <input
-              type="datetime-local"
-              placeholder="event_startdate"
-              {...register("event_startdate", { required: true })}
-              className="w-full p-2 text-white bg-black border border-white rounded-md"
-            />
-          </div>
+        {/* Event Start Date */}
+        <div className="flex flex-col w-full gap-2">
+          <label htmlFor="event_startdate">Event Start Date: </label>
+          <input
+            type="datetime-local"
+            placeholder="event_startdate"
+            {...register("event_startdate", { required: true })}
+            className="w-full p-2 text-white bg-black border border-white rounded-md"
+            min={minDate} // Set minimum date to current date and time
+          />
+        </div>
 
-          <div className="flex flex-col w-full gap-2">
-            <label htmlFor="event_enddate">Event End Date: </label>
-            <input
-              type="datetime-local"
-              placeholder="event_enddate"
-              {...register("event_enddate", { required: true })}
-              className="w-full p-2 text-white bg-black border border-white rounded-md"
-            />
-          </div>
+        {/* Event End Date */}
+        <div className="flex flex-col w-full gap-2">
+          <label htmlFor="event_enddate">Event End Date: </label>
+          <input
+            type="datetime-local"
+            placeholder="event_enddate"
+            {...register("event_enddate", { required: true })}
+            className="w-full p-2 text-white bg-black border border-white rounded-md"
+            min={minDate} // Set minimum date to current date and time
+          />
+        </div>
 
           <div className="flex flex-col w-full gap-2">
             <label htmlFor="event_duration">Event Duration(In hours): </label>
