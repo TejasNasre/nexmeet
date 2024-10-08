@@ -1,8 +1,10 @@
+import React from "react";
 import type { Metadata } from "next";
 import { DM_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { Toaster } from "@/components/ui/sonner";
 
 const mono = DM_Mono({
   subsets: ["latin"],
@@ -10,13 +12,13 @@ const mono = DM_Mono({
   variable: "--font-dm_mono",
 });
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://nexmeet-lake.vercel.app'; 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://nexmeet-lake.vercel.app';
 
 export const metadata: Metadata = {
   title: "NexMeet",
   description: "Make Your Events Memorable With NexMeet",
-  metadataBase: new URL(baseUrl), 
-  keywords: "events, NexMeet, memorable events, networking, event management", 
+  metadataBase: new URL(baseUrl),
+  keywords: "events, NexMeet, memorable events, networking, event management",
   openGraph: {
     title: "NexMeet - Make Your Events Memorable",
     description: "Join events, connect with people, and make memories with NexMeet.",
@@ -68,6 +70,18 @@ export default function RootLayout({
         <title>NexMeet</title>
       </head>
       <body suppressHydrationWarning={true} className={mono.className}>
+        <Toaster theme="dark" richColors
+          toastOptions={{
+            unstyled: true,
+            style: { display: 'flex', alignItems: 'center', gap: '1rem', borderRadius: '.5rem', backdropFilter: 'blur(5px)', backgroundColor: 'rgba(0, 0, 0, 0.75)', border: '.125rem solid #8888' },
+            classNames: {
+              toast: 'text-sm group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg px-4 py-3 w-full z-10',
+              description: 'group-[.toast]:text-muted-foreground',
+              actionButton: 'bg-zinc-400',
+              cancelButton: 'bg-orange-400',
+              closeButton: 'bg-lime-400',
+            },
+          }} />
         <Header />
         <main>{children}</main>
         <Footer />

@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { userAuth } from "../../../../action/auth";
+import { toast } from "sonner";
 
 const EventPage = () => {
   const router = useRouter();
@@ -26,9 +27,11 @@ const EventPage = () => {
         .eq("id", spaceId);
       if (error) {
         console.error("Error fetching event details:", error);
+        toast.error("Failed to fetch event details.");
       } else {
         console.log(data);
         setSpaceData(data);
+        toast.success("Event details loaded successfully!");
       }
       setIsLoading(false);
     }
@@ -41,8 +44,10 @@ const EventPage = () => {
     userAuth().then((res) => {
       if (!res) {
         router.push("/unauthorized");
+        toast.error("Unauthorized access. Please register.");
       } else {
         router.push(`/register-event/${spaceId}`);
+        toast.success("Redirecting to booking...");
       }
     });
   }
@@ -59,10 +64,10 @@ const EventPage = () => {
       <div className="  w-full h-auto bg-black text-white py-[8rem] px-[1rem] md:px-[2rem]">
         {spaceData.map((space: any) => (
           <div
-            className="flex flex-wrap justify-center items-center"
+            className="flex flex-wrap items-center justify-center"
             key={space.id}
           >
-            <h1 className="text-2xl font-extrabold md:text-4xl text-center">
+            <h1 className="text-2xl font-extrabold text-center md:text-4xl">
               {space.name}
             </h1>
 
@@ -83,8 +88,8 @@ const EventPage = () => {
               })}
             </div>
 
-            <div className="w-full flex flex-col md:flex-row gap-4">
-              <div className="w-full border border-white rounded-lg p-6 flex flex-col gap-2 md:gap-4">
+            <div className="flex flex-col w-full gap-4 md:flex-row">
+              <div className="flex flex-col w-full gap-2 p-6 border border-white rounded-lg md:gap-4">
                 <h1 className="text-2xl font-extrabold">About Space</h1>
                 <p className="text-justify">{space.description}</p>
                 <h1>Space Capacity : {space.capacity}</h1>
@@ -121,13 +126,13 @@ const EventPage = () => {
               </div>
 
               <div className="flex flex-col gap-4">
-                <div className="border border-white rounded-lg p-6 flex flex-col gap-2">
+                <div className="flex flex-col gap-2 p-6 border border-white rounded-lg">
                   <h1 className="text-xl font-bold">Owner Details</h1>
                   <h1>{space.owner_contact}</h1>
                   <h1>{space.owner_email}</h1>
                 </div>
 
-                <div className="border border-white rounded-lg p-6 flex flex-col gap-2">
+                <div className="flex flex-col gap-2 p-6 border border-white rounded-lg">
                   <h1 className="text-xl font-bold">Amenities</h1>
                   <h1 className="flex flex-wrap gap-2">
                     Available :{" "}
