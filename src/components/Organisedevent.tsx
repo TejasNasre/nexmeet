@@ -93,6 +93,19 @@ function Organisedevent({ user }: any) {
                       <ChevronRight size={16} className="ml-1" />
                     </Link>
                   </Button>
+                  <Link
+                    href={`/manage-feedback/${event.id}`}
+                    className="flex flex-row justify-center items-center"
+                  >
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-[15rem] text-white"
+                    >
+                      Manage Feedback Form
+                      <ChevronRight size={16} className="ml-1" />
+                    </Button>
+                  </Link>
                 </div>
               </div>
             ))}
