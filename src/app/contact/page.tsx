@@ -1,41 +1,41 @@
 "use client";
 
 import React, { useState } from "react";
-import { createClient } from "@supabase/supabase-js";
+import { supabase } from "../../utils/supabase";
 import { Space_Grotesk } from "next/font/google";
 import { motion } from "framer-motion";
 import { Mail, MapPin, Phone } from "lucide-react";
+import { toast } from "sonner";
 
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 function Page() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [status, setStatus] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStatus("Sending...");
+    setIsSubmitting(true);
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { data, error } = await supabase
-      .from("contact_messages")
-      .insert([{ name, email, message }]);
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { data, error } = await supabase
+        .from("contact_submissions")
+        .insert([{ name, email, message }]);
 
-    if (error) {
-      console.error("Error submitting form:", error);
-      setStatus("Error sending message. Please try again.");
-    } else {
-      setStatus("Message sent successfully!");
+      if (error) throw error;
+
+      toast.success("Message sent successfully!");
       setName("");
       setEmail("");
       setMessage("");
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast.error("Error sending message. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -99,10 +99,10 @@ function Page() {
                 className="w-full p-3 bg-blue-600 hover:bg-blue-700 rounded-xl text-white font-semibold transition-colors duration-300"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                disabled={isSubmitting}
               >
-                Send Message
+                {isSubmitting ? "Sending..." : "Send Message"}
               </motion.button>
-              {status && <p className="text-center text-xl">{status}</p>}
             </motion.form>
 
             <motion.div
