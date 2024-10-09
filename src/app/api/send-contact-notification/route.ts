@@ -7,8 +7,8 @@ export async function POST(request: Request) {
   try {
     const { name, email, message } = await request.json();
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { data, error } = await resend.emails.send({
+
+    const { error } = await resend.emails.send({
       from: "Nexmeet Contact Form <onboarding@resend.dev>",
       to: "ahsankhalid816@gmail.com",
       subject: "New Contact Form Submission",

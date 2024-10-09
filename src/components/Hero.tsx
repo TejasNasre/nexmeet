@@ -1,11 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 "use client";
 import React from "react";
 import { InfiniteMovingCards } from "../components/ui/infinite-moving-cards";
 import { BackgroundBeamsWithCollision } from "../components/ui/background-beams-with-collision";
 import { RegisterLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import Link from "next/link";
-import { PanInfo } from "framer-motion";
+
 import { useState, useEffect } from "react";
 import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
 import reviews from "../data/reviews.json";
@@ -26,18 +26,7 @@ const Hero: React.FC = () => {
     setCurrentReview((prev) => (prev - 1 + reviews.length) % reviews.length);
   };
 
-  const handleDragEnd = (
-    event: MouseEvent | TouchEvent | PointerEvent,
-    info: PanInfo
-  ) => {
-    if (Math.abs(info.offset.x) > 100) {
-      removeCard();
-    }
-  };
 
-  const removeCard = () => {
-    setCurrentReview((prev) => (prev + 1) % reviews.length);
-  };
 
   useEffect(() => {
     const timer = setInterval(() => {
