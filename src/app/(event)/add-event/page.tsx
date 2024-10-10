@@ -32,9 +32,13 @@ export default function AddEvent() {
   useEffect(() => {
     userDetails()
       .then((res: any) => {
+        console.log(res);
+        console.log("YIppppppppp")
         setUser(res);
       })
       .catch((error) => {
+        console.log("Lesssgooooo")
+
         console.error("Error fetching user details:", error);
         toast.error("Failed to fetch user details");
         setUser(null);
@@ -61,7 +65,11 @@ export default function AddEvent() {
   };
 
   const onSubmit = async (event_details: any) => {
-    // console.log(event_details);
+    if (!user || !user.email) {
+      console.error("User is not authenticated or email is missing");
+      toast.error("User email is missing. Please log in and try again.");
+      return;
+    }
     const { data, error } = await supabase
       .from("event_details")
       .insert([
@@ -90,6 +98,7 @@ export default function AddEvent() {
 
     if (error) {
       console.error(error);
+      console.error("Supabase Error:", error.message, error.details, error.hint);
       toast.error("Submission failed. Please try again.");
       return;
     }
