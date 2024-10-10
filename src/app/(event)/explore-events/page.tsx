@@ -176,67 +176,77 @@ const Page: React.FC = () => {
         ) : (
           <div className="w-full flex flex-wrap gap-5 justify-evenly py-[4rem]">
             {currentItems.length > 0 ? (
-              currentItems.map((event: any) => (
-                <div
-                  className="cursor-pointer w-[350px] mx-auto bg-black text-white rounded-xl shadow-md overflow-hidden transition duration-300 ease-in-out transform hover:scale-105"
-                  key={event.id}
-                >
-                  <div className="relative h-64">
-                    <Image
-                      width="500"
-                      height="500"
-                      src={JSON.parse(event.event_images[0]?.url)[0]}
-                      alt={event.event_title}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
-                      <h2 className="text-lg font-bold leading-tight text-white">
-                        {event.event_title}
-                      </h2>
+              currentItems.map((event: any) => {
+                const isActive = new Date(event.event_startdate) >= new Date();
+                return (
+                  <div
+                    className="cursor-pointer w-[350px] mx-auto bg-black text-white rounded-xl shadow-md overflow-hidden transition duration-300 ease-in-out transform hover:scale-105"
+                    key={event.id}
+                  >
+                    <div className="relative h-64">
+                      <Image
+                        width="500"
+                        height="500"
+                        src={JSON.parse(event.event_images[0]?.url)[0]}
+                        alt={event.event_title}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
+                        <h2 className="text-lg font-bold leading-tight text-white">
+                          {event.event_title}
+                        </h2>
+                      </div>
                     </div>
-                  </div>
-                  <div className="p-4 text-white">
-                    <div className="flex justify-between items-start mb-2">
-                      <span className="px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800">
-                        {event.event_category}
-                      </span>
-                      <span className="text-sm font-semibold">
-                        ${event.event_price}
-                      </span>
-                    </div>
-                    <p className="text-xs mb-3 line-clamp-2">
-                      {event.event_description}
-                    </p>
-                    <div className="space-y-2">
-                      <div className="flex items-center space-x-2 text-xs">
-                        <CalendarIcon className="h-3 w-3" />
-                        <span>
-                          {" "}
-                          {new Date(event.event_startdate).toLocaleString(
-                            undefined,
-                            {
-                              year: "numeric",
-                              month: "short",
-                              day: "numeric",
-                            }
-                          )}
+                    <div className="p-4 text-white">
+                      <div className="flex justify-between items-start mb-2">
+                        <span className="flex gap-3">
+                          <span className="px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800">
+                            {event.event_category}
+                          </span>
+                          <span
+                            className={`px-2 py-1 text-xs font-semibold rounded-full ${isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
+                          >
+                            {isActive ? "Active" : "Inactive"}
+                          </span>
+                        </span>
+                        <span className="text-sm font-semibold">
+                          ${event.event_price}
                         </span>
                       </div>
-                      <div className="flex items-center space-x-2 text-xs">
-                        <MapPinIcon className="h-3 w-3" />
-                        <span className="truncate">{event.event_location}</span>
+                      <p className="text-xs mb-3 line-clamp-2">
+                        {event.event_description}
+                      </p>
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2 text-xs">
+                          <CalendarIcon className="h-3 w-3" />
+                          <span>
+                            {" "}
+                            {new Date(event.event_startdate).toLocaleString(
+                              undefined,
+                              {
+                                year: "numeric",
+                                month: "short",
+                                day: "numeric",
+                              }
+                            )}
+                          </span>
+                        </div>
+                        <div className="flex items-center space-x-2 text-xs">
+                          <MapPinIcon className="h-3 w-3" />
+                          <span className="truncate">{event.event_location}</span>
+                        </div>
                       </div>
                     </div>
+                    <div className="px-4 pb-4">
+                      <Link href={`/explore-events/${event.id}`}>
+                        <button className="w-full bg-black border text-white text-sm font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out">
+                          View Details
+                        </button>
+                      </Link>
+                    </div>
                   </div>
-                  <div className="px-4 pb-4">
-                    <Link href={`/explore-events/${event.id}`}>
-                      <button className="w-full bg-black border text-white text-sm font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out">
-                        View Details
-                      </button>
-                    </Link>
-                  </div>
-                </div>
-              ))
+                )
+              })
             ) : (
               <div className="h-screen flex flex-col justify-center items-center text-3xl font-bold">
                 Event Not Found
