@@ -97,7 +97,9 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
   return (
     <>
       <div className="w-full h-auto bg-black text-white py-[5rem] md:py-[8rem] px-[1rem] md:px-[2rem]">
-        {eventData.map((event: any) => (
+        {eventData.map((event: any) => {
+          const isActive = new Date(event.event_startdate) >= new Date();
+          return (
           <div
             className="flex flex-wrap justify-center items-center"
             key={event.id}
@@ -155,10 +157,13 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                 <h1 className="flex flex-row items-center gap-4">
                   Location : {event.event_location}
                 </h1>
-                <h1 className="flex flex-row items-center">
+                <h1 className="flex flex-row items-center gap-3">
                   <Badge variant="destructive">
                     <span>&#8377;</span>
                     {event.event_price}
+                  </Badge>
+                  <Badge variant="destructive" className={`${isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
+                  { isActive ? "Active" : "Inactive" }
                   </Badge>
                 </h1>
 
@@ -272,7 +277,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
               </div>
             </div>
           </div>
-        ))}
+        )})}
       </div>
     </>
   );

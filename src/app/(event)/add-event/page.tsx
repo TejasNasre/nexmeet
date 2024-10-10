@@ -146,7 +146,7 @@ export default function AddEvent() {
 
       setImageUrls([]);
       toast.success("Event created successfully!");
-      router.push(`/events/${data[0].id}`);
+      router.push(`/explore-events/${data[0].id}`);
     });
   };
 
@@ -263,6 +263,7 @@ export default function AddEvent() {
             <label htmlFor="event_duration">Event Duration(In hours): </label>
             <input
               type="number"
+              min={0}
               placeholder="Enter Event Duration (In hours)"
               {...register("event_duration", { required: true })}
               className="w-full p-2 text-white bg-black border border-white rounded-md"
@@ -273,6 +274,7 @@ export default function AddEvent() {
             <label htmlFor="team_size">Event Team Size: </label>
             <input
               type="number"
+              min={0}
               placeholder="Enter Team Size"
               {...register("team_size", { required: true })}
               className="w-full p-2 text-white bg-black border border-white rounded-md"
@@ -293,6 +295,7 @@ export default function AddEvent() {
             <label htmlFor="event_price">Event Price: </label>
             <input
               type="number"
+              min={0}
               placeholder="Enter Event Price (INR)"
               {...register("event_price", { required: true })}
               className="w-full p-2 text-white bg-black border border-white rounded-md"
