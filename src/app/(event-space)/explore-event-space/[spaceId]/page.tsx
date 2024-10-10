@@ -46,7 +46,7 @@ const EventPage = () => {
         router.push("/unauthorized");
         toast.error("Unauthorized access. Please register.");
       } else {
-        router.push(`/register-event/${spaceId}`);
+        router.push(`/explore-event-space/request-booking?spaceId=${spaceId}`);
         toast.success("Redirecting to booking...");
       }
     });
