@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { IoLogoTwitter, IoLogoGithub, IoLogoLinkedin } from "react-icons/io5";
+import { IoLogoGithub, IoLogoLinkedin } from "react-icons/io5";
+import { FaXTwitter } from "react-icons/fa6";
 import React from "react";
 
 const Footer: React.FC = () => {
@@ -17,7 +18,7 @@ const Footer: React.FC = () => {
             target="_blank"
             className="transition hover:scale-110 hover:text-blue-500"
           >
-            <IoLogoTwitter className="h-6 w-6 text-white" />
+            <FaXTwitter className="h-6 w-6 text-white" />
           </Link>
           <Link
             href="https://github.com/TejasNasre/nexmeet"
