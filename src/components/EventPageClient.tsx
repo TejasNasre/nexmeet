@@ -13,10 +13,11 @@ import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
 import {
   TwitterShareButton,
-  TwitterIcon,
   WhatsappShareButton,
   WhatsappIcon,
 } from "react-share";
+
+import { FaSquareXTwitter } from "react-icons/fa6";
 
 const EventPageClient = ({ eventsId }: { eventsId: string }) => {
   const router = useRouter();
@@ -260,7 +261,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                   <div className="flex gap-4">
                     {/* Twitter Share Button */}
                     <TwitterShareButton url={shareUrl} title={title}>
-                      <TwitterIcon size={30} round />
+                      <FaSquareXTwitter size={30} round />
                     </TwitterShareButton>
 
                     {/* WhatsApp Share Button */}
