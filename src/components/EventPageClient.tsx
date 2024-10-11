@@ -25,6 +25,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
   const [eventData, setEventData]: any = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData]: any = useState([]);
+  const [registrationClosed, setRegistrationClosed] = useState(false); // New state
 
   useEffect(() => {
     async function getData() {
@@ -38,6 +39,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
         console.error("Error fetching event details:", error);
       } else {
         setEventData(data);
+        checkRegistrationStatus(data); // Check registration dates
       }
       setIsLoading(false);
     }
@@ -51,6 +53,17 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
       setUserData(res);
     });
   }, []);
+
+  // Function to check if registration period has ended
+  const checkRegistrationStatus = (data: any) => {
+    const currentDate = new Date();
+    const registrationStartDate = new Date(data[0].event_registration_startdate);
+    const registrationEndDate = new Date(data[0].event_registration_enddate);
+
+    if (currentDate < registrationStartDate || currentDate > registrationEndDate) {
+      setRegistrationClosed(true); // Set registration closed if outside the valid period
+    }
+  };
 
   async function isUser() {
     if (!isAuthenticated) {
@@ -83,8 +96,10 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
 
   return (
     <>
-      <div className="  w-full h-auto bg-black text-white py-[5rem] md:py-[8rem] px-[1rem] md:px-[2rem]">
-        {eventData.map((event: any) => (
+      <div className="w-full h-auto bg-black text-white py-[5rem] md:py-[8rem] px-[1rem] md:px-[2rem]">
+        {eventData.map((event: any) => {
+          const isActive = new Date(event.event_startdate) >= new Date();
+          return (
           <div
             className="flex flex-wrap justify-center items-center"
             key={event.id}
@@ -142,10 +157,13 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                 <h1 className="flex flex-row items-center gap-4">
                   Location : {event.event_location}
                 </h1>
-                <h1 className="flex flex-row items-center">
+                <h1 className="flex flex-row items-center gap-3">
                   <Badge variant="destructive">
                     <span>&#8377;</span>
                     {event.event_price}
+                  </Badge>
+                  <Badge variant="destructive" className={`${isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
+                  { isActive ? "Active" : "Inactive" }
                   </Badge>
                 </h1>
 
@@ -177,10 +195,12 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                   <Button
                     variant="outline"
                     className="w-full"
-                    disabled={isRegistered}
+                    disabled={registrationClosed || isRegistered} // Button disabled if registration is closed
                     onClick={isUser}
                   >
-                    {isRegistered
+                    {registrationClosed
+                      ? "Registration Closed"
+                      : isRegistered
                       ? "Registered Waiting For Approval"
                       : "Register Now"}
                   </Button>
@@ -190,7 +210,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                     <>
                       <Link href={`${event.event_formlink}`}>
                         <Button variant="outline" className="w-full">
-                          Actual For Link
+                          Actual Form Link
                         </Button>
                       </Link>
                     </>
@@ -257,7 +277,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
               </div>
             </div>
           </div>
-        ))}
+        )})}
       </div>
     </>
   );
