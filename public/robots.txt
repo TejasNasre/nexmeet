@@ -1,4 +1,9 @@
+# *
 User-agent: *
-Disallow:
+Allow: /
 
+# Host
+Host: https://nexmeet-lake.vercel.app
+
+# Sitemaps
 Sitemap: https://nexmeet-lake.vercel.app/sitemap.xml
