@@ -150,8 +150,8 @@ create table
     created_at timestamp with time zone not null default now(),
     url text not null,
     event_space_id uuid not null,
-    constraint event_space_img - vid_pkey primary key (id),
-    constraint event_space_img - vid_event_space_id_fkey foreign key (event_space_id) references event_space (id)
+    constraint event_space_img_vid_pkey primary key (id),
+    constraint event_space_img_vid_event_space_id_fkey foreign key (event_space_id) references event_space (id)
   ) tablespace pg_default;
 ```
 
@@ -253,7 +253,6 @@ create table
 - Now Go To `Policies` Under `CONFIGURATION` Section.
 
 - Create Policy for `event_details`, `event_images`, `event_participants`, `event_space`, `event_space_img_vid`, `event_space_request`, and `contact_submissions` With `all` Permissions.
-
 
 ### `Congrats! You Successfully Setup Your Database`
 
