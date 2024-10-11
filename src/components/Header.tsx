@@ -8,7 +8,7 @@ import {
 } from "@kinde-oss/kinde-auth-nextjs/components";
 import { userDetails } from "../action/userDetails";
 import Image from "next/image";
-import Logo from "./images/nexmeet.png"
+import Logo from "./images/nexmeet.png";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
 interface User {
@@ -29,7 +29,7 @@ function Header() {
         setUser(res);
       })
       .catch((error) => {
-        console.error('Error fetching user details:', error);
+        console.error("Error fetching user details:", error);
         setUser(null);
       });
   }, []);
@@ -44,15 +44,11 @@ function Header() {
   };
 
   return (
-    <div className="absolute top-0 bg-transparent w-full z-[999] px-4 sm:px-8 py-4 sm:py-8">
+    <div className="absolute top-0 bg-transparent w-full z-[999] py-4 pr-4 md:px-4 md:py-4">
       <div className="flex justify-between items-center">
         <Link href={"/"} className="mono text-2xl text-white">
-        <Image
-    src={Logo} 
-    alt="NexMeet Logo" 
-    className="h-8 w-auto"
-        />
-        {/* NexMeet */}
+          <Image src={Logo} alt="NexMeet Logo" className="h-8 w-auto" />
+          {/* NexMeet */}
         </Link>
         {/* Hamburger Menu Button */}
         <button

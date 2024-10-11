@@ -168,16 +168,19 @@ export default function EditEvent() {
                 {successMessage}
               </div>
             )}
-            <div className="flex flex-wrap gap-6 justify-center">
+            <div className="w-full flex flex-wrap gap-6 justify-center">
               {events.map((event) => (
-                <Card key={event.id} className="bg-black w-full sm:w-[300px] flex flex-col h-[350px]">
+                <Card
+                  key={event.id}
+                  className="bg-black w-full flex flex-col h-[auto]"
+                >
                   <CardHeader>
                     <CardTitle>{event.event_title}</CardTitle>
                   </CardHeader>
                   <CardContent className="flex-grow flex flex-col justify-between">
                     <p className="flex-grow mb-4">{event.event_description}</p>
                     <div className="flex space-x-4">
-                      <Button variant="outline" className="flex-grow">
+                      <Button variant="outline" className="w-32">
                         <Link href={`/update-event?eventId=${event.id}`}>
                           Edit Event
                         </Link>
@@ -187,6 +190,7 @@ export default function EditEvent() {
                           <Button
                             variant="outline"
                             onClick={() => setDeleteEventId(event.id)}
+                            className="w-32"
                           >
                             Delete Event
                           </Button>
@@ -198,8 +202,8 @@ export default function EditEvent() {
                             </AlertDialogTitle>
                             <AlertDialogDescription>
                               This action cannot be undone. This will
-                              permanently delete your event and remove all
-                              data associated with it.
+                              permanently delete your event and remove all data
+                              associated with it.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
@@ -249,11 +253,7 @@ export default function EditEvent() {
                     </Pie>
                     <Tooltip
                       content={
-                        <CustomTooltip
-                          active={false}
-                          payload={[]}
-                          label={""}
-                        />
+                        <CustomTooltip active={false} payload={[]} label={""} />
                       }
                       cursor={{ fill: "transparent" }}
                     />
