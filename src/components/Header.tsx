@@ -47,15 +47,7 @@ function Header() {
     <div className="absolute top-0 bg-transparent w-full z-[999] py-4 pr-4 md:px-4 md:py-4">
       <div className="flex justify-between items-center">
         <Link href={"/"} className="mono text-2xl text-white">
-<<<<<<< HEAD
           <Image src={Logo} alt="NexMeet Logo" className="h-8 w-auto" />
-=======
-          <Image
-            src={Logo} 
-            alt="NexMeet Logo" 
-            className="h-8 w-auto"
-          />
->>>>>>> 8f1076f (Add seprate contributor page)
           {/* NexMeet */}
         </Link>
         {/* Hamburger Menu Button */}
