@@ -61,7 +61,7 @@ export default function RequestBooking() {
       }
   
       toast.success("Booking request submitted successfully!");
-      router.push("/"); 
+      router.push("/dashboard"); 
     };
   
     if (isLoading) {
