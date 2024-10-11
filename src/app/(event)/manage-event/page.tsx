@@ -28,7 +28,6 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-import { toast } from "sonner";
 
 interface User {
   id: string;
@@ -76,12 +75,9 @@ export default function EditEvent() {
       if (error) {
         console.log(error);
       }
-      {
-        // console.log(organised_events);
-        setLoading(true);
-        setEvents(organised_events || []);
-        setLoading(false);
-      }
+      setLoading(true);
+      setEvents(organised_events || []);
+      setLoading(false);
     };
 
     organizeEvents();
@@ -104,7 +100,7 @@ export default function EditEvent() {
   }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="p-2 text-white bg-black rounded shadow-lg custom-tooltip">
+        <div className="custom-tooltip bg-black text-white p-2 rounded shadow-lg">
           <p className="label">{`${payload[0].name}`}</p>
           <p className="intro">{`Category: ${payload[0].payload.category}`}</p>
         </div>
@@ -116,7 +112,6 @@ export default function EditEvent() {
   const handleDeleteEvent = async () => {
     if (!deleteEventId) return;
 
-    // Delete related records from event_participants table
     const { error: deleteParticipantsError } = await supabase
       .from("event_participants")
       .delete()
@@ -127,11 +122,9 @@ export default function EditEvent() {
         "Error deleting related participants:",
         deleteParticipantsError
       );
-      toast.error("Failed to delete participants for the event.");
       return;
     }
 
-    // Delete related records from event_images table
     const { error: deleteImagesError } = await supabase
       .from("event_images")
       .delete()
@@ -139,11 +132,9 @@ export default function EditEvent() {
 
     if (deleteImagesError) {
       console.error("Error deleting related images:", deleteImagesError);
-      toast.error("Failed to delete images for the event.");
       return;
     }
 
-    // Delete the event from event_details table
     const { error: deleteEventError } = await supabase
       .from("event_details")
       .delete()
@@ -151,10 +142,8 @@ export default function EditEvent() {
 
     if (deleteEventError) {
       console.error("Error deleting event:", deleteEventError);
-      toast.error("Failed to delete the event.");
     } else {
       setSuccessMessage("Event deleted successfully.");
-      toast.success("Event deleted successfully!");
     }
 
     setDeleteEventId(null);
@@ -167,124 +156,114 @@ export default function EditEvent() {
   return isAuthenticated ? (
     <>
       {loading ? (
-        <>
-          <Loading />
-        </>
+        <Loading />
       ) : (
-        <>
-          <div className="  w-full h-auto bg-black text-white py-[8rem] px-4 flex flex-col">
-            <div className="flex flex-col items-center justify-center gap-4">
-              <h1 className="my-10 text-3xl font-bold text-center">
-                Edit Your Events
-              </h1>
-              {successMessage && (
-                <div className="p-4 mb-4 text-white bg-green-500 rounded">
-                  {successMessage}
-                </div>
-              )}
-              <div className="grid gap-6">
-                {loading ? (
-                  <Loading />
-                ) : (
-                  <>
-                    {events.map((event) => (
-                      <Card key={event.id} className="bg-black">
-                        <CardHeader>
-                          <CardTitle>{event.event_title}</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <p className="mb-4">{event.event_description}</p>
-                          <div className="flex space-x-4">
-                            <Button variant="outline">
-                              <Link href={`/update-event?eventId=${event.id}`}>
-                                Edit Event
-                              </Link>
-                            </Button>
-                            <AlertDialog>
-                              <AlertDialogTrigger asChild>
-                                <Button
-                                  variant="outline"
-                                  onClick={() => setDeleteEventId(event.id)}
-                                >
-                                  Delete Event
-                                </Button>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent className="p-4 text-white bg-black">
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle>
-                                    Are you absolutely sure?
-                                  </AlertDialogTitle>
-                                  <AlertDialogDescription>
-                                    This action cannot be undone. This will
-                                    permanently delete your event and remove all
-                                    data associated with it.
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                  <AlertDialogAction
-                                    onClick={() => handleDeleteEvent()}
-                                  >
-                                    Delete
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </>
-                )}
+        <div className="w-full h-auto bg-black text-white py-[8rem] px-4 flex flex-col">
+          <div className="flex flex-col justify-center items-center gap-4">
+            <h1 className="text-3xl font-bold text-center my-10">
+              Edit Your Events
+            </h1>
+            {successMessage && (
+              <div className="mb-4 p-4 bg-green-500 text-white rounded">
+                {successMessage}
               </div>
-            </div>
-            <div className="container flex flex-col flex-grow gap-8 px-4 py-8 mx-auto lg:flex-row">
-              <Card className="w-full border-0">
-                <CardHeader>
-                  <CardTitle className="text-center">
-                    Organised Event Analytics
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-0">
-                  <ResponsiveContainer width="100%" height={400}>
-                    <PieChart className="py-10 md:p-0">
-                      <Pie
-                        data={data}
-                        cx="50%"
-                        cy="50%"
-                        labelLine={false}
-                        outerRadius={150}
-                        fill="#8884d8"
-                        dataKey="value"
-                        label={({ percent }) =>
-                          `(${(percent * 100).toFixed(0)}%)`
-                        }
-                      >
-                        {data.map((entry: any, index: any) => (
-                          <Cell
-                            key={`cell-${index}`}
-                            fill={COLORS[index % COLORS.length]}
-                          />
-                        ))}
-                      </Pie>
-                      <Tooltip
-                        content={
-                          <CustomTooltip
-                            active={false}
-                            payload={[]}
-                            label={""}
-                          />
-                        }
-                        cursor={{ fill: "transparent" }}
-                      />
-                      <Legend />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
+            )}
+            <div className="w-full flex flex-wrap gap-6 justify-center">
+              {events.map((event) => (
+                <Card
+                  key={event.id}
+                  className="bg-black w-full flex flex-col h-[auto]"
+                >
+                  <CardHeader>
+                    <CardTitle>{event.event_title}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex-grow flex flex-col justify-between">
+                    <p className="flex-grow mb-4">{event.event_description}</p>
+                    <div className="flex space-x-4">
+                      <Button variant="outline" className="w-32">
+                        <Link href={`/update-event?eventId=${event.id}`}>
+                          Edit Event
+                        </Link>
+                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            variant="outline"
+                            onClick={() => setDeleteEventId(event.id)}
+                            className="w-32"
+                          >
+                            Delete Event
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent className="bg-black text-white p-4">
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Are you absolutely sure?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This action cannot be undone. This will
+                              permanently delete your event and remove all data
+                              associated with it.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => handleDeleteEvent()}
+                            >
+                              Delete
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </div>
-        </>
+          <div className="flex-grow container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8">
+            <Card className="w-full border-0">
+              <CardHeader>
+                <CardTitle className="text-center">
+                  Organised Event Analytics
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-0">
+                <ResponsiveContainer width="100%" height={400}>
+                  <PieChart className="py-10 md:p-0">
+                    <Pie
+                      data={data}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      outerRadius={150}
+                      fill="#8884d8"
+                      dataKey="value"
+                      label={({ percent }) =>
+                        `(${(percent * 100).toFixed(0)}%)`
+                      }
+                    >
+                      {data.map((entry: any, index: any) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))}
+                    </Pie>
+                    <Tooltip
+                      content={
+                        <CustomTooltip active={false} payload={[]} label={""} />
+                      }
+                      cursor={{ fill: "transparent" }}
+                    />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       )}
     </>
   ) : (
