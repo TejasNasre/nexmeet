@@ -63,7 +63,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
     const registrationEndDate = new Date(data[0].event_registration_enddate);
 
     if (
-      currentDate < registrationStartDate ||
+      currentDate < registrationStartDate &&
       currentDate > registrationEndDate
     ) {
       setRegistrationClosed(true); // Set registration closed if outside the valid period
