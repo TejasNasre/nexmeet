@@ -57,10 +57,15 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
   // Function to check if registration period has ended
   const checkRegistrationStatus = (data: any) => {
     const currentDate = new Date();
-    const registrationStartDate = new Date(data[0].event_registration_startdate);
+    const registrationStartDate = new Date(
+      data[0].event_registration_startdate
+    );
     const registrationEndDate = new Date(data[0].event_registration_enddate);
 
-    if (currentDate < registrationStartDate || currentDate > registrationEndDate) {
+    if (
+      currentDate < registrationStartDate ||
+      currentDate > registrationEndDate
+    ) {
       setRegistrationClosed(true); // Set registration closed if outside the valid period
     }
   };
@@ -100,184 +105,190 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
         {eventData.map((event: any) => {
           const isActive = new Date(event.event_startdate) >= new Date();
           return (
-          <div
-            className="flex flex-wrap justify-center items-center"
-            key={event.id}
-          >
-            <h1 className="text-2xl font-extrabold md:text-4xl text-center">
-              {event.event_title}
-            </h1>
+            <div
+              className="flex flex-wrap justify-center items-center"
+              key={event.id}
+            >
+              <h1 className="text-2xl font-extrabold md:text-4xl text-center">
+                {event.event_title}
+              </h1>
 
-            <div className="w-full md:w-[80%] py-6 md:p-10">
-              {img.map((i: any) => {
-                return (
-                  <div key={i}>
-                    <Image
-                      src={i}
-                      alt="event image"
-                      className="w-full"
-                      width={500}
-                      height={500}
-                      loading="lazy"
-                    />
-                  </div>
-                );
-              })}
-            </div>
+              <div className="w-full md:w-[80%] py-6 md:p-10">
+                {img.map((i: any) => {
+                  return (
+                    <div key={i}>
+                      <Image
+                        src={i}
+                        alt="event image"
+                        className="w-full"
+                        width={500}
+                        height={500}
+                        loading="lazy"
+                      />
+                    </div>
+                  );
+                })}
+              </div>
 
-            <div className="w-full flex flex-col md:flex-row gap-4">
-              <div className="w-full border border-white rounded-lg p-6 flex flex-col gap-2 md:gap-4">
-                <h1 className="text-2xl font-extrabold">About The Event</h1>
-                <p className="text-justify leading-relaxed">
-                  {event.event_description}
-                </p>
-                <div className="w-full flex flex-col md:flex-row gap-4">
-                  <h1 className="flex flex-row items-center gap-2">
-                    Event Start&apos;s Form :{" "}
-                    {new Date(event.event_startdate).toLocaleString(undefined, {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
-                  </h1>
-                  <h1 className="flex flex-row items-center gap-2">
-                    Event End&apos;s On :{" "}
-                    {new Date(event.event_enddate).toLocaleString(undefined, {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
-                  </h1>
-                </div>
-                <h1 className="flex flex-row items-center gap-2">
-                  Duration : {event.event_duration} Hours
-                </h1>
-                <h1>Team Size : {event.team_size}</h1>
-
-                <h1 className="flex flex-row items-center gap-4">
-                  Location : {event.event_location}
-                </h1>
-                <h1 className="flex flex-row items-center gap-3">
-                  <Badge variant="destructive">
-                    <span>&#8377;</span>
-                    {event.event_price}
-                  </Badge>
-                  <Badge variant="destructive" className={`${isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
-                  { isActive ? "Active" : "Inactive" }
-                  </Badge>
-                </h1>
-
-                <div className="border border-white"></div>
-
-                <div>
-                  <h1 className="text-xl font-bold">Registration Period</h1>
-                  <h1>
-                    From{" "}
-                    {new Date(
-                      event.event_registration_startdate
-                    ).toLocaleString(undefined, {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}{" "}
-                    To{" "}
-                    {new Date(event.event_registration_enddate).toLocaleString(
-                      undefined,
-                      {
+              <div className="w-full flex flex-col md:flex-row gap-4">
+                <div className="w-full border border-white rounded-lg p-6 flex flex-col gap-2 md:gap-4">
+                  <h1 className="text-2xl font-extrabold">About The Event</h1>
+                  <p className="text-justify leading-relaxed">
+                    {event.event_description}
+                  </p>
+                  <div className="w-full flex flex-col md:flex-row gap-4">
+                    <h1 className="flex flex-row items-center gap-2">
+                      Event Start&apos;s Form :{" "}
+                      {new Date(event.event_startdate).toLocaleString(
+                        undefined,
+                        {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        }
+                      )}
+                    </h1>
+                    <h1 className="flex flex-row items-center gap-2">
+                      Event End&apos;s On :{" "}
+                      {new Date(event.event_enddate).toLocaleString(undefined, {
                         year: "numeric",
                         month: "short",
                         day: "numeric",
-                      }
-                    )}{" "}
+                      })}
+                    </h1>
+                  </div>
+                  <h1 className="flex flex-row items-center gap-2">
+                    Duration : {event.event_duration} Hours
                   </h1>
-                </div>
-                <div>
-                  <Button
-                    variant="outline"
-                    className="w-full"
-                    disabled={registrationClosed || isRegistered} // Button disabled if registration is closed
-                    onClick={isUser}
-                  >
-                    {registrationClosed
-                      ? "Registration Closed"
-                      : isRegistered
-                      ? "Registered Waiting For Approval"
-                      : "Register Now"}
-                  </Button>
-                </div>
-                <div>
-                  {isRegistered ? (
-                    <>
-                      <Link href={`${event.event_formlink}`}>
-                        <Button variant="outline" className="w-full">
-                          Actual Form Link
-                        </Button>
-                      </Link>
-                    </>
-                  ) : (
-                    ""
-                  )}
-                </div>
-              </div>
+                  <h1>Team Size : {event.team_size}</h1>
 
-              <div className="flex flex-col gap-4">
-                <div className="border border-white rounded-lg p-6 flex flex-col gap-2">
-                  <h1 className="text-xl font-bold">Organizer</h1>
-                  <h1>{event.organizer_name}</h1>
-                  <h1>{event.organizer_contact}</h1>
-                  <h1>{event.organizer_email}</h1>
+                  <h1 className="flex flex-row items-center gap-4">
+                    Location : {event.event_location}
+                  </h1>
+                  <h1 className="flex flex-row items-center gap-3">
+                    <Badge variant="destructive">
+                      <span>&#8377;</span>
+                      {event.event_price}
+                    </Badge>
+                    <Badge
+                      variant="destructive"
+                      className={`${isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
+                    >
+                      {isActive ? "Active" : "Inactive"}
+                    </Badge>
+                  </h1>
+
+                  <div className="border border-white"></div>
+
+                  <div>
+                    <h1 className="text-xl font-bold">Registration Period</h1>
+                    <h1>
+                      From{" "}
+                      {new Date(
+                        event.event_registration_startdate
+                      ).toLocaleString(undefined, {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}{" "}
+                      To{" "}
+                      {new Date(
+                        event.event_registration_enddate
+                      ).toLocaleString(undefined, {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}{" "}
+                    </h1>
+                  </div>
+                  <div>
+                    <Button
+                      variant="outline"
+                      className="w-full"
+                      disabled={registrationClosed || isRegistered} // Button disabled if registration is closed
+                      onClick={isUser}
+                    >
+                      {registrationClosed
+                        ? "Registration Closed"
+                        : isRegistered
+                          ? "Registered Waiting For Approval"
+                          : "Register Now"}
+                    </Button>
+                  </div>
+                  <div>
+                    {isRegistered ? (
+                      <>
+                        <Link href={`${event.event_formlink}`}>
+                          <Button variant="outline" className="w-full">
+                            Actual Form Link
+                          </Button>
+                        </Link>
+                      </>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 </div>
 
-                <div className="border border-white rounded-lg p-6 flex flex-col gap-2">
-                  <h1 className="text-xl font-bold">Category & Tags</h1>
-                  <h1>
-                    Category :{" "}
-                    <Badge variant="secondary">{event.event_category}</Badge>
-                  </h1>
-                  <h1 className="flex flex-wrap gap-2">
-                    Tags :{" "}
-                    {tags.map((tag: any) => (
-                      <Badge key={tag}>{tag}</Badge>
-                    ))}
-                  </h1>
-                </div>
+                <div className="flex flex-col gap-4">
+                  <div className="border border-white rounded-lg p-6 flex flex-col gap-2">
+                    <h1 className="text-xl font-bold">Organizer</h1>
+                    <h1>{event.organizer_name}</h1>
+                    <h1>{event.organizer_contact}</h1>
+                    <h1>{event.organizer_email}</h1>
+                  </div>
 
-                <div className="border border-white rounded-lg p-6">
-                  <h1 className="text-xl font-bold">Social Links</h1>
-                  <h1 className="w-full flex flex-col text-wrap">
-                    {social.map((s: any) => (
-                      <Link
-                        key={s}
-                        href={s}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-red-500 break-all"
-                      >
-                        {s}
-                      </Link>
-                    ))}
-                  </h1>
-                </div>
-                <div className="border border-white rounded-lg p-6 flex flex-col gap-4">
-                  <h1 className="text-xl font-bold">
-                    Share This Event On Socials
-                  </h1>
-                  <div className="flex gap-4">
-                    {/* Twitter Share Button */}
-                    <TwitterShareButton url={shareUrl} title={title}>
-                      <TwitterIcon size={30} round />
-                    </TwitterShareButton>
+                  <div className="border border-white rounded-lg p-6 flex flex-col gap-2">
+                    <h1 className="text-xl font-bold">Category & Tags</h1>
+                    <h1>
+                      Category :{" "}
+                      <Badge variant="secondary">{event.event_category}</Badge>
+                    </h1>
+                    <h1 className="flex flex-wrap gap-2">
+                      Tags :{" "}
+                      {tags.map((tag: any) => (
+                        <Badge key={tag}>{tag}</Badge>
+                      ))}
+                    </h1>
+                  </div>
 
-                    {/* WhatsApp Share Button */}
-                    <WhatsappShareButton url={shareUrl} title={title}>
-                      <WhatsappIcon size={30} round />
-                    </WhatsappShareButton>
+                  <div className="border border-white rounded-lg p-6">
+                    <h1 className="text-xl font-bold">Social Links</h1>
+                    <h1 className="w-full flex flex-col text-wrap">
+                      {social.map((s: any) => (
+                        <Link
+                          key={s}
+                          href={s}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-red-500 break-all"
+                        >
+                          {s}
+                        </Link>
+                      ))}
+                    </h1>
+                  </div>
+                  <div className="border border-white rounded-lg p-6 flex flex-col gap-4">
+                    <h1 className="text-xl font-bold">
+                      Share This Event On Socials
+                    </h1>
+                    <div className="flex gap-4">
+                      {/* Twitter Share Button */}
+                      <TwitterShareButton url={shareUrl} title={title}>
+                        <TwitterIcon size={30} round />
+                      </TwitterShareButton>
+
+                      {/* WhatsApp Share Button */}
+                      <WhatsappShareButton url={shareUrl} title={title}>
+                        <WhatsappIcon size={30} round />
+                      </WhatsappShareButton>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        )})}
+          );
+        })}
       </div>
     </>
   );

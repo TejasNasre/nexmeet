@@ -98,11 +98,11 @@ const Page: React.FC = () => {
   return (
     <>
       <div
-        className={`  w-full h-auto bg-black text-white py-[8rem] ${
+        className={`w-full h-auto bg-black text-white py-[8rem] ${
           loading ? `px-0` : `px-4`
         }`}
       >
-        <div className="text-center my-10 text-4xl font-bold">
+        <div className="text-5xl md:text-6xl font-bold mb-12 text-center tracking-tight">
           Explore Events
         </div>
         <div className="w-full my-[3rem] flex flex-col gap-4 justify-end">
@@ -174,7 +174,7 @@ const Page: React.FC = () => {
         {loading ? (
           <Loading />
         ) : (
-          <div className="w-full flex flex-wrap gap-5 justify-evenly py-[4rem]">
+          <div className="w-full flex flex-wrap gap-5 justify-evenly py-[8rem]">
             {currentItems.length > 0 ? (
               currentItems.map((event: any) => {
                 const isActive = new Date(event.event_startdate) >= new Date();
@@ -233,7 +233,9 @@ const Page: React.FC = () => {
                         </div>
                         <div className="flex items-center space-x-2 text-xs">
                           <MapPinIcon className="h-3 w-3" />
-                          <span className="truncate">{event.event_location}</span>
+                          <span className="truncate">
+                            {event.event_location}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -245,7 +247,7 @@ const Page: React.FC = () => {
                       </Link>
                     </div>
                   </div>
-                )
+                );
               })
             ) : (
               <div className="h-screen flex flex-col justify-center items-center text-3xl font-bold">

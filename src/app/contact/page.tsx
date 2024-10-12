@@ -20,8 +20,7 @@ function Page() {
     setIsSubmitting(true);
 
     try {
-    
-      const {  error } = await supabase
+      const { error } = await supabase
         .from("contact_submissions")
         .insert([{ name, email, message }]);
 
@@ -40,9 +39,11 @@ function Page() {
   };
 
   return (
-    <div className={`${spaceGrotesk.className} w-full min-h-screen bg-black text-white py-[8rem] px-[2rem] flex flex-col justify-start items-center gap-24 relative overflow-hidden`}>
+    <div
+      className={`${spaceGrotesk.className} w-full min-h-screen bg-black text-white py-[8rem] px-[2rem] flex flex-col justify-start items-center gap-24 relative overflow-hidden`}
+    >
       <div className="absolute inset-0 bg-grid-white/[0.05] bg-[length:20px_20px]" />
-      
+
       <div className="container mx-auto px-4 relative z-10">
         <motion.h1
           className="text-5xl md:text-7xl font-bold mb-12 text-center tracking-tight"
@@ -60,7 +61,8 @@ function Page() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
           >
-            Have questions or feedback? We&apos;d love to hear from you. Reach out to us using the form below or through our contact information.
+            Have questions or feedback? We&apos;d love to hear from you. Reach
+            out to us using the form below or through our contact information.
           </motion.p>
 
           <div className="w-full flex flex-col md:flex-row gap-12">
@@ -121,14 +123,16 @@ function Page() {
               </div>
               <div className="flex items-center space-x-4">
                 <MapPin size={24} className="text-gray-400" />
-                <p className="text-xl">123 Event Street, College Town, ST 12345</p>
+                <p className="text-xl">
+                  123 Event Street, College Town, ST 12345
+                </p>
               </div>
               <div className="h-64 md:h-auto mt-6">
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.1422937950147!2d-73.98731968482413!3d40.75889497932681!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25855c6480299%3A0x55194ec5a1ae072e!2sTimes+Square!5e0!3m2!1sen!2sus!4v1560412335839!5m2!1sen!2sus"
                   width="100%"
                   height="100%"
-                  style={{ border: 0, borderRadius: '0.75rem' }}
+                  style={{ border: 0, borderRadius: "0.75rem" }}
                   allowFullScreen
                   loading="lazy"
                 ></iframe>

@@ -100,7 +100,7 @@ const Page: React.FC = () => {
           <Loading />
         ) : (
           <>
-            <div className="w-full flex flex-wrap gap-5 justify-evenly py-[4rem]">
+            <div className="w-full flex flex-wrap gap-5 justify-evenly py-[8rem]">
               {spaceData.length > 0 ? (
                 spaceData.map((space: any) => (
                   <div
