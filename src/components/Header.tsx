@@ -151,6 +151,13 @@ function Header() {
           >
             Contact
           </Link>
+          <Link
+            href="/contributors"
+            onClick={() => handleNavigation("/contributors")}
+            className="mono hover:text-gray-300"
+          >
+            Contributors
+          </Link>
         </div>
         {isAuthenticated ? (
           <>
