@@ -146,9 +146,9 @@ const Hero: React.FC = () => {
               <p className="mt-4 text-white sm:text-xl">
                 Discover a world of events with NexMeet! From technical
                 workshops to creative meetups, we bring everything to one
-                platform. Whether you're an organizer looking for seamless event
-                management or an attendee exploring exciting events near you,
-                NexMeet has you covered.
+                platform. Whether you&apos;re an organizer looking for seamless
+                event management or an attendee exploring exciting events near
+                you, NexMeet has you covered.
               </p>
             </div>
 
