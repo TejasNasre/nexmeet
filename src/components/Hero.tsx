@@ -1,6 +1,6 @@
-
 "use client";
 import React from "react";
+import CountUp from "react-countup";
 import { InfiniteMovingCards } from "../components/ui/infinite-moving-cards";
 import { BackgroundBeamsWithCollision } from "../components/ui/background-beams-with-collision";
 import { RegisterLink } from "@kinde-oss/kinde-auth-nextjs/components";
@@ -25,8 +25,6 @@ const Hero: React.FC = () => {
   const prevReview = () => {
     setCurrentReview((prev) => (prev - 1 + reviews.length) % reviews.length);
   };
-
-
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -143,13 +141,14 @@ const Hero: React.FC = () => {
           <div className="mx-auto max-w-screen-xl py-8">
             <div className="mx-auto max-w-3xl text-center">
               <h2 className="text-3xl font-bold text-white sm:text-4xl">
-                Trusted by eCommerce Businesses
+                Trusted by Event Organizers and Attendees
               </h2>
-
               <p className="mt-4 text-white sm:text-xl">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione
-                dolores laborum labore provident impedit esse recusandae facere
-                libero harum sequi.
+                Discover a world of events with NexMeet! From technical
+                workshops to creative meetups, we bring everything to one
+                platform. Whether you&apos;re an organizer looking for seamless
+                event management or an attendee exploring exciting events near
+                you, NexMeet has you covered.
               </p>
             </div>
 
@@ -158,9 +157,14 @@ const Hero: React.FC = () => {
                 <dt className="order-last text-lg font-medium text-white">
                   Total Sales
                 </dt>
-
                 <dd className="text-4xl font-extrabold text-blue-600 md:text-5xl">
-                  $4.8m
+                  <CountUp
+                    start={0}
+                    end={4800000}
+                    duration={10}
+                    prefix="$"
+                    separator=","
+                  />
                 </dd>
               </div>
 
@@ -168,9 +172,8 @@ const Hero: React.FC = () => {
                 <dt className="order-last text-lg font-medium text-white">
                   Official Addons
                 </dt>
-
                 <dd className="text-4xl font-extrabold text-blue-600 md:text-5xl">
-                  24
+                  <CountUp start={0} end={24} duration={10} />
                 </dd>
               </div>
 
@@ -178,9 +181,8 @@ const Hero: React.FC = () => {
                 <dt className="order-last text-lg font-medium text-white">
                   Total Addons
                 </dt>
-
                 <dd className="text-4xl font-extrabold text-blue-600 md:text-5xl">
-                  86
+                  <CountUp start={0} end={86} duration={10} />
                 </dd>
               </div>
 
@@ -188,9 +190,8 @@ const Hero: React.FC = () => {
                 <dt className="order-last text-lg font-medium text-white">
                   Downloads
                 </dt>
-
                 <dd className="text-4xl font-extrabold text-blue-600 md:text-5xl">
-                  86k
+                  <CountUp start={0} end={86000} duration={10} separator="," />
                 </dd>
               </div>
             </div>
@@ -207,9 +208,7 @@ const Hero: React.FC = () => {
               open
             >
               <summary className="flex cursor-pointer items-center justify-between gap-1.5 text-white">
-                <h2 className="text-lg font-medium">
-                  What is NexMeet?
-                </h2>
+                <h2 className="text-lg font-medium">What is NexMeet?</h2>
 
                 <span className="relative size-5 shrink-0">
                   <svg
@@ -245,9 +244,10 @@ const Hero: React.FC = () => {
               </summary>
 
               <p className="mt-4 leading-relaxed text-justify text-white">
-                NexMeet is your go-to platform for organizing college and social events. 
-                NexMeet makes it super easy to plan, manage, and enjoy. 
-                We&apos;re all about bringing people together and making event planning fun and hassle-free!
+                NexMeet is your go-to platform for organizing college and social
+                events. NexMeet makes it super easy to plan, manage, and enjoy.
+                We&apos;re all about bringing people together and making event
+                planning fun and hassle-free!
               </p>
             </details>
 
@@ -291,13 +291,13 @@ const Hero: React.FC = () => {
               </summary>
 
               <p className="mt-4 leading-relaxed text-justify text-white">
-                Browse events on the &quot;Explore Events&quot; tab, click &quot;Register,&quot; and fill in the details to sign up.
-                Now, all you have to do is show up and have fun!
+                Browse events on the &quot;Explore Events&quot; tab, click
+                &quot;Register,&quot; and fill in the details to sign up. Now,
+                all you have to do is show up and have fun!
               </p>
             </details>
 
-            <details
-              className="group p-6 [&_summary::-webkit-details-marker]:hidden">
+            <details className="group p-6 [&_summary::-webkit-details-marker]:hidden">
               <summary className="flex cursor-pointer items-center justify-between gap-1.5 text-white">
                 <h2 className="text-lg font-medium">
                   Where can I view the events I&apos;ve registered for?
@@ -336,13 +336,13 @@ const Hero: React.FC = () => {
                 </span>
               </summary>
 
-              <p className="mt-4 leading-relaxed text-justify text-white"> 
-                Sign in, go to your profile, and view all your registered events under &quot;Your Events.&quot;
+              <p className="mt-4 leading-relaxed text-justify text-white">
+                Sign in, go to your profile, and view all your registered events
+                under &quot;Your Events.&quot;
               </p>
             </details>
 
-            <details
-              className="group p-6 [&_summary::-webkit-details-marker]:hidden">
+            <details className="group p-6 [&_summary::-webkit-details-marker]:hidden">
               <summary className="flex cursor-pointer items-center justify-between gap-1.5 text-white">
                 <h2 className="text-lg font-medium">
                   Can I create my own custom events?
@@ -381,14 +381,13 @@ const Hero: React.FC = () => {
                 </span>
               </summary>
 
-              <p className="mt-4 leading-relaxed text-justify text-white"> 
-                Yes, go to your profile, click &quot;Organize Your Own Event,&quot; and fill in the details.
-                You are ready to go!
+              <p className="mt-4 leading-relaxed text-justify text-white">
+                Yes, go to your profile, click &quot;Organize Your Own
+                Event,&quot; and fill in the details. You are ready to go!
               </p>
             </details>
 
-            <details
-              className="group p-6 [&_summary::-webkit-details-marker]:hidden">
+            <details className="group p-6 [&_summary::-webkit-details-marker]:hidden">
               <summary className="flex cursor-pointer items-center justify-between gap-1.5 text-white">
                 <h2 className="text-lg font-medium">
                   How do I cancel my event registration?
@@ -427,13 +426,13 @@ const Hero: React.FC = () => {
                 </span>
               </summary>
 
-              <p className="mt-4 leading-relaxed text-justify text-white"> 
-              Go to &quot;Your Events&quot; in Profile, select the event, and click &quot;Cancel Registration&quot;
+              <p className="mt-4 leading-relaxed text-justify text-white">
+                Go to &quot;Your Events&quot; in Profile, select the event, and
+                click &quot;Cancel Registration&quot;
               </p>
             </details>
 
-            <details
-              className="group p-6 [&_summary::-webkit-details-marker]:hidden">
+            <details className="group p-6 [&_summary::-webkit-details-marker]:hidden">
               <summary className="flex cursor-pointer items-center justify-between gap-1.5 text-white">
                 <h2 className="text-lg font-medium">
                   Can I edit the details of my event after it&apos;s created?
@@ -472,13 +471,13 @@ const Hero: React.FC = () => {
                 </span>
               </summary>
 
-              <p className="mt-4 leading-relaxed text-justify text-white"> 
-                Yes! You can update your event details anytime using &quot;Manage your Events&quot; in Profile section.
+              <p className="mt-4 leading-relaxed text-justify text-white">
+                Yes! You can update your event details anytime using
+                &quot;Manage your Events&quot; in Profile section.
               </p>
             </details>
 
-            <details
-              className="group p-6 [&_summary::-webkit-details-marker]:hidden">
+            <details className="group p-6 [&_summary::-webkit-details-marker]:hidden">
               <summary className="flex cursor-pointer items-center justify-between gap-1.5 text-white">
                 <h2 className="text-lg font-medium">
                   Is there a way to invite my friends to an event?
@@ -517,7 +516,7 @@ const Hero: React.FC = () => {
                 </span>
               </summary>
 
-              <p className="mt-4 leading-relaxed text-justify text-white"> 
+              <p className="mt-4 leading-relaxed text-justify text-white">
                 Yes, click the share button on the event page to invite friends
                 via social media or link.
               </p>

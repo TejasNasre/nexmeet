@@ -5,6 +5,7 @@ import axios from "axios";
 import Link from "next/link";
 import { FaGithub } from "react-icons/fa6";
 import Loading from "@/components/loading";
+import Image from "next/image";
 
 const ContributorsPage = () => {
   const [contributors, setContributors] = useState<
@@ -54,10 +55,12 @@ const ContributorsPage = () => {
             key={contributor.id}
             className="w-72 p-4 border rounded-xl shadow text-center transition-transform transform hover:scale-105 hover:shadow-lg flex flex-col justify-center items-center gap-2 cursor-pointer"
           >
-            <img
+            <Image
               src={contributor.avatar_url}
               alt={contributor.login}
-              className="w-16 h-16 rounded-full mb-2 mx-auto"
+              className="rounded-full mb-2 mx-auto"
+              width={64} // Set the width equivalent to w-16 (16 * 4 = 64px)
+              height={64} // Set the height equivalent to h-16 (16 * 4 = 64px)
             />
             <h2 className="text-xl font-semibold">{contributor.login}</h2>
             <Link
