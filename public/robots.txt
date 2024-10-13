@@ -1,4 +1,9 @@
+# *
 User-agent: *
-Disallow:
+Allow: /
 
+# Host
+Host: http://localhost:3000
+
+# Sitemaps
 Sitemap: https://nexmeet-lake.vercel.app/sitemap.xml

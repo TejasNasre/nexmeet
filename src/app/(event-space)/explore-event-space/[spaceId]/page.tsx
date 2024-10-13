@@ -46,7 +46,7 @@ const EventPage = () => {
         router.push("/unauthorized");
         toast.error("Unauthorized access. Please register.");
       } else {
-        router.push(`/register-event/${spaceId}`);
+        router.push(`/explore-event-space/request-booking?spaceId=${spaceId}`);
         toast.success("Redirecting to booking...");
       }
     });
@@ -67,25 +67,27 @@ const EventPage = () => {
             className="flex flex-wrap items-center justify-center"
             key={space.id}
           >
-            <h1 className="text-2xl font-extrabold text-center md:text-4xl">
-              {space.name}
-            </h1>
+            <div className="w-full flex flex-col justify-center items-center">
+              <h1 className="text-2xl font-extrabold text-center md:text-4xl">
+                {space.name}
+              </h1>
 
-            <div className="w-full md:w-[80%] p-10">
-              {img.map((i: any) => {
-                return (
-                  <div key={i}>
-                    <Image
-                      src={i}
-                      alt="event image"
-                      className="w-full"
-                      width={500}
-                      height={500}
-                      loading="lazy"
-                    />
-                  </div>
-                );
-              })}
+              <div className="w-full md:w-[80%] p-10">
+                {img.map((i: any) => {
+                  return (
+                    <div key={i}>
+                      <Image
+                        src={i}
+                        alt="event image"
+                        className="w-full"
+                        width={500}
+                        height={500}
+                        loading="lazy"
+                      />
+                    </div>
+                  );
+                })}
+              </div>
             </div>
 
             <div className="flex flex-col w-full gap-4 md:flex-row">

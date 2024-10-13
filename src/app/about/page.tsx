@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { Space_Grotesk } from "next/font/google";
 import Image from "next/image";
 import { motion } from "framer-motion";

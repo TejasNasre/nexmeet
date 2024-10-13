@@ -21,6 +21,10 @@ import Loading from "@/components/loading";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { toast } from "sonner";
 
+const formatDateForDatabase = (inputDate: string): string => {
+  const [date, time] = inputDate.split("T"); // datetime-local returns yyyy-mm-ddThh:mm
+  return `${date} ${time}:00`; // Format as yyyy-mm-dd hh:mm:ss
+};
 interface Event {
   id: string;
   event_title: string;
@@ -72,12 +76,10 @@ export default function UpdateEvent() {
     } else {
       setEvent({
         ...data,
-        event_tags:
-          typeof data.event_tags === "string" ? data.event_tags.split(",") : [],
-        event_social_links:
-          typeof data.event_social_links === "string"
-            ? data.event_social_links.split(",")
-            : [],
+        event_tags: Array.isArray(data.event_tags) ? data.event_tags : [],
+        event_social_links: Array.isArray(data.event_social_links)
+          ? data.event_social_links
+          : [],
       });
     }
     setLoading(false);
@@ -111,6 +113,14 @@ export default function UpdateEvent() {
 
     const updatedEvent = {
       ...event,
+      event_registration_startdate: formatDateForDatabase(
+        event.event_registration_startdate
+      ),
+      event_registration_enddate: formatDateForDatabase(
+        event.event_registration_enddate
+      ),
+      event_startdate: formatDateForDatabase(event.event_startdate),
+      event_enddate: formatDateForDatabase(event.event_enddate),
       event_tags: event.event_tags.length > 0 ? event.event_tags : [],
       event_social_links:
         event.event_social_links.length > 0 ? event.event_social_links : [],
@@ -123,7 +133,7 @@ export default function UpdateEvent() {
 
     if (error) {
       console.error("Error updating event:", error);
-      toast.error("Error updating event. Please try again.")
+      toast.error("Error updating event. Please try again.");
     } else {
       setSuccessMessage("Event updated successfully.");
       toast.success("Event updated successfully!");
@@ -208,7 +218,13 @@ export default function UpdateEvent() {
                   required
                   type="datetime-local"
                   placeholder="event_registration_startdate"
-                  value={event.event_registration_startdate}
+                  value={
+                    event.event_registration_startdate
+                      ? new Date(event.event_registration_startdate)
+                          .toISOString()
+                          .slice(0, 16) // Converting to yyyy-mm-ddThh:mm
+                      : ""
+                  }
                   onChange={(e) =>
                     setEvent({
                       ...event,
@@ -226,7 +242,13 @@ export default function UpdateEvent() {
                   required
                   type="datetime-local"
                   placeholder="event_registration_enddate"
-                  value={event.event_registration_enddate}
+                  value={
+                    event.event_registration_enddate
+                      ? new Date(event.event_registration_enddate)
+                          .toISOString()
+                          .slice(0, 16) // Converting to yyyy-mm-ddThh:mm
+                      : ""
+                  }
                   onChange={(e) =>
                     setEvent({
                       ...event,
@@ -242,7 +264,13 @@ export default function UpdateEvent() {
                   required
                   type="datetime-local"
                   placeholder="event_startdate"
-                  value={event.event_startdate}
+                  value={
+                    event.event_startdate
+                      ? new Date(event.event_startdate)
+                          .toISOString()
+                          .slice(0, 16) // Converting to yyyy-mm-ddThh:mm
+                      : ""
+                  }
                   onChange={(e) =>
                     setEvent({ ...event, event_startdate: e.target.value })
                   }
@@ -255,7 +283,11 @@ export default function UpdateEvent() {
                   required
                   type="datetime-local"
                   placeholder="event_enddate"
-                  value={event.event_enddate}
+                  value={
+                    event.event_enddate
+                      ? new Date(event.event_enddate).toISOString().slice(0, 16) // Converting to yyyy-mm-ddThh:mm
+                      : ""
+                  }
                   onChange={(e) =>
                     setEvent({ ...event, event_enddate: e.target.value })
                   }

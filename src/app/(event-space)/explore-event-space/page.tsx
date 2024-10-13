@@ -6,10 +6,15 @@ import { supabase } from "../../../utils/supabase";
 import Link from "next/link";
 import Image from "next/image";
 import Loading from "../../../components/loading";
-import { CalendarIcon, MapPinIcon } from "lucide-react";
+import { MapPinIcon } from "lucide-react";
 import { toast } from "sonner";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { useRouter } from "next/navigation";
 
-const Page: React.FC = () => {
+const Page = () => {
+  const router = useRouter();
+  const { isAuthenticated, isLoading } = useKindeBrowserClient();
+
   const [loading, setLoading] = useState(true);
   const [space, setSpace]: any = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -56,7 +61,11 @@ const Page: React.FC = () => {
     }
   }, [totalPages, currentPage]);
 
-  return (
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  return isAuthenticated ? (
     <>
       <div className="  w-full h-auto bg-black text-white py-[8rem] px-[2rem]">
         <div className="my-10 text-4xl font-bold text-center">
@@ -100,7 +109,7 @@ const Page: React.FC = () => {
           <Loading />
         ) : (
           <>
-            <div className="w-full flex flex-wrap gap-5 justify-evenly py-[4rem]">
+            <div className="w-full flex flex-wrap gap-5 justify-evenly py-[8rem]">
               {spaceData.length > 0 ? (
                 spaceData.map((space: any) => (
                   <div
@@ -167,6 +176,8 @@ const Page: React.FC = () => {
         </div>
       </div>
     </>
+  ) : (
+    router.push("/unauthorized")
   );
 };
 
