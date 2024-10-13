@@ -143,7 +143,6 @@ const Hero: React.FC = () => {
               <h2 className="text-3xl font-bold text-white sm:text-4xl">
                 Trusted by Event Organizers and Attendees
               </h2>
-
               <p className="mt-4 text-white sm:text-xl">
                 Discover a world of events with NexMeet! From technical
                 workshops to creative meetups, we bring everything to one
