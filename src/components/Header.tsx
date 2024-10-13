@@ -142,6 +142,16 @@ function Header() {
           >
             Explore Events
           </Link>
+          {isAuthenticated && (
+            <Link
+              href="/explore-event-space"
+              onClick={() => handleNavigation("/explore-event-space")}
+              className="mono hover:text-gray-300"
+            >
+              Explore Event Spaces
+            </Link>
+          )}
+
           <Link
             href="/about"
             onClick={() => handleNavigation("/about")}

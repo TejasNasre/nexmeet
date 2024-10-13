@@ -109,25 +109,27 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
               className="flex flex-wrap justify-center items-center"
               key={event.id}
             >
-              <h1 className="text-2xl font-extrabold md:text-4xl text-center">
-                {event.event_title}
-              </h1>
+              <div className="w-full flex flex-col justify-center items-center">
+                <h1 className="text-2xl font-extrabold md:text-4xl text-center">
+                  {event.event_title}
+                </h1>
 
-              <div className="w-full md:w-[80%] py-6 md:p-10">
-                {img.map((i: any) => {
-                  return (
-                    <div key={i}>
-                      <Image
-                        src={i}
-                        alt="event image"
-                        className="w-full"
-                        width={500}
-                        height={500}
-                        loading="lazy"
-                      />
-                    </div>
-                  );
-                })}
+                <div className="w-full md:w-[80%] py-6 md:p-10">
+                  {img.map((i: any) => {
+                    return (
+                      <div key={i}>
+                        <Image
+                          src={i}
+                          alt="event image"
+                          className="w-full"
+                          width={500}
+                          height={500}
+                          loading="lazy"
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
 
               <div className="w-full flex flex-col md:flex-row gap-4">
