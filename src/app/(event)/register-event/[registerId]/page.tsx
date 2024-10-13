@@ -128,9 +128,18 @@ function Registerevent() {
             <input
               type="tel"
               placeholder="Participant Contact"
-              {...register("participant_contact", { required: true })}
+              {...register("participant_contact", {
+                required: true,
+                pattern: {
+                  value: /^[0-9]{10,15}$/,
+                  message: "Contact number must be 10 to 15 digits",
+                },
+              })}
               className="w-full p-2 text-white bg-black border border-white rounded-md"
             />
+            {errors.participant_contact && (
+              <span style={{ color: 'red' }}>Invalid contact number</span>
+            )}
           </div>
 
           <button
