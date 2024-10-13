@@ -5,7 +5,8 @@ import { supabase } from "../../../utils/supabase";
 import Link from "next/link";
 import Image from "next/image";
 import Loading from "../../../components/loading";
-import { CalendarIcon, MapPinIcon } from "lucide-react";
+import { HeartIcon } from "@heroicons/react/solid";
+import { CalendarIcon, MapPinIcon} from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -19,6 +20,7 @@ const Page: React.FC = () => {
   const [category, setCategory] = useState("");
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
+  const [likedEvents, setLikedEvents] = useState<{ [key: string]: boolean }>({});
 
   useEffect(() => {
     async function getData() {
@@ -42,6 +44,14 @@ const Page: React.FC = () => {
       return events.sort((a, b) => a.event_likes - b.event_likes);
     }
     return events;
+  };
+  
+
+  const handleLikeToggle = (eventId: string) => {
+    setLikedEvents((prevLikes) => ({
+      ...prevLikes,
+      [eventId]: !prevLikes[eventId], // Toggle the liked state
+    }));
   };
 
   const filteredAndSortedEvents = sortEventsByLikes(event).filter(
@@ -94,6 +104,8 @@ const Page: React.FC = () => {
       setCurrentPage(totalPages > 0 ? totalPages : 1);
     }
   }, [totalPages, currentPage]);
+
+  
 
   return (
     <>
@@ -222,9 +234,16 @@ const Page: React.FC = () => {
                           )}
                         </span>
                       </div>
-                      <div className="flex items-center space-x-2 text-xs">
+                      <div className="flex items-center text-xs">
                         <MapPinIcon className="h-3 w-3" />
                         <span className="truncate">{event.event_location}</span>
+                        {/* Heart Icon positioned on the right */}
+                        <HeartIcon
+                          className={`h-5 w-5 cursor-pointer ml-auto transition duration-300 ${
+                            likedEvents[event.id] ? "text-red-500" : "text-gray-400"
+                          }`}
+                          onClick={() => handleLikeToggle(event.id)}
+                        />
                       </div>
                     </div>
                   </div>

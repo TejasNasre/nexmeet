@@ -104,11 +104,12 @@ export default function AddEvent() {
       let urls = [];
       for (const url of imageUrls) {
         const imageFile = await convertBlobUrlToFile(url);
-
+        console.log("Converted image file:", imageFile);
         const { imageUrl, error } = await uploadImage({
           file: imageFile,
           bucket: "event_image",
         });
+        console.log("Image upload result:", { imageUrl, error });
 
         if (error) {
           console.error(error);
@@ -119,6 +120,7 @@ export default function AddEvent() {
         urls.push(imageUrl);
         // console.log(imageUrl);
       }
+      console.log("Image URLs for event:", urls);
       const { data: imageData, error: imageError }: any = await supabase
         .from("event_images")
         .insert([
@@ -128,7 +130,7 @@ export default function AddEvent() {
           },
         ])
         .select();
-
+      console.log("Image insertion result:", { imageData, imageError });
       if (imageError) {
         console.error(imageError);
         toast.error("Failed to save event images. Please try again.");
