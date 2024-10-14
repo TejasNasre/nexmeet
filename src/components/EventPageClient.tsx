@@ -25,7 +25,9 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
   const [eventData, setEventData]: any = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData]: any = useState([]);
-  const [registrationClosed, setRegistrationClosed] = useState(false); // New state
+  const [registrationClosed, setRegistrationClosed] = useState(false);
+  const [comment, setComment] = useState(""); // State for comment input
+  const [comments, setComments] = useState<string[]>([]); // Explicitly define as array of strings
 
   useEffect(() => {
     async function getData() {
@@ -98,6 +100,18 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
 
   const shareUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/explore-events/${eventsId}`;
   const title = "Check out this event on Nexmeet";
+
+  const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setComment(e.target.value);
+  };
+
+  const handleCommentSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (comment.trim()) {
+      setComments([...comments, comment]);
+      setComment(""); // Clear the comment input
+    }
+  };
 
   return (
     <>
@@ -228,6 +242,35 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                       </>
                     ) : (
                       ""
+                    )}
+                  </div>
+
+                  {/* Comment Section */}
+                  <form onSubmit={handleCommentSubmit} className="mt-4">
+                    <textarea
+                      value={comment}
+                      onChange={handleCommentChange}
+                      placeholder="Leave a comment..."
+                      className="w-full bg-black p-2 border border-gray-300 rounded"
+                      rows={4}
+                    />
+                    <Button type="submit" variant="outline" className="mt-2 w-full">
+                      Submit Comment
+                    </Button>
+                  </form>
+
+                  <div className="mt-4">
+                    <h2 className="text-lg font-bold">Comments</h2>
+                    {comments.length > 0 ? (
+                      <ul className="list-disc pl-5">
+                        {comments.map((c, index) => (
+                          <li key={index} className="text-white">
+                            {c}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p>No comments yet.</p>
                     )}
                   </div>
                 </div>
