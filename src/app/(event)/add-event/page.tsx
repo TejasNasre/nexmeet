@@ -42,11 +42,9 @@ export default function AddEvent() {
     userDetails()
       .then((res: any) => {
         console.log(res);
-        console.log("YIppppppppp");
         setUser(res);
       })
       .catch((error) => {
-        console.log("Lesssgooooo");
 
         console.error("Error fetching user details:", error);
         toast.error("Failed to fetch user details");

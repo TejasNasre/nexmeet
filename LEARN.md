@@ -245,14 +245,24 @@ create table
   ) tablespace pg_default;
 ```
 
-- This Will Create A Table Named `event_details`, `event_images`, `event_participants`, `event_space`, `event_space_img_vid`, `event_space_request`,`contact_submissions` and `all`.
+### `Table for Checking event likes :`
+
+```sql
+CREATE TABLE check_event_likes (
+    eventId TEXT NOT NULL,
+    userEmail TEXT NOT NULL,
+    PRIMARY KEY (eventId, userEmail)
+);
+```
+
+- This Will Create A Table Named `event_details`, `event_images`, `event_participants`, `event_space`, `event_space_img_vid`, `event_space_request`,`contact_submissions` `check_event_likes` and `all`.
 
 - Navigate To The `Authentication` Tab In The Sidebar.
   <img width="1366" alt="TABLE POILICY" src="https://raw.githubusercontent.com/TejasNasre/nexmeet/refs/heads/main/public/policy%20setup.PNG">
 
 - Now Go To `Policies` Under `CONFIGURATION` Section.
 
-- Create Policy for `event_details`, `event_images`, `event_participants`, `event_space`, `event_space_img_vid`, `event_space_request`, and `contact_submissions` With `all` Permissions.
+- Create Policy for `event_details`, `event_images`, `event_participants`, `event_space`, `event_space_img_vid`, `event_space_request`, and `contact_submissions` `check_event_likes`  With `all` Permissions.
 
 ### `Congrats! You Successfully Setup Your Database`
 
