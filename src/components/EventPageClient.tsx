@@ -111,7 +111,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
             >
               <div className="w-full flex flex-col justify-center items-center">
                 <h1 className="text-2xl font-extrabold md:text-4xl text-center">
-                  {event.event_title}
+                  {event.event_title} 
                 </h1>
 
                 <div className="w-full md:w-[80%] py-6 md:p-10">
@@ -206,10 +206,13 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                   <div>
                     <Button
                       variant="outline"
-                      className="w-full"
+                      className={`w-full transition-transform duration-300 ease-in-out transform ${
+                          (!isRegistered && !registrationClosed)? "hover:scale-105" : "" 
+                        }
+                      `}
                       disabled={registrationClosed || isRegistered} // Button disabled if registration is closed
                       onClick={isUser}
-                    >
+                      >
                       {registrationClosed
                         ? "Registration Closed"
                         : isRegistered
@@ -276,12 +279,12 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                     </h1>
                     <div className="flex gap-4">
                       {/* Twitter Share Button */}
-                      <TwitterShareButton url={shareUrl} title={title}>
-                        <TwitterIcon size={30} round />
+                      <TwitterShareButton url={shareUrl} title={title} className="hover:scale-105 transition-transform transform duration-300 ease-in-out">
+                        <TwitterIcon size={30} round/>
                       </TwitterShareButton>
 
                       {/* WhatsApp Share Button */}
-                      <WhatsappShareButton url={shareUrl} title={title}>
+                      <WhatsappShareButton url={shareUrl} title={title} className="hover:scale-105 transition-transform transform duration-300 ease-in-out">
                         <WhatsappIcon size={30} round />
                       </WhatsappShareButton>
                     </div>
