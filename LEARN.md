@@ -113,6 +113,7 @@ create table
     participant_contact bigint not null,
     event_id uuid not null,
     is_registered boolean null default false,
+	approved text not null,
     constraint event_participants_pkey primary key (id),
     constraint event_participants_event_id_fkey foreign key (event_id) references event_details (id)
   ) tablespace pg_default;
