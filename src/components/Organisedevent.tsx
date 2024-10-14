@@ -10,6 +10,7 @@ import Link from "next/link";
 function Organisedevent({ user }: any) {
   const [organisedEvent, setOrganisedEvent] = useState<any[] | null>([]);
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const organizeEvents: any = async () => {
       let { data: organised_events, error } = await supabase
@@ -30,6 +31,7 @@ function Organisedevent({ user }: any) {
 
     organizeEvents();
   }, [user]);
+
   return (
     <>
       {organisedEvent && organisedEvent.length > 0 ? (

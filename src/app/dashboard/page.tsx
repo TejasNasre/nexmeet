@@ -6,15 +6,21 @@ import Loading from "../../components/loading";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { CalendarDays, Users, Star } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import Link from "next/link";
 import Organisedevent from "@/components/Organisedevent";
 import Participatedevent from "@/components/Participatedevent";
 import { supabase } from "@/utils/supabase";
 import { useRouter } from "next/navigation";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-import { TrendingUp } from "lucide-react";
+
 import {
   PieChart,
   Pie,
@@ -37,14 +43,13 @@ import {
   AreaChart,
   Area,
 } from "recharts";
+
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 
 interface User {
   id: string;
@@ -53,11 +58,13 @@ interface User {
   picture: string;
   email: string;
 }
+
 interface ChartDataItem {
   category: string;
   eventcount: number;
   fill: string;
 }
+
 const categoryColors = {
   technical: "var(--color-chrome)",
   cultural: "var(--color-safari)",
@@ -78,7 +85,8 @@ const chartConfig2 = {
   label: {
     color: "hsl(var(--background))",
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
+
 const chartConfig = {
   visitors: {
     label: "Visitors",
@@ -103,30 +111,28 @@ const chartConfig = {
     label: "Other",
     color: "hsl(var(--chart-5))",
   },
-} satisfies ChartConfig
-
+} satisfies ChartConfig;
 
 const totalAttendeesData = [
-  { name: 'Online', value: 1200 },
-  { name: 'In-person', value: 800 },
-]
+  { name: "Online", value: 1200 },
+  { name: "In-person", value: 800 },
+];
 
 const avgRatingData = [
-  { category: 'Content', rating: 4.5 },
-  { category: 'Speakers', rating: 4.7 },
-  { category: 'Organization', rating: 4.2 },
-  { category: 'Venue', rating: 4.0 },
-]
+  { category: "Content", rating: 4.5 },
+  { category: "Speakers", rating: 4.7 },
+  { category: "Organization", rating: 4.2 },
+  { category: "Venue", rating: 4.0 },
+];
 
 const engagementRateData = [
-  { month: 'Jan', rate: 65 },
-  { month: 'Feb', rate: 59 },
-  { month: 'Mar', rate: 80 },
-  { month: 'Apr', rate: 72 },
-  { month: 'May', rate: 78 },
-  { month: 'Jun', rate: 85 },
-]
-
+  { month: "Jan", rate: 65 },
+  { month: "Feb", rate: 59 },
+  { month: "Mar", rate: 80 },
+  { month: "Apr", rate: 72 },
+  { month: "May", rate: 78 },
+  { month: "Jun", rate: 85 },
+];
 
 const chartData2 = [
   { month: "January", desktop: 186, mobile: 80 },
@@ -135,7 +141,7 @@ const chartData2 = [
   { month: "April", desktop: 73, mobile: 190 },
   { month: "May", desktop: 209, mobile: 130 },
   { month: "June", desktop: 214, mobile: 140 },
-]
+];
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 export default function Page() {
@@ -146,51 +152,14 @@ export default function Page() {
   const [organisedEvent, setOrganisedEvent]: any = useState([]);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  // const totalVisitors = React.useMemo(() => {
-  //   return chartData.reduce((acc, curr) => acc + curr.visitors, 0)
-  // }, [])
+
   const [chartData, setChartData] = useState<ChartDataItem[]>([]);
-  const [eventcount, seteventCount] = useState('');
-
-  useEffect(() => {
-    const fetchEventStats = async () => {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from("event_details")
-        .select("event_category, id");
-
-      if (error) {
-        console.error("Error fetching event data:", error);
-        setLoading(false);
-        return;
-      }
-
-      if (!data) {
-        setLoading(false);
-        return;
-      }
-
-      const categoryCounts = data.reduce<Record<string, number>>((acc, curr) => {
-        acc[curr.event_category] = (acc[curr.event_category] || 0) + 1;
-        return acc;
-      }, {});
-
-      const formattedChartData: ChartDataItem[] = Object.entries(categoryCounts).map(([category, count]) => ({
-        category,
-        eventcount: count,
-        fill: categoryColors[category as keyof typeof categoryColors] || "var(--color-other)",
-      }));
-      seteventCount(data.length.toString());
-      setChartData(formattedChartData);
-      setLoading(false);
-    };
-
-    fetchEventStats();
-  }, []);
+  const [eventcount, seteventCount] = useState("");
 
   useEffect(() => {
     userDetails()
       .then((res: any) => {
+        // console.log(res);
         setUser(res);
         setLoading(false);
       })
@@ -221,6 +190,49 @@ export default function Page() {
 
     organizeEvents();
   }, [user]);
+
+  useEffect(() => {
+    const fetchEventStats = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("event_details")
+        .select("event_category, id");
+
+      if (error) {
+        console.error("Error fetching event data:", error);
+        setLoading(false);
+        return;
+      }
+
+      if (!data) {
+        setLoading(false);
+        return;
+      }
+
+      const categoryCounts = data.reduce<Record<string, number>>(
+        (acc, curr) => {
+          acc[curr.event_category] = (acc[curr.event_category] || 0) + 1;
+          return acc;
+        },
+        {}
+      );
+
+      const formattedChartData: ChartDataItem[] = Object.entries(
+        categoryCounts
+      ).map(([category, count]) => ({
+        category,
+        eventcount: count,
+        fill:
+          categoryColors[category as keyof typeof categoryColors] ||
+          "var(--color-other)",
+      }));
+      seteventCount(data.length.toString());
+      setChartData(formattedChartData);
+      setLoading(false);
+    };
+
+    fetchEventStats();
+  }, []);
 
   if (isLoading) {
     return <Loading />;
@@ -274,9 +286,14 @@ export default function Page() {
                       className="mx-auto aspect-square max-h-[250px]"
                     >
                       <PieChart>
-                        <ChartTooltip 
+                        <ChartTooltip
                           cursor={false}
-                          content={<ChartTooltipContent hideLabel className="bg-black" />}
+                          content={
+                            <ChartTooltipContent
+                              hideLabel
+                              className="bg-black"
+                            />
+                          }
                         />
                         <Pie
                           data={chartData}
@@ -287,7 +304,11 @@ export default function Page() {
                         >
                           <Label
                             content={({ viewBox }) => {
-                              if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                              if (
+                                viewBox &&
+                                "cx" in viewBox &&
+                                "cy" in viewBox
+                              ) {
                                 return (
                                   <text
                                     x={viewBox.cx}
@@ -300,7 +321,7 @@ export default function Page() {
                                       y={viewBox.cy}
                                       className="fill-white text-3xl font-bold"
                                     >
-                                    {eventcount.toLocaleString()}
+                                      {eventcount.toLocaleString()}
                                     </tspan>
                                     <tspan
                                       x={viewBox.cx}
@@ -310,7 +331,7 @@ export default function Page() {
                                       Events
                                     </tspan>
                                   </text>
-                                )
+                                );
                               }
                             }}
                           />
@@ -322,7 +343,9 @@ export default function Page() {
 
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-center">Total Attendes</CardTitle>
+                    <CardTitle className="text-center">
+                      Total Attendes
+                    </CardTitle>
                   </CardHeader>
                   <CardContent className="mt-2 md:mt-4">
                     <ChartContainer config={chartConfig2}>
@@ -340,11 +363,15 @@ export default function Page() {
                           axisLine={false}
                           tickMargin={8}
                           tickFormatter={(value) => value.slice(0, 3)}
-                          
                         />
                         <ChartTooltip
                           cursor={false}
-                          content={<ChartTooltipContent indicator="dot" className="bg-black"/>}
+                          content={
+                            <ChartTooltipContent
+                              indicator="dot"
+                              className="bg-black"
+                            />
+                          }
                         />
                         <Area
                           dataKey="mobile"
@@ -369,7 +396,9 @@ export default function Page() {
 
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-center">Average Rating</CardTitle>
+                    <CardTitle className="text-center">
+                      Average Rating
+                    </CardTitle>
                   </CardHeader>
                   <CardContent className="mt-2 md:mt-4">
                     <ChartContainer config={chartConfig2}>
@@ -393,7 +422,12 @@ export default function Page() {
                         <XAxis dataKey="desktop" type="number" hide />
                         <ChartTooltip
                           cursor={false}
-                          content={<ChartTooltipContent indicator="line" className="bg-black"/>}
+                          content={
+                            <ChartTooltipContent
+                              indicator="line"
+                              className="bg-black"
+                            />
+                          }
                         />
                         <Bar
                           dataKey="desktop"
@@ -420,10 +454,12 @@ export default function Page() {
                     </ChartContainer>
                   </CardContent>
                 </Card>
-                
+
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-center">Engagement Rate</CardTitle>
+                    <CardTitle className="text-center">
+                      Engagement Rate
+                    </CardTitle>
                   </CardHeader>
                   <CardContent className="mt-2 md:mt-4">
                     <ChartContainer config={chartConfig2}>
@@ -446,7 +482,12 @@ export default function Page() {
                         />
                         <ChartTooltip
                           cursor={false}
-                          content={<ChartTooltipContent indicator="line" className="bg-black"/>}
+                          content={
+                            <ChartTooltipContent
+                              indicator="line"
+                              className="bg-black"
+                            />
+                          }
                         />
                         <Line
                           dataKey="desktop"
@@ -523,16 +564,16 @@ export default function Page() {
               <CardContent className={`${loading ? `h-auto` : `p-0`}`}>
                 <div className="divide-y">
                   {activeTab === "organized" ? (
-                    <Organisedevent eventDetails={organisedEvent} />
+                    <Organisedevent user={user?.email} />
                   ) : (
-                    <Participatedevent email={user?.email} />
+                    <Participatedevent user={user?.email} />
                   )}
                 </div>
               </CardContent>
             </Card>
           </div>
-        </main >
-      </div >
+        </main>
+      </div>
     </>
   ) : (
     router.push("/unauthorized")
