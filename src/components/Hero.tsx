@@ -160,7 +160,7 @@ const Hero: React.FC = () => {
                 <dd className="text-4xl font-extrabold text-blue-600 md:text-5xl">
                   <CountUp
                     start={0}
-                    end={4800000}
+                    end={1000}
                     duration={10}
                     prefix="$"
                     separator=","
@@ -173,7 +173,7 @@ const Hero: React.FC = () => {
                   Official Addons
                 </dt>
                 <dd className="text-4xl font-extrabold text-blue-600 md:text-5xl">
-                  <CountUp start={0} end={24} duration={10} />
+                  <CountUp start={0} end={50} duration={10} />
                 </dd>
               </div>
 
@@ -182,7 +182,7 @@ const Hero: React.FC = () => {
                   Total Addons
                 </dt>
                 <dd className="text-4xl font-extrabold text-blue-600 md:text-5xl">
-                  <CountUp start={0} end={86} duration={10} />
+                  <CountUp start={0} end={100} duration={10} />
                 </dd>
               </div>
 
@@ -191,7 +191,7 @@ const Hero: React.FC = () => {
                   Downloads
                 </dt>
                 <dd className="text-4xl font-extrabold text-blue-600 md:text-5xl">
-                  <CountUp start={0} end={86000} duration={10} separator="," />
+                  <CountUp start={0} end={10000} duration={10} separator="," />
                 </dd>
               </div>
             </div>
