@@ -37,7 +37,6 @@ export default function Page() {
   useEffect(() => {
     userDetails()
       .then((res: any) => {
-        // console.log(res);
         setUser(res);
         setLoading(false);
       })

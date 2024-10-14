@@ -137,8 +137,6 @@ export default function CreateFeedbackForm() {
 
     startTransition(async () => {
       try {
-        console.log("Submitting form with user:", user);
-
         const { data: formData, error: formError } = await supabase
           .from("feedback_forms")
           .insert([

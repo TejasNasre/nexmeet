@@ -92,7 +92,7 @@ function Page({ params }: { params: { id: any } }) {
   const handleApproval = async (id: string, status: boolean) => {
     const { error } = await supabase
       .from("event_participants")
-      .update({ approved: status ? "approved" : "rejected" }) // Update status as a string
+      .update({ is_approved: status ? true : false })
       .eq("id", id);
 
     if (error) {
@@ -134,7 +134,9 @@ function Page({ params }: { params: { id: any } }) {
         <Loading />
       ) : (
         <div className="w-full min-h-screen bg-black text-white py-[8rem] px-0 md:px-8 flex flex-col gap-10">
-          <h1 className="mb-6 text-3xl font-bold text-center">Participant Details</h1>
+          <h1 className="mb-6 text-3xl font-bold text-center">
+            Participant Details
+          </h1>
 
           <div className="w-full h-auto mb-8">
             <h2 className="mb-4 text-2xl font-bold text-center text-cyan-400">
@@ -164,9 +166,19 @@ function Page({ params }: { params: { id: any } }) {
                   tick={{ fill: "#9CA3AF", fontSize: 12 }}
                   stroke="#4B5563"
                 />
-                <Tooltip content={<CustomTooltip active={false} payload={[]} label="" />} />
+                <Tooltip
+                  content={
+                    <CustomTooltip active={false} payload={[]} label="" />
+                  }
+                />
                 <defs>
-                  <linearGradient id="colorParticipants" x1="0" y1="0" x2="0" y2="1">
+                  <linearGradient
+                    id="colorParticipants"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
                     <stop offset="5%" stopColor="#06B6D4" stopOpacity={0.8} />
                     <stop offset="95%" stopColor="#06B6D4" stopOpacity={0.2} />
                   </linearGradient>
@@ -228,22 +240,32 @@ function Page({ params }: { params: { id: any } }) {
                       <TableHead className="text-gray-100">Name</TableHead>
                       <TableHead className="text-gray-100">Email</TableHead>
                       <TableHead className="text-gray-100">Contact</TableHead>
-                      <TableHead className="text-gray-100">Registered At</TableHead>
-                      <TableHead className="text-gray-100">Status</TableHead> {/* Updated header */}
+                      <TableHead className="text-gray-100">
+                        Registered At
+                      </TableHead>
+                      <TableHead className="text-gray-100">Status</TableHead>{" "}
+                      {/* Updated header */}
                       <TableHead className="text-gray-100">Action</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {filteredParticipants.map((participant) => (
-                      <TableRow key={participant.id} className="cursor-pointer hover:bg-gray-800">
-                        <TableCell className="font-medium">{participant.participant_name}</TableCell>
+                      <TableRow
+                        key={participant.id}
+                        className="cursor-pointer hover:bg-gray-800"
+                      >
+                        <TableCell className="font-medium">
+                          {participant.participant_name}
+                        </TableCell>
                         <TableCell>{participant.participant_email}</TableCell>
                         <TableCell>{participant.participant_contact}</TableCell>
-                        <TableCell>{new Date(participant.created_at).toLocaleString()}</TableCell>
                         <TableCell>
-                          {participant.approved === "approved" ? (
+                          {new Date(participant.created_at).toLocaleString()}
+                        </TableCell>
+                        <TableCell>
+                          {participant.is_approved === true ? (
                             <span className="text-green-500">Approved</span>
-                          ) : participant.approved === "rejected" ? (
+                          ) : participant.is_approved === false ? (
                             <span className="text-red-500">Rejected</span>
                           ) : (
                             <span className="text-yellow-500">Pending</span>
@@ -252,13 +274,20 @@ function Page({ params }: { params: { id: any } }) {
                         <TableCell>
                           <div className="flex gap-2">
                             <button
-                              onClick={() => handleApproval(participant.id, true)}
+                              onClick={() =>
+                                handleApproval(participant.id, true)
+                              }
                               className="px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600"
-                            >Accept</button>
+                            >
+                              Accept
+                            </button>
                             <button
-                              onClick={() => handleApproval(participant.id, false)}
+                              onClick={() =>
+                                handleApproval(participant.id, false)
+                              }
                               className="px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600"
-                            >Reject
+                            >
+                              Reject
                             </button>
                           </div>
                         </TableCell>
