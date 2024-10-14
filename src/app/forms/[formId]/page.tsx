@@ -168,8 +168,6 @@ export default function ResponseForm() {
         .insert(responseFields);
 
       if (fieldsError) throw fieldsError;
-
-      console.log("Response submitted successfully");
     } catch (error) {
       console.error("Error submitting response:", error);
     }
