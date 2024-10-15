@@ -116,3 +116,49 @@
   background-position: 100% 0;
   animation: highlight 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
 }
+
+/* Light Theme */
+
+/* .white {
+  --background-color: #ffffff;
+  --text-color: #000000;
+  --header-footer-background: #f8f8f8;
+  --link-color: #333333;
+  color: black;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.white a {
+  color: black;
+}
+
+.white .mono {
+  color: black;
+}
+
+.white svg {
+  stroke: black;
+} */
+
+/* .white class override for dark theme */
+.white {
+  background-color: hsl(0, 0%, 100%) !important;
+  /* --background: 0 0% 100% !important; Light background */
+  --foreground: 240 10% 3.9% !important; /* Dark text */
+  --primary-foreground: 0 0% 10% !important; /* Ensuring dark primary color */
+}
+
+body.white {
+  background-color: hsl(var(--background)) !important; /* Light background for body */
+  color: hsl(var(--foreground)) !important; /* Dark text for body */
+}
+
+/* Ensure the text in .white class stays dark, but non-overridden text colors remain */
+.white .text-white {
+  color: hsl(var(--foreground)) !important; /* Dark text if explicitly white */
+}
+
+  /* Override specific components with background issues */
+  .white .bg-black {
+    background-color: hsl(0, 0%, 100%) !important; /* Override any dark bg classes */
+  }
