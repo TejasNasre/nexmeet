@@ -17,6 +17,8 @@ import {
   WhatsappShareButton,
   WhatsappIcon,
 } from "react-share";
+import { FaXTwitter } from "react-icons/fa6";
+
 
 const EventPageClient = ({ eventsId }: { eventsId: string }) => {
   const router = useRouter();
@@ -279,12 +281,12 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                     </h1>
                     <div className="flex gap-4">
                       {/* Twitter Share Button */}
-                      <TwitterShareButton url={shareUrl} title={title} className="hover:scale-105 transition-transform transform duration-300 ease-in-out">
-                        <TwitterIcon size={30} round/>
+                      <TwitterShareButton url={shareUrl} title={title} className="hover:scale-110 transition-transform transform duration-300 ease-in-out">
+                       <FaXTwitter size={30} className="rounded-full" />
                       </TwitterShareButton>
 
                       {/* WhatsApp Share Button */}
-                      <WhatsappShareButton url={shareUrl} title={title} className="hover:scale-105 transition-transform transform duration-300 ease-in-out">
+                      <WhatsappShareButton url={shareUrl} title={title} className="hover:scale-110 transition-transform transform duration-300 ease-in-out">
                         <WhatsappIcon size={30} round />
                       </WhatsappShareButton>
                     </div>
