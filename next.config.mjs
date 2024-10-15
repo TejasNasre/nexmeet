@@ -31,6 +31,11 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "mlrecckdbtuezsjebihk.supabase.co", // Add new Supabase hostname here
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
         hostname: "media.giphy.com",
         pathname: "/**",
       },
