@@ -12,11 +12,17 @@ import reviews from "../data/reviews.json";
 import data from "../data/community.json";
 import FeatureCards from "./FeatureCards";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { CiStar } from "react-icons/ci";
+import { AiFillStar } from "react-icons/ai";
+
+
 
 const Hero: React.FC = () => {
   const { isAuthenticated } = useKindeBrowserClient();
 
   const [currentReview, setCurrentReview] = useState(0);
+
+  const [isStarred, setIsStarred] = useState(false);
 
   const nextReview = () => {
     setCurrentReview((prev) => (prev + 1) % reviews.length);
@@ -32,6 +38,31 @@ const Hero: React.FC = () => {
     }, 5000);
     return () => clearInterval(timer);
   }, []);
+
+  const handleStarClick = async () => {
+    // Toggle star state
+    setIsStarred(!isStarred);
+
+    // GitHub API to star the repo (Replace with your GitHub repo details)
+    const repoOwner = "TejasNasre";
+    const repoName = "nexmeet";
+
+    try {
+      const response = await fetch(`https://api.github.com/user/starred/${repoOwner}/${repoName}`, {
+        method: isStarred ? "DELETE" : "PUT",
+        headers: {
+          Authorization: `Bearer ${process.env.GITHUB_TOKEN}`, // Add your GitHub token securely
+        },
+      });
+      if (response.ok) {
+        console.log("Repo starred/unstarred successfully!");
+      } else {
+        console.error("Failed to star/unstar the repo.");
+      }
+    } catch (error) {
+      console.error("Error starring/un-starring the repo:", error);
+    }
+  };
 
   return (
     <>
@@ -71,6 +102,26 @@ const Hero: React.FC = () => {
               )}
             </div>
             <h1>project is in development phase</h1>
+
+            <div className="flex flex-col md:flex-row items-center gap-2 mt-2">
+            <Link
+                href="https://github.com/TejasNasre/nexmeet"
+                target="_blank"
+                className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white font-semibold rounded-md transition duration-300"
+              >
+              <div className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-md transition duration-300">
+                <span className="mr-2 text-lg">Contribute and Star the repo:</span>
+                <button onClick={handleStarClick} aria-label="Star the repo" >
+                  {isStarred ? (
+                    <AiFillStar className="text-yellow-500 text-3xl" />
+                  ) : (
+                    <CiStar className="text-white text-3xl" />
+                  )}
+                </button>
+              </div>
+              </Link>
+            </div>
+
           </div>
         </BackgroundBeamsWithCollision>
 
