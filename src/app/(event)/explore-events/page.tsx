@@ -25,7 +25,9 @@ const Page: React.FC = () => {
   const [category, setCategory] = useState("");
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
-  const [likedEvents, setLikedEvents] = useState<{ [key: string]: boolean }>({});
+  const [likedEvents, setLikedEvents] = useState<{ [key: string]: boolean }>(
+    {}
+  );
   const session = useSession();
   const [countLikes, setCountLikes] = useState<CountLikes>({});
   const { user } = useUserDetails();
@@ -33,7 +35,6 @@ const Page: React.FC = () => {
     id: string; // or number, based on your actual id type
     event_likes: number;
   }
-
 
   useEffect(() => {
     async function getData() {
@@ -48,7 +49,7 @@ const Page: React.FC = () => {
       setLoading(false);
     }
     getData();
-  }, []);
+  }, []); // Fetch Event Details
 
   useEffect(() => {
     const fetchLikedEvents = async () => {
@@ -66,10 +67,13 @@ const Page: React.FC = () => {
         }
 
         const likedeventids = likedEventsData.map((item) => item.eventid);
-        const likedEventsMap = likedeventids.reduce((acc, id) => {
-          acc[id] = true; // Mark liked events as true
-          return acc;
-        }, {} as { [key: string]: boolean });
+        const likedEventsMap = likedeventids.reduce(
+          (acc, id) => {
+            acc[id] = true; // Mark liked events as true
+            return acc;
+          },
+          {} as { [key: string]: boolean }
+        );
 
         setLikedEvents(likedEventsMap); // Update the liked events state
       }
@@ -77,7 +81,6 @@ const Page: React.FC = () => {
 
     fetchLikedEvents();
   }, [user]); // Fetch liked events whenever the user changes
-
 
   const sortEventsByLikes = (events: any[]) => {
     if (numberOfLikes === "high") {
@@ -87,12 +90,13 @@ const Page: React.FC = () => {
     }
     return events;
   };
+
   useEffect(() => {
     // Fetch initial like counts for all events when the component mounts
     const fetchLikeCounts = async () => {
       const { data, error } = await supabase
-        .from('event_details') // Specify the table name only
-        .select('id, event_likes');
+        .from("event_details") // Specify the table name only
+        .select("id, event_likes");
 
       if (error) {
         console.error("Error fetching event likes:", error);
@@ -108,8 +112,6 @@ const Page: React.FC = () => {
     fetchLikeCounts();
   }, []);
 
-
-
   const handleLikeToggle = async (eventid: string) => {
     // Get the user details via the hook // Assuming you're using this hook to get user details
     if (!user) {
@@ -119,15 +121,13 @@ const Page: React.FC = () => {
 
     const userid = user.id;
     const useremail = user.email; // Get user ID from the hook
-    console.log("user", userid);
-    console.log("userEmail", useremail);
-    console.log("event", eventid);
+
     // Check if the event is liked by the user
     const { data: likedData, error: checkError } = await supabase
-      .from('check_event_likes')
-      .select('eventid')
-      .eq('eventid', eventid)
-      .eq('useremail', useremail);
+      .from("check_event_likes")
+      .select("eventid")
+      .eq("eventid", eventid)
+      .eq("useremail", useremail);
 
     if (checkError) {
       console.error("Error checking likes:", checkError);
@@ -141,9 +141,9 @@ const Page: React.FC = () => {
 
     // Fetch the current like count for the event
     const { data: fetchedEventData, error: eventError } = await supabase
-      .from('event_details')
-      .select('event_likes')
-      .eq('id', eventid)
+      .from("event_details")
+      .select("event_likes")
+      .eq("id", eventid)
       .single();
 
     if (eventError) {
@@ -156,10 +156,10 @@ const Page: React.FC = () => {
     if (isLiked) {
       // If the event is liked, unlike it
       const { error: unlikeError } = await supabase
-        .from('check_event_likes')
+        .from("check_event_likes")
         .delete()
-        .eq('eventid', eventid)
-        .eq('useremail', useremail);
+        .eq("eventid", eventid)
+        .eq("useremail", useremail);
 
       if (unlikeError) {
         console.error("Error unliking event:", unlikeError);
@@ -170,9 +170,9 @@ const Page: React.FC = () => {
       const newLikesCount = eventData.event_likes - 1;
 
       const { error: decrementError } = await supabase
-        .from('event_details')
+        .from("event_details")
         .update({ event_likes: newLikesCount })
-        .eq('id', eventid);
+        .eq("id", eventid);
 
       if (decrementError) {
         console.error("Error decreasing like count:", decrementError);
@@ -186,7 +186,7 @@ const Page: React.FC = () => {
     } else {
       // If the event is not liked, like it
       const { error: likeError } = await supabase
-        .from('check_event_likes')
+        .from("check_event_likes")
         .insert({ eventid, useremail });
 
       if (likeError) {
@@ -198,9 +198,9 @@ const Page: React.FC = () => {
       const newLikesCount = eventData.event_likes + 1;
 
       const { error: incrementError } = await supabase
-        .from('event_details')
+        .from("event_details")
         .update({ event_likes: newLikesCount })
-        .eq('id', eventid);
+        .eq("id", eventid);
 
       if (incrementError) {
         console.error("Error increasing like count:", incrementError);
@@ -218,8 +218,6 @@ const Page: React.FC = () => {
       [eventid]: !isLiked,
     }));
   };
-
-
 
   const filteredAndSortedEvents = sortEventsByLikes(event).filter(
     (event: any) => {
@@ -272,13 +270,12 @@ const Page: React.FC = () => {
     }
   }, [totalPages, currentPage]);
 
-
-
   return (
     <>
       <div
-        className={`w-full h-auto bg-black text-white py-[8rem] ${loading ? `px-0` : `px-4`
-          }`}
+        className={`w-full h-auto bg-black text-white py-[8rem] ${
+          loading ? `px-0` : `px-4`
+        }`}
       >
         <div className="text-5xl md:text-6xl font-bold mb-12 text-center tracking-tight">
           Explore Events
@@ -369,6 +366,21 @@ const Page: React.FC = () => {
                         alt={event.event_title}
                         className="w-full h-full object-cover"
                       />
+                      <div className="absolute top-2 right-2 z-10">
+                        <div className="flex flex-col items-center justify-center p-2 ">
+                          <HeartIcon
+                            onClick={() => handleLikeToggle(event.id)}
+                            className={`h-8 w-8 transition-all duration-300 ${
+                              likedEvents[event.id]
+                                ? "text-red-500 filter drop-shadow-[0_0_10px_rgba(255,0,0,0.5)]"
+                                : "text-white"
+                            } hover:text-red-500 rounded-full bg-red-100 bg-opacity-20 backdrop-filter backdrop-blur-sm p-1`}
+                          />
+                          <span className="text-[14px] font-semibold text-white mt-1">
+                            {countLikes[event.id] || 0}
+                          </span>
+                        </div>
+                      </div>
                       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
                         <h2 className="text-lg font-bold leading-tight text-white">
                           {event.event_title}
@@ -378,63 +390,47 @@ const Page: React.FC = () => {
                     <div className="p-4 text-white">
                       <div className="flex justify-between items-start mb-2">
                         <span className="flex gap-3">
-                          <span className="px-2 py-1 text-l font-semibold rounded-full bg-purple-100 text-purple-800">
+                          <span className="px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800">
                             {event.event_category}
                           </span>
                           <span
-                            className={`px-2 py-1 text-l font-semibold rounded-full ${isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
+                            className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                              isActive
+                                ? "bg-green-100 text-green-800"
+                                : "bg-red-100 text-red-800"
+                            }`}
                           >
                             {isActive ? "Active" : "Inactive"}
                           </span>
                         </span>
-                        <span className="text-l font-semibold">
+                        <span className="text-sm font-semibold">
                           ${event.event_price}
                         </span>
                       </div>
-                      <p className="text-l mb-3 line-clamp-2">
+                      <p className="text-xs mb-3 line-clamp-2">
                         {event.event_description}
                       </p>
                       <div className="space-y-2">
-                        <div className="flex justify-between items-center text-l">
-                          <div className="flex items-center space-x-1">
-                            <CalendarIcon className="h-3 w-3" />
-                            <span>
-                              {" "}
-                              {new Date(event.event_startdate).toLocaleString(undefined, {
+                        <div className="flex items-center space-x-2 text-xs">
+                          <CalendarIcon className="h-3 w-3" />
+                          <span>
+                            {new Date(event.event_startdate).toLocaleString(
+                              undefined,
+                              {
                                 year: "numeric",
                                 month: "short",
                                 day: "numeric",
-                              })}
-                            </span>
-                          </div>
-
-                          <div className="flex flex-col items-center" style={{ marginTop: '9px', paddingTop: '0.1px' }}>
-                            {/* Circular div for the heart icon */}
-                            <div
-                              onClick={() => handleLikeToggle(event.id)}
-                              className="relative w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-colors duration-300 hover:bg-gray-700"
-                            >
-                              <HeartIcon
-                                className={`h-8 w-8 transition duration-300 ${likedEvents[event.id] ? "text-red-500" : "text-gray-400"} hover:text-red-500`}
-                              />
-                              {/* Optional: Add a circle effect for click feedback */}
-                              <span
-                                className={`absolute w-full h-full rounded-full ${likedEvents[event.id] ? "bg-red-500 opacity-50" : "bg-transparent"}`}
-                                style={{ transition: "opacity 0.3s" }}
-                              />
-                            </div>
-                            <span className="text-l">{countLikes[event.id] || 0}</span> {/* Display like count here */}
-                          </div>
-
+                              }
+                            )}
+                          </span>
                         </div>
-                        <div className="flex items-center text-l">
+                        <div className="flex items-center space-x-2 text-xs">
                           <MapPinIcon className="h-3 w-3" />
-                          <span className="truncate">{event.event_location}</span>
+                          <span className="truncate">
+                            {event.event_location}
+                          </span>
                         </div>
-
-
                       </div>
-
                     </div>
                     <div className="px-4 pb-4">
                       <Link href={`/explore-events/${event.id}`}>
@@ -461,7 +457,7 @@ const Page: React.FC = () => {
             onPageChange={(page) => setCurrentPage(page)}
           />
         </div>
-      </div >
+      </div>
     </>
   );
 };

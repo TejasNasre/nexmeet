@@ -29,7 +29,6 @@ const EventPage = () => {
         console.error("Error fetching event details:", error);
         toast.error("Failed to fetch event details.");
       } else {
-        console.log(data);
         setSpaceData(data);
         toast.success("Event details loaded successfully!");
       }
