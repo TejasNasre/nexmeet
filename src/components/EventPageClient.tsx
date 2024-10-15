@@ -10,7 +10,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { userDetails } from "../action/userDetails";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import {
   TwitterShareButton,
   TwitterIcon,
@@ -27,7 +27,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
   const [userData, setUserData]: any = useState([]);
   const [registrationClosed, setRegistrationClosed] = useState(false);
   const [comment, setComment] = useState(""); // State for comment input
-  const [comments, setComments] = useState<string[]>([]); // Explicitly define as array of strings
+  const [comments, setComments] = useState<{ id: string; text: string; author: string; timestamp: string }[]>([]);
 
   useEffect(() => {
     async function getData() {
@@ -56,12 +56,26 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
     });
   }, []);
 
-  // Function to check if registration period has ended
+  useEffect(() => {
+    fetchComments();
+  }, [eventsId]);
+
+  const fetchComments = async () => {
+    const { data, error } = await supabase
+      .from("comments")
+      .select("*")
+      .eq("event_id", eventsId);
+
+    if (error) {
+      console.error("Error fetching comments:", error);
+    } else {
+      setComments(data);
+    }
+  };
+
   const checkRegistrationStatus = (data: any) => {
     const currentDate = new Date();
-    const registrationStartDate = new Date(
-      data[0].event_registration_startdate
-    );
+    const registrationStartDate = new Date(data[0].event_registration_startdate);
     const registrationEndDate = new Date(data[0].event_registration_enddate);
 
     if (
@@ -85,13 +99,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
   }
 
   const isRegistered = eventData[0]?.event_participants.some(
-    (register: any) => {
-      const isMatch =
-        register.participant_email === userData?.email &&
-        register.is_registered === true;
-
-      return isMatch;
-    }
+    (register: any) => register.participant_email === userData?.email && register.is_registered
   );
 
   const img = JSON.parse(eventData[0].event_images[0].url);
@@ -105,11 +113,21 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
     setComment(e.target.value);
   };
 
-  const handleCommentSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleCommentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (comment.trim()) {
-      setComments([...comments, comment]);
-      setComment(""); // Clear the comment input
+      const { error } = await supabase
+        .from("comments")
+        .insert([
+          { event_id: eventsId, author: `${userData?.given_name} ${userData?.family_name}` || "Anonymous", text: comment }
+        ]);
+
+      if (error) {
+        console.error("Error adding comment:", error);
+      } else {
+        setComments([...comments, { author: `${userData?.given_name} ${userData?.family_name}` || "Anonymous", text: comment, timestamp: new Date().toISOString(), id: "" }]);
+        setComment(""); // Clear the comment input
+      }
     }
   };
 
@@ -243,35 +261,41 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                     ) : (
                       ""
                     )}
-                  </div>
 
-                  {/* Comment Section */}
-                  <form onSubmit={handleCommentSubmit} className="mt-4">
+                    {/* Comment Section */}
+                    <form onSubmit={handleCommentSubmit} className="mt-4">
                     <textarea
-                      value={comment}
-                      onChange={handleCommentChange}
-                      placeholder="Leave a comment..."
-                      className="w-full bg-black p-2 border border-gray-300 rounded"
-                      rows={4}
+                        value={comment}
+                        onChange={handleCommentChange}
+                        placeholder="Leave a comment..."
+                        className="w-full bg-black p-2 border border-gray-300 rounded"
+                        rows={4}
                     />
                     <Button type="submit" variant="outline" className="mt-2 w-full">
-                      Submit Comment
+                        Submit Comment
                     </Button>
-                  </form>
+                    </form>
 
-                  <div className="mt-4">
-                    <h2 className="text-lg font-bold">Comments</h2>
-                    {comments.length > 0 ? (
-                      <ul className="list-disc pl-5">
-                        {comments.map((c, index) => (
-                          <li key={index} className="text-white">
-                            {c}
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p>No comments yet.</p>
-                    )}
+                    <div className="mt-4">
+                        <h2 className="text-lg">Comments</h2>
+                        {comments.length > 0 ? (
+                            <div className="space-y-2">
+                            {comments.map((c) => (
+                                <Card key={c.id} className="bg-gray-800">
+                                <CardHeader>
+                                    <CardTitle>{c.author}</CardTitle>
+                                    <CardDescription>{new Date(c.timestamp).toLocaleString()}</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <p className="text-white">{c.text}</p>
+                                </CardContent>
+                                </Card>
+                            ))}
+                            </div>
+                        ) : (
+                            <p>No comments yet.</p>
+                        )}
+                    </div>
                   </div>
                 </div>
 

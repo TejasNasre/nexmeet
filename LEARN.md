@@ -101,6 +101,20 @@ create table
   ) tablespace pg_default;
 ```
 
+### `Table For Event comments : `
+
+```sql
+create table public.comments (
+    id uuid not null default gen_random_uuid (),
+    created_at timestamp with time zone not null default now(),
+    event_id uuid not null references public.event_details(id) on delete cascade,
+    author text not null,
+    text text not null,
+    timestamp timestamp with time zone not null default now(),
+    constraint comments_pkey primary key (id)
+) tablespace pg_default;
+```
+
 ### `Table For Event Participants : `
 
 ```sql
