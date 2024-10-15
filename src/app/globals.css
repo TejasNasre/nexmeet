@@ -119,37 +119,17 @@
 
 /* Light Theme */
 
-/* .white {
-  --background-color: #ffffff;
-  --text-color: #000000;
-  --header-footer-background: #f8f8f8;
-  --link-color: #333333;
-  color: black;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.white a {
-  color: black;
-}
-
-.white .mono {
-  color: black;
-}
-
-.white svg {
-  stroke: black;
-} */
-
 /* .white class override for dark theme */
 .white {
-  background-color: hsl(0, 0%, 100%) !important;
+  background-color: hsl(40, 20%, 95%) !important;
   /* --background: 0 0% 100% !important; Light background */
   --foreground: 240 10% 3.9% !important; /* Dark text */
   --primary-foreground: 0 0% 10% !important; /* Ensuring dark primary color */
 }
 
 body.white {
-  background-color: hsl(var(--background)) !important; /* Light background for body */
+  /* background-color: hsl(var(--background)) !important; Light background for body */
+  background-color: hsl(40, 20%, 95%) !important; /* Light creamy background for body */
   color: hsl(var(--foreground)) !important; /* Dark text for body */
 }
 
@@ -160,5 +140,15 @@ body.white {
 
   /* Override specific components with background issues */
   .white .bg-black {
-    background-color: hsl(0, 0%, 100%) !important; /* Override any dark bg classes */
+    background-color:hsl(40, 20%, 95%) !important; /* Override any dark bg classes */
+  }
+
+  .white .bg-gray-800 {
+    background-color:hsl(40, 20%, 95%) !important; /* Override any dark bg classes */
+  }
+  .white .text-gray-300 {
+    color: hsl(0, 0%, 9%) !important; /* Override any dark bg classes */
+  }
+  .white .border-double {
+    border-color: #000;
   }
