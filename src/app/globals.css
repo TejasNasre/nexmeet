@@ -96,8 +96,11 @@
   animation: gradientSlide 1s ease-out forwards;
 }
 .bg-grid-white {
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+  background-image: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.1) 1px,
+      transparent 1px
+    ),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
 }
 
@@ -111,7 +114,11 @@
 }
 
 .highlight-text {
-  background: linear-gradient(to right, rgba(255, 255, 255, 0.1) 50%, transparent 50%);
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 50%
+  );
   background-size: 200% 100%;
   background-position: 100% 0;
   animation: highlight 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
@@ -129,7 +136,11 @@
 
 body.white {
   /* background-color: hsl(var(--background)) !important; Light background for body */
-  background-color: hsl(40, 20%, 95%) !important; /* Light creamy background for body */
+  background-color: hsl(
+    40,
+    20%,
+    95%
+  ) !important; /* Light creamy background for body */
   color: hsl(var(--foreground)) !important; /* Dark text for body */
 }
 
@@ -138,17 +149,98 @@ body.white {
   color: hsl(var(--foreground)) !important; /* Dark text if explicitly white */
 }
 
-  /* Override specific components with background issues */
-  .white .bg-black {
-    background-color:hsl(40, 20%, 95%) !important; /* Override any dark bg classes */
-  }
+/* Override specific components with background issues */
+.white .bg-black {
+  background-color: hsl(
+    40,
+    20%,
+    95%
+  ) !important; /* Override any dark bg classes */
+}
 
-  .white .bg-gray-800 {
-    background-color:hsl(40, 20%, 95%) !important; /* Override any dark bg classes */
-  }
-  .white .text-gray-300 {
-    color: hsl(0, 0%, 9%) !important; /* Override any dark bg classes */
-  }
-  .white .border-double {
-    border-color: #000;
-  }
+.white .bg-gray-800 {
+  background-color: hsl(
+    40,
+    20%,
+    95%
+  ) !important; /* Override any dark bg classes */
+}
+.white .text-gray-300 {
+  color: hsl(0, 0%, 9%) !important; /* Override any dark bg classes */
+}
+
+.white .text-gray-400 {
+  color: #000;
+}
+.white .DatePicker.text-white {
+  color: #000;
+}
+
+.white .card,
+.white .border-black {
+  border-color: #000 !important; /* Ensure black border for all cards */
+}
+
+/* For specific components that may need card-like borders */
+.white .div.border-black,
+.white .border,
+.white .border-white {
+  border-color: #000 !important; /* Set all borders to black */
+}
+
+/* You can also add specific padding or margins if required for uniformity */
+.white .card {
+  padding: 1rem; /* Example padding */
+  border-width: 1px; /* Set border thickness if needed */
+  border-style: solid;
+}
+
+/* Ensure placeholder text is black */
+.white .placeholder-gray-400::placeholder {
+  color: #000 !important;
+}
+
+.white .DatePicker.text-white,
+.white select.text-white,
+.white .select.text-white {
+  color: #000 !important; /* Change text to black */
+}
+
+.white .DatePicker.border-white,
+.white select.border-white,
+.white .select.border-white {
+  border-color: #000 !important; /* Change border to black */
+}
+
+.white input.text-white,
+.white textarea.text-white,
+.white select.text-white {
+  color: #000 !important; /* Change input text to black */
+}
+
+.white input.border-white,
+.white textarea.border-white,
+.white select.border-white {
+  border-color: #000 !important; /* Change border to black */
+}
+
+.white input::placeholder,
+.white textarea::placeholder,
+.white select::placeholder {
+  color: #000 !important; /* Change placeholder text to black */
+}
+
+
+
+.white .hover\:border-white:hover {
+  border-color: #000 !important; /* Change border to black on hover */
+}
+
+/* Optional: You can also set the default border color for these buttons if needed */
+.white .border-white {
+  border-color: #fff; /* Default border color for buttons */
+}
+
+.white .hover\:text-gray-300:hover {
+  color: #000 !important; /* Change hover text color to black */
+}

@@ -184,6 +184,12 @@ function Header() {
         </div>
         {isAuthenticated ? (
           <>
+          <button
+              onClick={toggleTheme}
+              className="bg-black p-2 rounded-md"
+            >
+              {isDarkMode ? <BsBrightnessLow size={24} /> : <IoMoon size={24} />}
+            </button>
             <Link
               onClick={() => handleNavigation("/dashboard")}
               href="/dashboard"
@@ -202,13 +208,13 @@ function Header() {
           <>
             <LoginLink
               postLoginRedirectURL="/dashboard"
-              className="mono transition ease-in-out delay-100 hover:scale-105 border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1"
+              className="mono transition ease-in-out delay-100 hover:scale-105 border-white border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1"
             >
               Sign in
             </LoginLink>
             <RegisterLink
               postLoginRedirectURL="/dashboard"
-              className="mono transition ease-in-out delay-100 hover:scale-105 border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1"
+              className="mono transition ease-in-out delay-100 hover:scale-105 border-white border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1"
             >
               Sign up
             </RegisterLink>
