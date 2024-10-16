@@ -10,7 +10,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { userDetails } from "../action/userDetails";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Comment } from "@/components/ui/comment";
 import {
   TwitterShareButton,
   TwitterIcon,
@@ -277,24 +277,16 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                     </form>
 
                     <div className="mt-4">
-                        <h2 className="text-lg">Comments</h2>
-                        {comments.length > 0 ? (
-                            <div className="space-y-2">
-                            {comments.map((c) => (
-                                <Card key={c.id} className="bg-gray-800">
-                                <CardHeader>
-                                    <CardTitle>{c.author}</CardTitle>
-                                    <CardDescription>{new Date(c.timestamp).toLocaleString()}</CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <p className="text-white">{c.text}</p>
-                                </CardContent>
-                                </Card>
-                            ))}
-                            </div>
-                        ) : (
-                            <p>No comments yet.</p>
-                        )}
+                    <h2 className="text-lg">Comments</h2>
+                    {comments.length > 0 ? (
+                        <div className="space-y-2">
+                        {comments.map((c) => (
+                            <Comment key={c.id} author={c.author} timestamp={c.timestamp} text={c.text} />
+                        ))}
+                        </div>
+                    ) : (
+                        <p>No comments yet.</p>
+                    )}
                     </div>
                   </div>
                 </div>
