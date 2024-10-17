@@ -23,6 +23,7 @@ export const uploadImage = async ({ file, bucket, folder }: UploadProps) => {
     });
   } catch (error) {
     console.error(error);
+    console.error("Error during image compression:", error);
     return { imageUrl: "", error: "Image compression failed" };
   }
 
@@ -31,13 +32,12 @@ export const uploadImage = async ({ file, bucket, folder }: UploadProps) => {
   const { data, error } = await storage.from(bucket).upload(path, file);
 
   if (error) {
+    console.error("Error during image upload:", error);
     return { imageUrl: "", error: "Image upload failed" };
   }
-
   const imageUrl = `${process.env
     .NEXT_PUBLIC_SUPABASE_URL!}/storage/v1/object/public/${bucket}/${
     data?.path
   }`;
-
   return { imageUrl, error: "" };
 };

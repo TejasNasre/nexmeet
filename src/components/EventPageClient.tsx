@@ -11,6 +11,8 @@ import { useRouter } from "next/navigation";
 import { userDetails } from "../action/userDetails";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { Comment } from "@/components/ui/comment";
+import { FaXTwitter } from "react-icons/fa6";
+
 import {
   TwitterShareButton,
   TwitterIcon,
@@ -238,7 +240,10 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                   <div>
                     <Button
                       variant="outline"
-                      className="w-full"
+                      className={`w-full transition-transform duration-300 ease-in-out transform ${
+                        (!isRegistered && !registrationClosed)? "hover:scale-105" : "" 
+                      }
+                    `}
                       disabled={registrationClosed || isRegistered} // Button disabled if registration is closed
                       onClick={isUser}
                     >
@@ -335,12 +340,12 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                     </h1>
                     <div className="flex gap-4">
                       {/* Twitter Share Button */}
-                      <TwitterShareButton url={shareUrl} title={title}>
-                        <TwitterIcon size={30} round />
+                      <TwitterShareButton url={shareUrl} title={title} className="hover:scale-110 transition-transform transform duration-300 ease-in-out">
+                        <FaXTwitter size={30} />
                       </TwitterShareButton>
 
                       {/* WhatsApp Share Button */}
-                      <WhatsappShareButton url={shareUrl} title={title}>
+                      <WhatsappShareButton url={shareUrl} title={title} className="hover:scale-110 transition-transform transform duration-300 ease-in-out">
                         <WhatsappIcon size={30} round />
                       </WhatsappShareButton>
                     </div>

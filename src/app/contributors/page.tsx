@@ -53,7 +53,7 @@ const ContributorsPage = () => {
         {contributors.map((contributor) => (
           <div
             key={contributor.id}
-            className="w-72 p-4 border rounded-xl shadow text-center transition-transform transform hover:scale-105 hover:shadow-lg flex flex-col justify-center items-center gap-2 cursor-pointer"
+            className="w-72 p-4 border rounded-xl shadow text-center transition-transform transform hover:scale-105 hover:shadow-lg duration-300 ease-in-out flex flex-col justify-center items-center gap-2 cursor-pointer"
           >
             <Image
               src={contributor.avatar_url}

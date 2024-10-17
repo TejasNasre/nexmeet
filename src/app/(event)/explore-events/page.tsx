@@ -1,15 +1,21 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { useUserDetails } from "../../../hooks/useUserDetails"; // Adjust the import path
 import Pagination from "../../../components/Pagination";
 import { supabase } from "../../../utils/supabase";
 import Link from "next/link";
 import Image from "next/image";
 import Loading from "../../../components/loading";
+import { HeartIcon } from "@heroicons/react/solid";
 import { CalendarIcon, MapPinIcon } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
+import { useSession } from "@supabase/auth-helpers-react";
 const Page: React.FC = () => {
+  interface CountLikes {
+    [key: string]: number; // Maps event id to its like count
+  }
+
   const [loading, setLoading] = useState(true);
   const [event, setEvent]: any = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -19,6 +25,16 @@ const Page: React.FC = () => {
   const [category, setCategory] = useState("");
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
+  const [likedEvents, setLikedEvents] = useState<{ [key: string]: boolean }>(
+    {}
+  );
+  const session = useSession();
+  const [countLikes, setCountLikes] = useState<CountLikes>({});
+  const { user } = useUserDetails();
+  interface Event {
+    id: string; // or number, based on your actual id type
+    event_likes: number;
+  }
 
   useEffect(() => {
     async function getData() {
@@ -33,7 +49,38 @@ const Page: React.FC = () => {
       setLoading(false);
     }
     getData();
-  }, []);
+  }, []); // Fetch Event Details
+
+  useEffect(() => {
+    const fetchLikedEvents = async () => {
+      if (user) {
+        const userid = user.id;
+        const useremail = user.email;
+        const { data: likedEventsData, error } = await supabase
+          .from("check_event_likes")
+          .select("eventid")
+          .eq("useremail", useremail);
+
+        if (error) {
+          console.error("Error fetching liked events:", error);
+          return;
+        }
+
+        const likedeventids = likedEventsData.map((item) => item.eventid);
+        const likedEventsMap = likedeventids.reduce(
+          (acc, id) => {
+            acc[id] = true; // Mark liked events as true
+            return acc;
+          },
+          {} as { [key: string]: boolean }
+        );
+
+        setLikedEvents(likedEventsMap); // Update the liked events state
+      }
+    };
+
+    fetchLikedEvents();
+  }, [user]); // Fetch liked events whenever the user changes
 
   const sortEventsByLikes = (events: any[]) => {
     if (numberOfLikes === "high") {
@@ -42,6 +89,134 @@ const Page: React.FC = () => {
       return events.sort((a, b) => a.event_likes - b.event_likes);
     }
     return events;
+  };
+
+  useEffect(() => {
+    // Fetch initial like counts for all events when the component mounts
+    const fetchLikeCounts = async () => {
+      const { data, error } = await supabase
+        .from("event_details") // Specify the table name only
+        .select("id, event_likes");
+
+      if (error) {
+        console.error("Error fetching event likes:", error);
+      } else if (data) {
+        const likesMap: CountLikes = {}; // Use the CountLikes interface
+        data.forEach((event: Event) => {
+          likesMap[event.id] = event.event_likes; // Create a map of eventId to like counts
+        });
+        setCountLikes(likesMap); // Set the initial state with all event likes
+      }
+    };
+
+    fetchLikeCounts();
+  }, []);
+
+  const handleLikeToggle = async (eventid: string) => {
+    // Get the user details via the hook // Assuming you're using this hook to get user details
+    if (!user) {
+      console.log("User is not authenticated. Cannot like the event.");
+      return;
+    }
+
+    const userid = user.id;
+    const useremail = user.email; // Get user ID from the hook
+
+    // Check if the event is liked by the user
+    const { data: likedData, error: checkError } = await supabase
+      .from("check_event_likes")
+      .select("eventid")
+      .eq("eventid", eventid)
+      .eq("useremail", useremail);
+
+    if (checkError) {
+      console.error("Error checking likes:", checkError);
+      return;
+    }
+
+    const isLiked = likedData.length > 0;
+
+    // Declare eventData outside the blocks to reuse it
+    let eventData;
+
+    // Fetch the current like count for the event
+    const { data: fetchedEventData, error: eventError } = await supabase
+      .from("event_details")
+      .select("event_likes")
+      .eq("id", eventid)
+      .single();
+
+    if (eventError) {
+      console.error("Error fetching event likes:", eventError);
+      return;
+    }
+
+    eventData = fetchedEventData; // Assign the fetched event data
+
+    if (isLiked) {
+      // If the event is liked, unlike it
+      const { error: unlikeError } = await supabase
+        .from("check_event_likes")
+        .delete()
+        .eq("eventid", eventid)
+        .eq("useremail", useremail);
+
+      if (unlikeError) {
+        console.error("Error unliking event:", unlikeError);
+        return;
+      }
+
+      // Decrease the like count in event_details
+      const newLikesCount = eventData.event_likes - 1;
+
+      const { error: decrementError } = await supabase
+        .from("event_details")
+        .update({ event_likes: newLikesCount })
+        .eq("id", eventid);
+
+      if (decrementError) {
+        console.error("Error decreasing like count:", decrementError);
+        return;
+      }
+      // Update the countLikes state
+      setCountLikes((prevCount) => ({
+        ...prevCount,
+        [eventid]: newLikesCount,
+      }));
+    } else {
+      // If the event is not liked, like it
+      const { error: likeError } = await supabase
+        .from("check_event_likes")
+        .insert({ eventid, useremail });
+
+      if (likeError) {
+        console.error("Error liking event:", likeError);
+        return;
+      }
+
+      // Increase the like count in event_details
+      const newLikesCount = eventData.event_likes + 1;
+
+      const { error: incrementError } = await supabase
+        .from("event_details")
+        .update({ event_likes: newLikesCount })
+        .eq("id", eventid);
+
+      if (incrementError) {
+        console.error("Error increasing like count:", incrementError);
+        return;
+      }
+      setCountLikes((prevCount) => ({
+        ...prevCount,
+        [eventid]: newLikesCount,
+      }));
+    }
+
+    // Update the local state in UI to reflect the liked/unliked status
+    setLikedEvents((prevLikes) => ({
+      ...prevLikes,
+      [eventid]: !isLiked,
+    }));
   };
 
   const filteredAndSortedEvents = sortEventsByLikes(event).filter(
@@ -184,13 +359,30 @@ const Page: React.FC = () => {
                     key={event.id}
                   >
                     <div className="relative h-64">
-                      <Image
-                        width="500"
-                        height="500"
-                        src={JSON.parse(event.event_images[0]?.url)[0]}
-                        alt={event.event_title}
-                        className="w-full h-full object-cover"
-                      />
+                      {event.event_images[0]?.url && (
+                        <Image
+                          width="500"
+                          height="500"
+                          src={JSON.parse(event.event_images[0].url)[0]}
+                          alt={event.event_title}
+                          className="w-full h-full object-cover"
+                        />
+                      )}
+                      <div className="absolute top-2 right-2 z-10">
+                        <div className="flex flex-col items-center justify-center p-2 ">
+                          <HeartIcon
+                            onClick={() => handleLikeToggle(event.id)}
+                            className={`h-8 w-8 transition-all duration-300 ${
+                              likedEvents[event.id]
+                                ? "text-red-500 filter drop-shadow-[0_0_10px_rgba(255,0,0,0.5)]"
+                                : "text-white"
+                            } hover:text-red-500 rounded-full bg-red-100 bg-opacity-20 backdrop-filter backdrop-blur-sm p-1`}
+                          />
+                          <span className="text-[14px] font-semibold text-white mt-1">
+                            {countLikes[event.id] || 0}
+                          </span>
+                        </div>
+                      </div>
                       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
                         <h2 className="text-lg font-bold leading-tight text-white">
                           {event.event_title}
@@ -204,7 +396,11 @@ const Page: React.FC = () => {
                             {event.event_category}
                           </span>
                           <span
-                            className={`px-2 py-1 text-xs font-semibold rounded-full ${isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
+                            className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                              isActive
+                                ? "bg-green-100 text-green-800"
+                                : "bg-red-100 text-red-800"
+                            }`}
                           >
                             {isActive ? "Active" : "Inactive"}
                           </span>
@@ -220,7 +416,6 @@ const Page: React.FC = () => {
                         <div className="flex items-center space-x-2 text-xs">
                           <CalendarIcon className="h-3 w-3" />
                           <span>
-                            {" "}
                             {new Date(event.event_startdate).toLocaleString(
                               undefined,
                               {

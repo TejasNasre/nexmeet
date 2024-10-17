@@ -329,7 +329,7 @@ export default function AddEvent() {
           const imageFile = await convertBlobUrlToFile(imageUrls[0]);
           const { imageUrl, error: uploadError } = await uploadImage({
             file: imageFile,
-            bucket: "event_images",
+            bucket: "event_image",
           });
 
           if (uploadError) throw uploadError;
@@ -348,7 +348,9 @@ export default function AddEvent() {
         console.error("Error during form submission:", error);
         toast.error("Failed to create event.", {
           description:
-            error instanceof Error ? error.message : "An error occurred while creating the event. Please try again.",
+            error instanceof Error
+              ? error.message
+              : "An error occurred while creating the event. Please try again.",
         });
       }
     });
