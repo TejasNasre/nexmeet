@@ -1,13 +1,25 @@
 import Link from "next/link";
 import { IoLogoTwitter, IoLogoGithub, IoLogoLinkedin } from "react-icons/io5";
 import React from "react";
+import { FaXTwitter } from "react-icons/fa6";
+import Image from "next/image";
 
 const Footer: React.FC = () => {
   return (
     <footer className="w-full bg-black text-white py-10 px-4 md:px-10 z-[999]">
       <div className="container mx-auto flex flex-col gap-8 md:flex-row justify-between items-center">
         <div className="text-center md:text-left">
-          <h2 className="text-2xl font-bold text-white">Nexmeet</h2>
+        <Link
+            href={"/"}
+            className=" transition duration-300 ease-in-out transform hover:scale-105">
+            <Image
+              src={"/nexmeet.png"}
+              width={500}
+              height={500}
+              alt="NexMeet Logo"
+              className="h-8 w-auto transition duration-300 ease-in-out transform hover:scale-105"
+            />
+          </Link>
           <p className="text-gray-400 mt-2">Your Next Meetup Platform</p>
         </div>
 
@@ -17,7 +29,7 @@ const Footer: React.FC = () => {
             target="_blank"
             className="transition hover:scale-110 hover:text-blue-500"
           >
-            <IoLogoTwitter className="h-6 w-6 text-white" />
+            <FaXTwitter className="h-6 w-6 text-white" />
           </Link>
           <Link
             href="https://github.com/TejasNasre/nexmeet"
