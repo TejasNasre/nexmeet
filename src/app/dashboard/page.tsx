@@ -242,7 +242,7 @@ export default function Page() {
     <>
       <div className="  w-full h-auto bg-black text-white py-[8rem] flex flex-col">
         <main className="flex-grow container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8">
-          <div className="flex flex-col justify-start items-center gap-24 md:border md:border-white rounded-md p-10">
+          <div className="flex flex-col justify-start items-center gap-24 border-white md:border rounded-md p-10">
             <h1 className="text-center text-4xl font-bold">Your Profile</h1>
             {loading ? (
               <Loading />
@@ -260,7 +260,7 @@ export default function Page() {
                 </h1>
                 <h2>{user.email}</h2>
                 <LogoutLink
-                  className="mono transition ease-in-out delay-100 hover:scale-105 border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1"
+                  className="mono transition ease-in-out delay-100 hover:scale-105 border-double border-white border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1"
                   postLogoutRedirectURL="/"
                 >
                   Log out

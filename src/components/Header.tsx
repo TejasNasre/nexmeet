@@ -9,6 +9,9 @@ import {
 import { userDetails } from "../action/userDetails";
 import Image from "next/image";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { BsBrightnessLow } from "react-icons/bs";
+import { IoMoon } from "react-icons/io5";
+
 
 interface User {
   picture: string;
@@ -19,6 +22,7 @@ function Header() {
 
   const [user, setUser] = useState<User | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -40,6 +44,11 @@ function Header() {
   const handleNavigation = (path: string) => {
     router.push(path);
     setIsMenuOpen(false); // Close the menu
+  };
+
+  const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode);
+    document.body.classList.toggle("white"); // Ensure dark-mode CSS is applied
   };
 
   return (
@@ -124,9 +133,8 @@ function Header() {
     return (
       <>
         <div
-          className={`flex justify-center items-center gap-6 ${
-            isMenuOpen ? `flex-col` : `flex-row`
-          }`}
+          className={`flex justify-center items-center gap-6 ${isMenuOpen ? `flex-col` : `flex-row`
+            }`}
         >
           <Link
             href="/"
@@ -176,6 +184,12 @@ function Header() {
         </div>
         {isAuthenticated ? (
           <>
+          <button
+              onClick={toggleTheme}
+              className="bg-black p-2 rounded-md"
+            >
+              {isDarkMode ? <BsBrightnessLow size={24} /> : <IoMoon size={24} />}
+            </button>
             <Link
               onClick={() => handleNavigation("/dashboard")}
               href="/dashboard"
@@ -194,16 +208,22 @@ function Header() {
           <>
             <LoginLink
               postLoginRedirectURL="/dashboard"
-              className="mono transition ease-in-out delay-100 hover:scale-105 border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1"
+              className="mono transition ease-in-out delay-100 hover:scale-105 border-white border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1"
             >
               Sign in
             </LoginLink>
             <RegisterLink
               postLoginRedirectURL="/dashboard"
-              className="mono transition ease-in-out delay-100 hover:scale-105 border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1"
+              className="mono transition ease-in-out delay-100 hover:scale-105 border-white border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1"
             >
               Sign up
             </RegisterLink>
+            <button
+              onClick={toggleTheme}
+              className="bg-black p-2 rounded-md"
+            >
+              {isDarkMode ? <BsBrightnessLow size={24} /> : <IoMoon size={24} />}
+            </button>
           </>
         )}
       </>

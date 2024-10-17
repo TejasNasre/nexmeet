@@ -12,11 +12,19 @@ import reviews from "../data/reviews.json";
 import data from "../data/community.json";
 import FeatureCards from "./FeatureCards";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { CiStar } from "react-icons/ci";
+import { AiFillStar } from "react-icons/ai";
+import axios from "axios";
 
 const Hero: React.FC = () => {
   const { isAuthenticated } = useKindeBrowserClient();
 
   const [currentReview, setCurrentReview] = useState(0);
+
+  const [isStarred, setIsStarred] = useState(false);
+
+  const [repoData, setRepoData] = useState({ stars: 0, forks: 0 });
+
 
   const nextReview = () => {
     setCurrentReview((prev) => (prev + 1) % reviews.length);
@@ -32,6 +40,25 @@ const Hero: React.FC = () => {
     }, 5000);
     return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    const fetchContributors = async () => {
+      try {
+        const { data: repoData } = await axios.get(
+          "https://api.github.com/repos/TejasNasre/nexmeet"
+        );
+        setRepoData({
+          stars: repoData.stargazers_count,
+          forks: repoData.forks_count,
+        });
+      } catch (error) {
+        console.error("Error fetching contributors data:", error);
+      }
+    };
+
+    fetchContributors();
+  }, []);
+
 
   return (
     <>
@@ -53,24 +80,28 @@ const Hero: React.FC = () => {
             <div className="flex flex-row justify-center items-center gap-8">
               <Link
                 href="/explore-events"
-                className="mono transition ease-in-out duration-300 hover:scale-105 border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md p-1 md:p-2"
+                className="mono transition ease-in-out duration-300 hover:scale-105 border-white border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md p-1 md:p-2"
               >
                 Explore Events
               </Link>
               {isAuthenticated ? (
                 <Link
                   href="/dashboard"
-                  className="mono transition ease-in-out duration-300 hover:scale-105 border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md p-1 md:p-2"
+                  className="mono transition ease-in-out duration-300 hover:scale-105 border-white border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md p-1 md:p-2"
                 >
                   Dashboard
                 </Link>
               ) : (
-                <RegisterLink className="mono transition ease-in-out duration-300 hover:scale-105 border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md p-1 md:p-2">
+                <RegisterLink className="mono transition ease-in-out duration-300 hover:scale-105 border-white border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md p-1 md:p-2">
                   Register
                 </RegisterLink>
               )}
             </div>
-            <h1>project is in development phase</h1>
+            <h1 className="-mb-6">project is in development phase</h1>
+
+            <div className="text-center">
+              <span className="mr-4">⭐ Stars: {repoData.stars}</span>
+            </div>
           </div>
         </BackgroundBeamsWithCollision>
 
