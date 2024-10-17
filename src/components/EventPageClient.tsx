@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { userDetails } from "../action/userDetails";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { Comment } from "@/components/ui/comment";
 import { FaXTwitter } from "react-icons/fa6";
 
 import {
@@ -26,7 +27,9 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
   const [eventData, setEventData]: any = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData]: any = useState([]);
-  const [registrationClosed, setRegistrationClosed] = useState(false); // New state
+  const [registrationClosed, setRegistrationClosed] = useState(false);
+  const [comment, setComment] = useState(""); // State for comment input
+  const [comments, setComments] = useState<{ id: string; text: string; author: string; timestamp: string }[]>([]);
 
   useEffect(() => {
     async function getData() {
@@ -55,12 +58,26 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
     });
   }, []);
 
-  // Function to check if registration period has ended
+  useEffect(() => {
+    fetchComments();
+  }, [eventsId]);
+
+  const fetchComments = async () => {
+    const { data, error } = await supabase
+      .from("comments")
+      .select("*")
+      .eq("event_id", eventsId);
+
+    if (error) {
+      console.error("Error fetching comments:", error);
+    } else {
+      setComments(data);
+    }
+  };
+
   const checkRegistrationStatus = (data: any) => {
     const currentDate = new Date();
-    const registrationStartDate = new Date(
-      data[0].event_registration_startdate
-    );
+    const registrationStartDate = new Date(data[0].event_registration_startdate);
     const registrationEndDate = new Date(data[0].event_registration_enddate);
 
     if (
@@ -84,13 +101,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
   }
 
   const isRegistered = eventData[0]?.event_participants.some(
-    (register: any) => {
-      const isMatch =
-        register.participant_email === userData?.email &&
-        register.is_registered === true;
-
-      return isMatch;
-    }
+    (register: any) => register.participant_email === userData?.email && register.is_registered
   );
 
   const img = JSON.parse(eventData[0].event_images[0].url);
@@ -99,6 +110,28 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
 
   const shareUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/explore-events/${eventsId}`;
   const title = "Check out this event on Nexmeet";
+
+  const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setComment(e.target.value);
+  };
+
+  const handleCommentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (comment.trim()) {
+      const { error } = await supabase
+        .from("comments")
+        .insert([
+          { event_id: eventsId, author: `${userData?.given_name} ${userData?.family_name}` || "Anonymous", text: comment }
+        ]);
+
+      if (error) {
+        console.error("Error adding comment:", error);
+      } else {
+        setComments([...comments, { author: `${userData?.given_name} ${userData?.family_name}` || "Anonymous", text: comment, timestamp: new Date().toISOString(), id: "" }]);
+        setComment(""); // Clear the comment input
+      }
+    }
+  };
 
   return (
     <>
@@ -233,6 +266,33 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                     ) : (
                       ""
                     )}
+
+                    {/* Comment Section */}
+                    <form onSubmit={handleCommentSubmit} className="mt-4">
+                    <textarea
+                        value={comment}
+                        onChange={handleCommentChange}
+                        placeholder="Leave a comment..."
+                        className="w-full bg-black p-2 border border-gray-300 rounded"
+                        rows={4}
+                    />
+                    <Button type="submit" variant="outline" className="mt-2 w-full">
+                        Submit Comment
+                    </Button>
+                    </form>
+
+                    <div className="mt-4">
+                    <h2 className="text-lg">Comments</h2>
+                    {comments.length > 0 ? (
+                        <div className="space-y-2">
+                        {comments.map((c) => (
+                            <Comment key={c.id} author={c.author} timestamp={c.timestamp} text={c.text} />
+                        ))}
+                        </div>
+                    ) : (
+                        <p>No comments yet.</p>
+                    )}
+                    </div>
                   </div>
                 </div>
 
