@@ -359,13 +359,15 @@ const Page: React.FC = () => {
                     key={event.id}
                   >
                     <div className="relative h-64">
-                      <Image
-                        width="500"
-                        height="500"
-                        src={JSON.parse(event.event_images[0]?.url)[0]}
-                        alt={event.event_title}
-                        className="w-full h-full object-cover"
-                      />
+                      {event.event_images[0]?.url && (
+                        <Image
+                          width="500"
+                          height="500"
+                          src={JSON.parse(event.event_images[0].url)[0]}
+                          alt={event.event_title}
+                          className="w-full h-full object-cover"
+                        />
+                      )}
                       <div className="absolute top-2 right-2 z-10">
                         <div className="flex flex-col items-center justify-center p-2 ">
                           <HeartIcon

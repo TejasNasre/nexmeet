@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    unoptimized : true,
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
@@ -27,11 +27,6 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "jzhgfowuznosxtwzkbkx.supabase.co",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "mlrecckdbtuezsjebihk.supabase.co", // Add new Supabase hostname here
         pathname: "/**",
       },
       {
