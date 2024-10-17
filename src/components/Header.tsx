@@ -12,7 +12,6 @@ import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { BsBrightnessLow } from "react-icons/bs";
 import { IoMoon } from "react-icons/io5";
 
-
 interface User {
   picture: string;
 }
@@ -133,8 +132,9 @@ function Header() {
     return (
       <>
         <div
-          className={`flex justify-center items-center gap-6 ${isMenuOpen ? `flex-col` : `flex-row`
-            }`}
+          className={`flex justify-center items-center gap-6 ${
+            isMenuOpen ? `flex-col` : `flex-row`
+          }`}
         >
           <Link
             href="/"
@@ -184,12 +184,6 @@ function Header() {
         </div>
         {isAuthenticated ? (
           <>
-          <button
-              onClick={toggleTheme}
-              className="bg-black p-2 rounded-md"
-            >
-              {isDarkMode ? <BsBrightnessLow size={24} /> : <IoMoon size={24} />}
-            </button>
             <Link
               onClick={() => handleNavigation("/dashboard")}
               href="/dashboard"
@@ -203,6 +197,13 @@ function Header() {
                 className="rounded-full size-10 border-2 border-white"
               />
             </Link>
+            <button onClick={toggleTheme} className="bg-black p-2 rounded-md">
+              {isDarkMode ? (
+                <BsBrightnessLow size={24} />
+              ) : (
+                <IoMoon size={24} />
+              )}
+            </button>
           </>
         ) : (
           <>
@@ -218,11 +219,12 @@ function Header() {
             >
               Sign up
             </RegisterLink>
-            <button
-              onClick={toggleTheme}
-              className="bg-black p-2 rounded-md"
-            >
-              {isDarkMode ? <BsBrightnessLow size={24} /> : <IoMoon size={24} />}
+            <button onClick={toggleTheme} className="bg-black p-2 rounded-md">
+              {isDarkMode ? (
+                <BsBrightnessLow size={24} />
+              ) : (
+                <IoMoon size={24} />
+              )}
             </button>
           </>
         )}

@@ -29,7 +29,9 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
   const [userData, setUserData]: any = useState([]);
   const [registrationClosed, setRegistrationClosed] = useState(false);
   const [comment, setComment] = useState(""); // State for comment input
-  const [comments, setComments] = useState<{ id: string; text: string; author: string; timestamp: string }[]>([]);
+  const [comments, setComments] = useState<
+    { id: string; text: string; author: string; timestamp: string }[]
+  >([]);
 
   useEffect(() => {
     async function getData() {
@@ -77,7 +79,9 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
 
   const checkRegistrationStatus = (data: any) => {
     const currentDate = new Date();
-    const registrationStartDate = new Date(data[0].event_registration_startdate);
+    const registrationStartDate = new Date(
+      data[0].event_registration_startdate
+    );
     const registrationEndDate = new Date(data[0].event_registration_enddate);
 
     if (
@@ -101,7 +105,8 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
   }
 
   const isRegistered = eventData[0]?.event_participants.some(
-    (register: any) => register.participant_email === userData?.email && register.is_registered
+    (register: any) =>
+      register.participant_email === userData?.email && register.is_registered
   );
 
   const img = JSON.parse(eventData[0].event_images[0].url);
@@ -118,16 +123,28 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
   const handleCommentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (comment.trim()) {
-      const { error } = await supabase
-        .from("comments")
-        .insert([
-          { event_id: eventsId, author: `${userData?.given_name} ${userData?.family_name}` || "Anonymous", text: comment }
-        ]);
+      const { error } = await supabase.from("comments").insert([
+        {
+          event_id: eventsId,
+          author:
+            `${userData?.given_name} ${userData?.family_name}` || "Anonymous",
+          text: comment,
+        },
+      ]);
 
       if (error) {
         console.error("Error adding comment:", error);
       } else {
-        setComments([...comments, { author: `${userData?.given_name} ${userData?.family_name}` || "Anonymous", text: comment, timestamp: new Date().toISOString(), id: "" }]);
+        setComments([
+          ...comments,
+          {
+            author:
+              `${userData?.given_name} ${userData?.family_name}` || "Anonymous",
+            text: comment,
+            timestamp: new Date().toISOString(),
+            id: "",
+          },
+        ]);
         setComment(""); // Clear the comment input
       }
     }
@@ -167,131 +184,152 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
               </div>
 
               <div className="w-full flex flex-col md:flex-row gap-4">
-                <div className="w-full border border-white rounded-lg p-6 flex flex-col gap-2 md:gap-4">
-                  <h1 className="text-2xl font-extrabold">About The Event</h1>
-                  <p className="text-justify leading-relaxed">
-                    {event.event_description}
-                  </p>
-                  <div className="w-full flex flex-col md:flex-row gap-4">
+                <div>
+                  <div className="w-full border border-white rounded-lg p-6 flex flex-col gap-2 md:gap-4">
+                    <h1 className="text-2xl font-extrabold">About The Event</h1>
+                    <p className="text-justify leading-relaxed">
+                      {event.event_description}
+                    </p>
+                    <div className="w-full flex flex-col md:flex-row gap-4">
+                      <h1 className="flex flex-row items-center gap-2">
+                        Event Start&apos;s Form :{" "}
+                        {new Date(event.event_startdate).toLocaleString(
+                          undefined,
+                          {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          }
+                        )}
+                      </h1>
+                      <h1 className="flex flex-row items-center gap-2">
+                        Event End&apos;s On :{" "}
+                        {new Date(event.event_enddate).toLocaleString(
+                          undefined,
+                          {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          }
+                        )}
+                      </h1>
+                    </div>
                     <h1 className="flex flex-row items-center gap-2">
-                      Event Start&apos;s Form :{" "}
-                      {new Date(event.event_startdate).toLocaleString(
-                        undefined,
-                        {
+                      Duration : {event.event_duration} Hours
+                    </h1>
+                    <h1>Team Size : {event.team_size}</h1>
+
+                    <h1 className="flex flex-row items-center gap-4">
+                      Location : {event.event_location}
+                    </h1>
+                    <h1 className="flex flex-row items-center gap-3">
+                      <Badge variant="destructive">
+                        <span>&#8377;</span>
+                        {event.event_price}
+                      </Badge>
+                      <Badge
+                        variant="destructive"
+                        className={`${isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
+                      >
+                        {isActive ? "Active" : "Inactive"}
+                      </Badge>
+                    </h1>
+
+                    <div className="border border-white"></div>
+
+                    <div>
+                      <h1 className="text-xl font-bold">Registration Period</h1>
+                      <h1>
+                        From{" "}
+                        {new Date(
+                          event.event_registration_startdate
+                        ).toLocaleString(undefined, {
                           year: "numeric",
                           month: "short",
                           day: "numeric",
+                        })}{" "}
+                        To{" "}
+                        {new Date(
+                          event.event_registration_enddate
+                        ).toLocaleString(undefined, {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        })}{" "}
+                      </h1>
+                    </div>
+                    <div>
+                      <Button
+                        variant="outline"
+                        className={`w-full transition-transform duration-300 ease-in-out transform ${
+                          !isRegistered && !registrationClosed
+                            ? "hover:scale-105"
+                            : ""
                         }
-                      )}
-                    </h1>
-                    <h1 className="flex flex-row items-center gap-2">
-                      Event End&apos;s On :{" "}
-                      {new Date(event.event_enddate).toLocaleString(undefined, {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })}
-                    </h1>
-                  </div>
-                  <h1 className="flex flex-row items-center gap-2">
-                    Duration : {event.event_duration} Hours
-                  </h1>
-                  <h1>Team Size : {event.team_size}</h1>
-
-                  <h1 className="flex flex-row items-center gap-4">
-                    Location : {event.event_location}
-                  </h1>
-                  <h1 className="flex flex-row items-center gap-3">
-                    <Badge variant="destructive">
-                      <span>&#8377;</span>
-                      {event.event_price}
-                    </Badge>
-                    <Badge
-                      variant="destructive"
-                      className={`${isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
-                    >
-                      {isActive ? "Active" : "Inactive"}
-                    </Badge>
-                  </h1>
-
-                  <div className="border border-white"></div>
-
-                  <div>
-                    <h1 className="text-xl font-bold">Registration Period</h1>
-                    <h1>
-                      From{" "}
-                      {new Date(
-                        event.event_registration_startdate
-                      ).toLocaleString(undefined, {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })}{" "}
-                      To{" "}
-                      {new Date(
-                        event.event_registration_enddate
-                      ).toLocaleString(undefined, {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })}{" "}
-                    </h1>
-                  </div>
-                  <div>
-                    <Button
-                      variant="outline"
-                      className={`w-full transition-transform duration-300 ease-in-out transform ${
-                        (!isRegistered && !registrationClosed)? "hover:scale-105" : "" 
-                      }
                     `}
-                      disabled={registrationClosed || isRegistered} // Button disabled if registration is closed
-                      onClick={isUser}
-                    >
-                      {registrationClosed
-                        ? "Registration Closed"
-                        : isRegistered
-                          ? "Registered Waiting For Approval"
-                          : "Register Now"}
-                    </Button>
+                        disabled={registrationClosed || isRegistered} // Button disabled if registration is closed
+                        onClick={isUser}
+                      >
+                        {registrationClosed
+                          ? "Registration Closed"
+                          : isRegistered
+                            ? "Registered Waiting For Approval"
+                            : "Register Now"}
+                      </Button>
+                    </div>
+                    <div>
+                      {isRegistered ? (
+                        <>
+                          <Link href={`${event.event_formlink}`}>
+                            <Button variant="outline" className="w-full">
+                              Actual Form Link
+                            </Button>
+                          </Link>
+                        </>
+                      ) : (
+                        ""
+                      )}
+                    </div>
                   </div>
                   <div>
-                    {isRegistered ? (
-                      <>
-                        <Link href={`${event.event_formlink}`}>
-                          <Button variant="outline" className="w-full">
-                            Actual Form Link
-                          </Button>
-                        </Link>
-                      </>
-                    ) : (
-                      ""
-                    )}
-
                     {/* Comment Section */}
-                    <form onSubmit={handleCommentSubmit} className="mt-4">
-                    <textarea
+                    <form
+                      onSubmit={handleCommentSubmit}
+                      className="mt-4 border border-white p-4 flex flex-col gap-4 rounded-xl"
+                    >
+                      <h1 className="text-xl">Leave Comments</h1>
+                      <textarea
                         value={comment}
                         onChange={handleCommentChange}
                         placeholder="Leave a comment..."
                         className="w-full bg-black p-2 border border-gray-300 rounded"
                         rows={4}
-                    />
-                    <Button type="submit" variant="outline" className="mt-2 w-full">
+                      />
+                      <Button
+                        type="submit"
+                        variant="outline"
+                        className="mt-2 w-full"
+                      >
                         Submit Comment
-                    </Button>
+                      </Button>
                     </form>
 
-                    <div className="mt-4">
-                    <h2 className="text-lg">Comments</h2>
-                    {comments.length > 0 ? (
+                    <div className="mt-4 flex flex-col gap-4">
+                      <h2 className="text-xl">Comments</h2>
+                      {comments.length > 0 ? (
                         <div className="space-y-2">
-                        {comments.map((c) => (
-                            <Comment key={c.id} author={c.author} timestamp={c.timestamp} text={c.text} />
-                        ))}
+                          {comments.map((c) => (
+                            <Comment
+                              key={c.id}
+                              author={c.author}
+                              timestamp={c.timestamp}
+                              text={c.text}
+                            />
+                          ))}
                         </div>
-                    ) : (
+                      ) : (
                         <p>No comments yet.</p>
-                    )}
+                      )}
                     </div>
                   </div>
                 </div>
@@ -340,12 +378,20 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                     </h1>
                     <div className="flex gap-4">
                       {/* Twitter Share Button */}
-                      <TwitterShareButton url={shareUrl} title={title} className="hover:scale-110 transition-transform transform duration-300 ease-in-out">
+                      <TwitterShareButton
+                        url={shareUrl}
+                        title={title}
+                        className="hover:scale-110 transition-transform transform duration-300 ease-in-out"
+                      >
                         <FaXTwitter size={30} />
                       </TwitterShareButton>
 
                       {/* WhatsApp Share Button */}
-                      <WhatsappShareButton url={shareUrl} title={title} className="hover:scale-110 transition-transform transform duration-300 ease-in-out">
+                      <WhatsappShareButton
+                        url={shareUrl}
+                        title={title}
+                        className="hover:scale-110 transition-transform transform duration-300 ease-in-out"
+                      >
                         <WhatsappIcon size={30} round />
                       </WhatsappShareButton>
                     </div>
