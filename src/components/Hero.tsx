@@ -15,6 +15,7 @@ import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { CiStar } from "react-icons/ci";
 import { AiFillStar } from "react-icons/ai";
 import axios from "axios";
+import ScrollToTop from "./Scroll-to-top"
 
 const Hero: React.FC = () => {
   const { isAuthenticated } = useKindeBrowserClient();
@@ -554,6 +555,7 @@ const Hero: React.FC = () => {
             </details>
           </div>
         </div>
+        
       </div>
     </>
   );
