@@ -28,10 +28,21 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData]: any = useState([]);
   const [registrationClosed, setRegistrationClosed] = useState(false);
+  const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState<
     { id: string; text: string; author: string; timestamp: string }[]
   >([]);
+
+  useEffect(() => {
+    if (eventData.length > 0) {
+      const currentDate = new Date();
+      const registrationStartDate = new Date(eventData[0].event_registration_startdate);
+      const registrationEndDate = new Date(eventData[0].event_registration_enddate);
+
+      setIsRegistrationOpen(currentDate >= registrationStartDate && currentDate <= registrationEndDate);
+    }
+  }, [eventData]);
 
   useEffect(() => {
     async function getData() {
@@ -273,20 +284,24 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                       </h1>
                     </div>
                     <div>
-                      <Button
-                        variant="outline"
-                        className={`w-full transition-transform duration-300 ease-in-out transform ${
-                          registrationClosed || isRegistered ? "opacity-50 cursor-not-allowed" : "hover:scale-105"
-                        }`}
-                        disabled={registrationClosed || isRegistered}
-                        onClick={isUser}
-                      >
-                        {registrationClosed
-                          ? "Registration Closed"
-                          : isRegistered
-                          ? "Registered ✔️"
-                          : "Register Now"}
-                      </Button>
+                    <Button
+                    variant="outline"
+                    className={`w-full transition-transform duration-300 ease-in-out transform ${
+                        registrationClosed || isRegistered || !isRegistrationOpen
+                        ? "opacity-50 cursor-not-allowed"
+                        : "hover:scale-105"
+                    }`}
+                    disabled={registrationClosed || isRegistered || !isRegistrationOpen}
+                    onClick={isUser}
+                    >
+                   {registrationClosed
+                    ? "Registration Closed"
+                    : isRegistered
+                    ? "Registered ✔️"
+                    : !isRegistrationOpen
+                    ? "Registration Coming Soon"
+                    : "Register Now"}
+                    </Button>
                     </div>
                     <div>
                       {isRegistered ? (
