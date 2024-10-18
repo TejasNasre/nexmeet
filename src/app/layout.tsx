@@ -5,6 +5,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/sonner";
+import ScrollToTop from "@/components/Scroll-to-top"; 
 
 const mono = DM_Mono({
   subsets: ["latin"],
@@ -70,10 +71,20 @@ export default function RootLayout({
         <title>NexMeet</title>
       </head>
       <body suppressHydrationWarning={true} className={mono.className}>
-        <Toaster theme="dark" richColors
+        <Toaster
+          theme="dark"
+          richColors
           toastOptions={{
             unstyled: true,
-            style: { display: 'flex', alignItems: 'center', gap: '1rem', borderRadius: '.5rem', backdropFilter: 'blur(5px)', backgroundColor: 'rgba(0, 0, 0, 0.75)', border: '.125rem solid #8888' },
+            style: {
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1rem',
+              borderRadius: '.5rem',
+              backdropFilter: 'blur(5px)',
+              backgroundColor: 'rgba(0, 0, 0, 0.75)',
+              border: '.125rem solid #8888',
+            },
             classNames: {
               toast: 'text-sm group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg px-4 py-3 w-full z-10',
               description: 'group-[.toast]:text-muted-foreground',
@@ -81,8 +92,10 @@ export default function RootLayout({
               cancelButton: 'bg-orange-400',
               closeButton: 'bg-lime-400',
             },
-          }} />
+          }}
+        />
         <Header />
+        <ScrollToTop /> 
         <main>{children}</main>
         <Footer />
       </body>

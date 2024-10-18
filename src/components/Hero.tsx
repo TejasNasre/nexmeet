@@ -555,7 +555,7 @@ const Hero: React.FC = () => {
             </details>
           </div>
         </div>
-        <ScrollToTop></ScrollToTop>
+        
       </div>
     </>
   );
