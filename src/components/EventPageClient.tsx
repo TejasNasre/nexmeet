@@ -28,10 +28,21 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData]: any = useState([]);
   const [registrationClosed, setRegistrationClosed] = useState(false);
-  const [comment, setComment] = useState(""); // State for comment input
+  const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
+  const [comment, setComment] = useState("");
   const [comments, setComments] = useState<
     { id: string; text: string; author: string; timestamp: string }[]
   >([]);
+
+  useEffect(() => {
+    if (eventData.length > 0) {
+      const currentDate = new Date();
+      const registrationStartDate = new Date(eventData[0].event_registration_startdate);
+      const registrationEndDate = new Date(eventData[0].event_registration_enddate);
+
+      setIsRegistrationOpen(currentDate >= registrationStartDate && currentDate <= registrationEndDate);
+    }
+  }, [eventData]);
 
   useEffect(() => {
     async function getData() {
@@ -109,7 +120,11 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
       register.participant_email === userData?.email && register.is_registered
   );
 
-  const img = JSON.parse(eventData[0].event_images[0].url);
+  const img = eventData[0]?.event_images?.[0]?.url &&
+    typeof eventData[0].event_images[0].url === 'string'
+    ? JSON.parse(eventData[0].event_images[0].url)
+    : []; // Default to an empty array if no valid URL
+
   const tags = eventData[0].event_tags;
   const social = eventData[0].event_social_links;
 
@@ -150,14 +165,24 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
     }
   };
 
+  const createGoogleCalendarLink = (event: any) => {
+    const eventTitle = encodeURIComponent(event.event_title);
+    const eventDescription = encodeURIComponent(event.event_description);
+    const eventLocation = encodeURIComponent(event.event_location);
+    const eventStart = new Date(event.event_startdate).toISOString().replace(/-|:|\.\d{3}/g, "");
+    const eventEnd = new Date(event.event_enddate).toISOString().replace(/-|:|\.\d{3}/g, "");
+
+    return `https://www.google.com/calendar/render?action=TEMPLATE&text=${eventTitle}&details=${eventDescription}&location=${eventLocation}&dates=${eventStart}/${eventEnd}`;
+  };
+
   return (
     <>
-      <div className="w-full h-auto bg-black text-white py-[5rem] md:py-[8rem] px-[1rem] md:px-[2rem]">
+      <div className="w-full h-auto bg-black text-white py-[5rem] md:py-[8rem] px-[1rem] md:px-[2rem] flex justify-center">
         {eventData.map((event: any) => {
           const isActive = new Date(event.event_startdate) >= new Date();
           return (
             <div
-              className="flex flex-wrap justify-center items-center"
+              className="flex flex-wrap justify-center items-center max-w-6xl"
               key={event.id}
             >
               <div className="w-full flex flex-col justify-center items-center">
@@ -192,7 +217,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                     </p>
                     <div className="w-full flex flex-col md:flex-row gap-4">
                       <h1 className="flex flex-row items-center gap-2">
-                        Event Start&apos;s Form :{" "}
+                        Event Start&apos;s From :{" "}
                         {new Date(event.event_startdate).toLocaleString(
                           undefined,
                           {
@@ -259,37 +284,42 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                       </h1>
                     </div>
                     <div>
-                      <Button
-                        variant="outline"
-                        className={`w-full transition-transform duration-300 ease-in-out transform ${
-                          !isRegistered && !registrationClosed
-                            ? "hover:scale-105"
-                            : ""
-                        }
-                    `}
-                        disabled={registrationClosed || isRegistered} // Button disabled if registration is closed
-                        onClick={isUser}
-                      >
-                        {registrationClosed
-                          ? "Registration Closed"
-                          : isRegistered
-                            ? "Registered Waiting For Approval"
-                            : "Register Now"}
-                      </Button>
+                    <Button
+                    variant="outline"
+                    className={`w-full transition-transform duration-300 ease-in-out transform ${
+                        registrationClosed || isRegistered || !isRegistrationOpen
+                        ? "opacity-50 cursor-not-allowed"
+                        : "hover:scale-105"
+                    }`}
+                    disabled={registrationClosed || isRegistered || !isRegistrationOpen}
+                    onClick={isUser}
+                    >
+                   {registrationClosed
+                    ? "Registration Closed"
+                    : isRegistered
+                    ? "Registered ✔️"
+                    : !isRegistrationOpen
+                    ? "Registration Coming Soon"
+                    : "Register Now"}
+                    </Button>
                     </div>
                     <div>
                       {isRegistered ? (
-                        <>
-                          <Link href={`${event.event_formlink}`}>
-                            <Button variant="outline" className="w-full">
-                              Actual Form Link
-                            </Button>
-                          </Link>
-                        </>
-                      ) : (
-                        ""
-                      )}
+                        <Link href={`${event.event_formlink}`}>
+                          <Button variant="outline" className="w-full">
+                            Actual Form Link
+                          </Button>
+                        </Link>
+                      ) : null}
                     </div>
+                    <Button
+                      variant="outline"
+                      className={`w-full ${isRegistered ? "" : "opacity-50 cursor-not-allowed"}`}
+                      onClick={isRegistered ? () => window.open(createGoogleCalendarLink(event), "_blank") : undefined}
+                      disabled={!isRegistered}
+                    >
+                      Save to Google Calendar
+                    </Button>
                   </div>
                   <div>
                     {/* Comment Section */}
