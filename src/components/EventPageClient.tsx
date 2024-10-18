@@ -150,6 +150,16 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
     }
   };
 
+  const createGoogleCalendarLink = (event: any) => {
+    const eventTitle = encodeURIComponent(event.event_title);
+    const eventDescription = encodeURIComponent(event.event_description);
+    const eventLocation = encodeURIComponent(event.event_location);
+    const eventStart = new Date(event.event_startdate).toISOString().replace(/-|:|\.\d{3}/g, "");
+    const eventEnd = new Date(event.event_enddate).toISOString().replace(/-|:|\.\d{3}/g, "");
+
+    return `https://www.google.com/calendar/render?action=TEMPLATE&text=${eventTitle}&details=${eventDescription}&location=${eventLocation}&dates=${eventStart}/${eventEnd}`;
+  };
+
   return (
     <>
       <div className="w-full h-auto bg-black text-white py-[5rem] md:py-[8rem] px-[1rem] md:px-[2rem]">
@@ -290,6 +300,13 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                         ""
                       )}
                     </div>
+                    <Button
+                      variant="outline"
+                      className="mt-4 w-full"
+                      onClick={() => window.open(createGoogleCalendarLink(event), "_blank")}
+                    >
+                      Save to Google Calendar
+                    </Button>
                   </div>
                   <div>
                     {/* Comment Section */}
