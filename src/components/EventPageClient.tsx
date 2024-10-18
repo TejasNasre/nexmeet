@@ -283,7 +283,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                         {registrationClosed
                           ? "Registration Closed"
                           : isRegistered
-                            ? "Registered Waiting For Approval"
+                            ? "Registered ✔️"
                             : "Register Now"}
                       </Button>
                     </div>
@@ -301,9 +301,10 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                       )}
                     </div>
                     <Button
-                      variant="outline"
-                      className="mt-4 w-full"
-                      onClick={() => window.open(createGoogleCalendarLink(event), "_blank")}
+                    variant="outline"
+                    className={`mt-4 w-full ${isRegistered ? "" : "opacity-50 cursor-not-allowed"}`}
+                    onClick={isRegistered ? () => window.open(createGoogleCalendarLink(event), "_blank") : undefined}
+                    disabled={!isRegistered}
                     >
                       Save to Google Calendar
                     </Button>
