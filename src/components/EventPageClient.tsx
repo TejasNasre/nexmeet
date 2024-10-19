@@ -32,6 +32,8 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
   const [comments, setComments] = useState<
     { id: string; text: string; author: string; timestamp: string }[]
   >([]);
+  const [eventEnded, seteventEnded] = useState(false)
+  const [eventFeedbackLink, seteventFeedbackLink] = useState("")
 
   useEffect(() => {
     async function getData() {
@@ -53,6 +55,35 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
       getData();
     }
   }, [eventsId]);
+
+  useEffect(() => {
+    async function fetchAndSetEventStatus() {
+      const { data, error } = await supabase
+        .from("event_details")
+        .select("event_enddate,event_formlink")
+        .eq("id", eventsId)
+        .single();
+
+      if (error) {
+        console.error("Error fetching event data:", error);
+        return;
+      }
+
+      const currentDate = new Date();
+      const endDate = new Date(data.event_enddate);
+
+      // Calculate the event status based on the current date
+      if (currentDate > endDate) {
+        seteventEnded(true); // Event has ended
+      }
+
+      seteventFeedbackLink(data.event_formlink || `/event-feedback/${eventsId}`)
+
+    }
+
+    fetchAndSetEventStatus();
+  }, [eventsId]);
+
 
   useEffect(() => {
     userDetails().then((res: any) => {
@@ -261,11 +292,10 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                     <div>
                       <Button
                         variant="outline"
-                        className={`w-full transition-transform duration-300 ease-in-out transform ${
-                          !isRegistered && !registrationClosed
-                            ? "hover:scale-105"
-                            : ""
-                        }
+                        className={`w-full transition-transform duration-300 ease-in-out transform ${!isRegistered && !registrationClosed
+                          ? "hover:scale-105"
+                          : ""
+                          }
                     `}
                         disabled={registrationClosed || isRegistered} // Button disabled if registration is closed
                         onClick={isUser}
@@ -278,17 +308,13 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                       </Button>
                     </div>
                     <div>
-                      {isRegistered ? (
-                        <>
-                          <Link href={`${event.event_formlink}`}>
-                            <Button variant="outline" className="w-full">
-                              Actual Form Link
-                            </Button>
-                          </Link>
-                        </>
-                      ) : (
-                        ""
-                      )}
+                      {isRegistered && eventEnded ? (
+                        <Link href={eventFeedbackLink}>
+                          <Button variant="outline" className="w-full">
+                            Submit Feedback
+                          </Button>
+                        </Link>
+                      ) : null}
                     </div>
                   </div>
                   <div>
