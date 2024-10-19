@@ -33,16 +33,23 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
   const [comments, setComments] = useState<
     { id: string; text: string; author: string; timestamp: string }[]
   >([]);
-  const [eventEnded, seteventEnded] = useState(false)
-  const [eventFeedbackLink, seteventFeedbackLink] = useState("")
+  const [eventEnded, seteventEnded] = useState(false);
+  const [eventFeedbackLink, seteventFeedbackLink] = useState("");
 
   useEffect(() => {
     if (eventData.length > 0) {
       const currentDate = new Date();
-      const registrationStartDate = new Date(eventData[0].event_registration_startdate);
-      const registrationEndDate = new Date(eventData[0].event_registration_enddate);
+      const registrationStartDate = new Date(
+        eventData[0].event_registration_startdate
+      );
+      const registrationEndDate = new Date(
+        eventData[0].event_registration_enddate
+      );
 
-      setIsRegistrationOpen(currentDate >= registrationStartDate && currentDate <= registrationEndDate);
+      setIsRegistrationOpen(
+        currentDate >= registrationStartDate &&
+          currentDate <= registrationEndDate
+      );
     }
   }, [eventData]);
 
@@ -88,13 +95,13 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
         seteventEnded(true); // Event has ended
       }
 
-      seteventFeedbackLink(data.event_formlink || `/event-feedback/${eventsId}`)
-
+      seteventFeedbackLink(
+        data.event_formlink || `/event-feedback/${eventsId}`
+      );
     }
 
     fetchAndSetEventStatus();
   }, [eventsId]);
-
 
   useEffect(() => {
     userDetails().then((res: any) => {
@@ -151,10 +158,11 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
       register.participant_email === userData?.email && register.is_registered
   );
 
-  const img = eventData[0]?.event_images?.[0]?.url &&
-    typeof eventData[0].event_images[0].url === 'string'
-    ? JSON.parse(eventData[0].event_images[0].url)
-    : []; // Default to an empty array if no valid URL
+  const img =
+    eventData[0]?.event_images?.[0]?.url &&
+    typeof eventData[0].event_images[0].url === "string"
+      ? JSON.parse(eventData[0].event_images[0].url)
+      : []; // Default to an empty array if no valid URL
 
   const tags = eventData[0].event_tags;
   const social = eventData[0].event_social_links;
@@ -200,8 +208,12 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
     const eventTitle = encodeURIComponent(event.event_title);
     const eventDescription = encodeURIComponent(event.event_description);
     const eventLocation = encodeURIComponent(event.event_location);
-    const eventStart = new Date(event.event_startdate).toISOString().replace(/-|:|\.\d{3}/g, "");
-    const eventEnd = new Date(event.event_enddate).toISOString().replace(/-|:|\.\d{3}/g, "");
+    const eventStart = new Date(event.event_startdate)
+      .toISOString()
+      .replace(/-|:|\.\d{3}/g, "");
+    const eventEnd = new Date(event.event_enddate)
+      .toISOString()
+      .replace(/-|:|\.\d{3}/g, "");
 
     return `https://www.google.com/calendar/render?action=TEMPLATE&text=${eventTitle}&details=${eventDescription}&location=${eventLocation}&dates=${eventStart}/${eventEnd}`;
   };
@@ -315,24 +327,30 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                       </h1>
                     </div>
                     <div>
-                    <Button
-                    variant="outline"
-                    className={`w-full transition-transform duration-300 ease-in-out transform ${
-                        registrationClosed || isRegistered || !isRegistrationOpen
-                        ? "opacity-50 cursor-not-allowed"
-                        : "hover:scale-105"
-                    }`}
-                    disabled={registrationClosed || isRegistered || !isRegistrationOpen}
-                    onClick={isUser}
-                    >
-                   {registrationClosed
-                    ? "Registration Closed"
-                    : isRegistered
-                    ? "Registered ✔️"
-                    : !isRegistrationOpen
-                    ? "Registration Coming Soon"
-                    : "Register Now"}
-                    </Button>
+                      <Button
+                        variant="outline"
+                        className={`w-full transition-transform duration-300 ease-in-out transform ${
+                          registrationClosed ||
+                          isRegistered ||
+                          !isRegistrationOpen
+                            ? "opacity-50 cursor-not-allowed"
+                            : "hover:scale-105"
+                        }`}
+                        disabled={
+                          registrationClosed ||
+                          isRegistered ||
+                          !isRegistrationOpen
+                        }
+                        onClick={isUser}
+                      >
+                        {registrationClosed
+                          ? "Registration Closed"
+                          : isRegistered
+                            ? "Registered ✔️"
+                            : !isRegistrationOpen
+                              ? "Registration Coming Soon"
+                              : "Register Now"}
+                      </Button>
                     </div>
                     <div>
                       {isRegistered ? (
@@ -346,7 +364,15 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                     <Button
                       variant="outline"
                       className={`w-full ${isRegistered ? "" : "opacity-50 cursor-not-allowed"}`}
-                      onClick={isRegistered ? () => window.open(createGoogleCalendarLink(event), "_blank") : undefined}
+                      onClick={
+                        isRegistered
+                          ? () =>
+                              window.open(
+                                createGoogleCalendarLink(event),
+                                "_blank"
+                              )
+                          : undefined
+                      }
                       disabled={!isRegistered}
                     >
                       Save to Google Calendar

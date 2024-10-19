@@ -80,7 +80,7 @@ create table
 ### `Make Storage : `
 
 - Navigate To The `Storage` In The Sidebar Of Your Newly Created Project.
-- Now Go To `New Bucket` And Create A `Public Buckets` Named `event_images` And `event_space`.
+- Now Go To `New Bucket` And Create A `Public Buckets` Named `event_image` And `event_space`.
   <img width="1366" alt="STORAGE SETUP" src="https://raw.githubusercontent.com/TejasNasre/nexmeet/refs/heads/main/public/storage.PNG">
   <img width="1366" alt="NEW BUCKET" src="https://raw.githubusercontent.com/TejasNasre/nexmeet/refs/heads/main/public/image%20setup.PNG">
 
@@ -198,13 +198,11 @@ organization_rating TEXT NOT NULL,
 overall_satisfaction SMALLINT NOT NULL,
 recommendation SMALLINT NOT NULL,
 improvement TEXT NOT NULL,
-created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(), 
+created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
 updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
 CONSTRAINT event_feedback_pkey PRIMARY KEY (id)
 );
 ```
-
-
 
 ### `Table For Contact Submissions : `
 
@@ -237,7 +235,7 @@ CREATE TABLE check_event_likes (
 
 - Now Go To `Policies` Under `CONFIGURATION` Section.
 
-- Create Policy for `event_details`, `event_images`, `event_participants`, `event_space`, `event_space_img_vid`, `event_space_request`, and `contact_submissions` `check_event_likes`  With `all` Permissions.
+- Create Policy for `event_details`, `event_images`, `event_participants`, `event_space`, `event_space_img_vid`, `event_space_request`, and `contact_submissions` `check_event_likes` With `all` Permissions.
 
 ### `Congrats! You Successfully Setup Your Database`
 

@@ -139,7 +139,7 @@ export default function UpdateEvent() {
       toast.success("Event updated successfully!");
       setTimeout(() => {
         setSuccessMessage(null);
-        router.push("/edit-event");
+        router.push(`/explore-events/${event.id}`);
       }, 3000);
     }
   };
