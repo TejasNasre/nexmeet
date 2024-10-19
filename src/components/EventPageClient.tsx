@@ -33,6 +33,8 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
   const [comments, setComments] = useState<
     { id: string; text: string; author: string; timestamp: string }[]
   >([]);
+  const [eventEnded, seteventEnded] = useState(false)
+  const [eventFeedbackLink, seteventFeedbackLink] = useState("")
 
   useEffect(() => {
     if (eventData.length > 0) {
@@ -64,6 +66,35 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
       getData();
     }
   }, [eventsId]);
+
+  useEffect(() => {
+    async function fetchAndSetEventStatus() {
+      const { data, error } = await supabase
+        .from("event_details")
+        .select("event_enddate,event_formlink")
+        .eq("id", eventsId)
+        .single();
+
+      if (error) {
+        console.error("Error fetching event data:", error);
+        return;
+      }
+
+      const currentDate = new Date();
+      const endDate = new Date(data.event_enddate);
+
+      // Calculate the event status based on the current date
+      if (currentDate > endDate) {
+        seteventEnded(true); // Event has ended
+      }
+
+      seteventFeedbackLink(data.event_formlink || `/event-feedback/${eventsId}`)
+
+    }
+
+    fetchAndSetEventStatus();
+  }, [eventsId]);
+
 
   useEffect(() => {
     userDetails().then((res: any) => {

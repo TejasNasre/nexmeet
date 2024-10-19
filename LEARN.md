@@ -186,65 +186,25 @@ create table
   ) tablespace pg_default;
 ```
 
-### `Table For Feedback Forms : `
+### `Table For Event Feedback Form:`
 
 ```sql
-create table
-  public.feedback_forms (
-    id uuid not null default extensions.uuid_generate_v4 (),
-    title text not null,
-    created_by text not null,
-    event_id uuid null,
-    created_at timestamp with time zone null default now(),
-    constraint feedback_forms_pkey primary key (id)
-  ) tablespace pg_default;
+CREATE TABLE public.event_feedback (
+id uuid NOT NULL DEFAULT gen_random_uuid(),
+event_id uuid NOT NULL REFERENCES public.event_details(id) ON DELETE CASCADE,
+respondent_email TEXT NOT NULL,
+enjoy_most TEXT NOT NULL,
+organization_rating TEXT NOT NULL,
+overall_satisfaction SMALLINT NOT NULL,
+recommendation SMALLINT NOT NULL,
+improvement TEXT NOT NULL,
+created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(), 
+updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+CONSTRAINT event_feedback_pkey PRIMARY KEY (id)
+);
 ```
 
-### `Table For Form Fields : `
 
-```sql
-create table
-  public.form_fields (
-    id uuid not null default extensions.uuid_generate_v4 (),
-    form_id uuid not null,
-    field_type text not null,
-    label text not null,
-    options jsonb null,
-    created_at timestamp with time zone null default now(),
-    constraint form_fields_pkey primary key (id),
-    constraint fk_form foreign key (form_id) references feedback_forms (id)
-  ) tablespace pg_default;
-```
-
-### `Table For Form Responses : `
-
-```sql
-create table
-  public.form_responses (
-    id uuid not null default extensions.uuid_generate_v4 (),
-    form_id uuid not null,
-    respondent_email text not null,
-    created_at timestamp with time zone null default now(),
-    constraint form_responses_pkey primary key (id),
-    constraint fk_form foreign key (form_id) references feedback_forms (id)
-  ) tablespace pg_default;
-```
-
-### `Table For Form Response Fields : `
-
-```sql
-create table
-  public.response_fields (
-    id uuid not null default extensions.uuid_generate_v4 (),
-    response_id uuid not null,
-    field_id uuid not null,
-    value text null,
-    created_at timestamp with time zone null default now(),
-    constraint response_fields_pkey primary key (id),
-    constraint fk_field foreign key (field_id) references form_fields (id) on delete cascade,
-    constraint fk_response foreign key (response_id) references form_responses (id) on delete cascade
-  ) tablespace pg_default;
-```
 
 ### `Table For Contact Submissions : `
 
