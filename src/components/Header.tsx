@@ -131,22 +131,18 @@ function Header() {
   function renderMenuItems() {
     return (
       <>
-        <div
-          className={`flex justify-center items-center gap-6 ${
-            isMenuOpen ? `flex-col` : `flex-row`
-          }`}
-        >
+        <div className={`flex justify-center items-center gap-6 ${isMenuOpen ? `flex-col` : `flex-row`}`}>
           <Link
             href="/"
             onClick={() => handleNavigation("/")}
-            className="mono hover:text-gray-300"
+            className="mono border border-white rounded-md px-4 py-2 hover:bg-gray-700"
           >
             Home
           </Link>
           <Link
             href="/explore-events"
             onClick={() => handleNavigation("/explore-events")}
-            className="mono hover:text-gray-300"
+            className="mono border border-white rounded-md px-4 py-2 hover:bg-gray-700"
           >
             Explore Events
           </Link>
@@ -154,30 +150,29 @@ function Header() {
             <Link
               href="/explore-event-space"
               onClick={() => handleNavigation("/explore-event-space")}
-              className="mono hover:text-gray-300"
+              className="mono border border-white rounded-md px-4 py-2 hover:bg-gray-700"
             >
               Explore Event Spaces
             </Link>
           )}
-
           <Link
             href="/about"
             onClick={() => handleNavigation("/about")}
-            className="mono hover:text-gray-300"
+            className="mono border border-white rounded-md px-4 py-2 hover:bg-gray-700"
           >
             About Us
           </Link>
           <Link
             href="/contact"
             onClick={() => handleNavigation("/contact")}
-            className="mono hover:text-gray-300"
+            className="mono border border-white rounded-md px-4 py-2 hover:bg-gray-700"
           >
             Contact
           </Link>
           <Link
             href="/contributors"
             onClick={() => handleNavigation("/contributors")}
-            className="mono hover:text-gray-300"
+            className="mono border border-white rounded-md px-4 py-2 hover:bg-gray-700"
           >
             Contributors
           </Link>
