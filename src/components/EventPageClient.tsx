@@ -220,94 +220,96 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
 
   return (
     <>
-      <div className="w-full h-auto bg-black text-white py-[5rem] md:py-[8rem] px-[1rem] md:px-[2rem] flex justify-center">
+      <div className="w-full min-h-screen bg-black text-white py-12 px-4 md:px-8">
         {eventData.map((event: any) => {
           const isActive = new Date(event.event_startdate) >= new Date();
           return (
-            <div
-              className="flex flex-wrap justify-center items-center max-w-6xl"
-              key={event.id}
-            >
-              <div className="w-full flex flex-col justify-center items-center">
-                <h1 className="text-2xl font-extrabold md:text-4xl text-center">
-                  {event.event_title}
-                </h1>
+            <div key={event.id} className="max-w-7xl mx-auto mt-12">
+              <h1 className="text-3xl md:text-5xl font-extrabold text-center mb-8">
+                {event.event_title}
+              </h1>
 
-                <div className="w-full md:w-[80%] py-6 md:p-10">
-                  {img.map((i: any) => {
-                    return (
-                      <div key={i}>
+              <div className="flex flex-col md:flex-row gap-8">
+                {/* Left side - Event Image */}
+                <div className="md:w-1/2">
+                  <div
+                    className="rounded-lg overflow-hidden shadow-lg"
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)",
+                    }}
+                  >
+                    <div className="p-1">
+                      {img.map((i: any) => (
                         <Image
+                          key={i}
                           src={i}
                           alt="event image"
-                          className="w-full"
+                          className="w-full rounded-lg"
                           width={500}
                           height={500}
                           loading="lazy"
                         />
-                      </div>
-                    );
-                  })}
+                      ))}
+                    </div>
+                  </div>
                 </div>
-              </div>
 
-              <div className="w-full flex flex-col md:flex-row gap-4">
-                <div>
-                  <div className="w-full border border-white rounded-lg p-6 flex flex-col gap-2 md:gap-4">
-                    <h1 className="text-2xl font-extrabold">About The Event</h1>
-                    <p className="text-justify leading-relaxed">
+                {/* Right side - Event Details */}
+                <div className="md:w-1/2">
+                  <div className="rounded-lg p-6 bg-gradient-to-r from-gray-900 to-gray-800 shadow-lg">
+                    <h2 className="text-2xl font-bold mb-4">About The Event</h2>
+                    <p className="text-justify leading-relaxed mb-4">
                       {event.event_description}
                     </p>
-                    <div className="w-full flex flex-col md:flex-row gap-4">
-                      <h1 className="flex flex-row items-center gap-2">
-                        Event Start&apos;s From :{" "}
-                        {new Date(event.event_startdate).toLocaleString(
-                          undefined,
-                          {
-                            year: "numeric",
-                            month: "short",
-                            day: "numeric",
-                          }
-                        )}
-                      </h1>
-                      <h1 className="flex flex-row items-center gap-2">
-                        Event End&apos;s On :{" "}
-                        {new Date(event.event_enddate).toLocaleString(
-                          undefined,
-                          {
-                            year: "numeric",
-                            month: "short",
-                            day: "numeric",
-                          }
-                        )}
-                      </h1>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                      <div>
+                        <h3 className="font-semibold">Event Starts:</h3>
+                        <p>
+                          {new Date(event.event_startdate).toLocaleString(
+                            undefined,
+                            { year: "numeric", month: "short", day: "numeric" }
+                          )}
+                        </p>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold">Event Ends:</h3>
+                        <p>
+                          {new Date(event.event_enddate).toLocaleString(
+                            undefined,
+                            { year: "numeric", month: "short", day: "numeric" }
+                          )}
+                        </p>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold">Duration:</h3>
+                        <p>{event.event_duration} Hours</p>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold">Team Size:</h3>
+                        <p>{event.team_size}</p>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold">Location:</h3>
+                        <p>{event.event_location}</p>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold">Price:</h3>
+                        <Badge variant="destructive">
+                          <span>&#8377;</span>
+                          {event.event_price}
+                        </Badge>
+                      </div>
                     </div>
-                    <h1 className="flex flex-row items-center gap-2">
-                      Duration : {event.event_duration} Hours
-                    </h1>
-                    <h1>Team Size : {event.team_size}</h1>
-
-                    <h1 className="flex flex-row items-center gap-4">
-                      Location : {event.event_location}
-                    </h1>
-                    <h1 className="flex flex-row items-center gap-3">
-                      <Badge variant="destructive">
-                        <span>&#8377;</span>
-                        {event.event_price}
-                      </Badge>
-                      <Badge
-                        variant="destructive"
-                        className={`${isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
-                      >
-                        {isActive ? "Active" : "Inactive"}
-                      </Badge>
-                    </h1>
-
-                    <div className="border border-white"></div>
-
-                    <div>
-                      <h1 className="text-xl font-bold">Registration Period</h1>
-                      <h1>
+                    <Badge
+                      variant="destructive"
+                      className={`${isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"} mb-4`}
+                    >
+                      {isActive ? "Active" : "Inactive"}
+                    </Badge>
+                    <div className="mb-4">
+                      <h3 className="font-semibold">Registration Period:</h3>
+                      <p>
                         From{" "}
                         {new Date(
                           event.event_registration_startdate
@@ -323,44 +325,40 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                           year: "numeric",
                           month: "short",
                           day: "numeric",
-                        })}{" "}
-                      </h1>
+                        })}
+                      </p>
                     </div>
-                    <div>
-                      <Button
-                        variant="outline"
-                        className={`w-full transition-transform duration-300 ease-in-out transform ${
-                          registrationClosed ||
-                          isRegistered ||
-                          !isRegistrationOpen
-                            ? "opacity-50 cursor-not-allowed"
-                            : "hover:scale-105"
-                        }`}
-                        disabled={
-                          registrationClosed ||
-                          isRegistered ||
-                          !isRegistrationOpen
-                        }
-                        onClick={isUser}
-                      >
-                        {registrationClosed
-                          ? "Registration Closed"
-                          : isRegistered
-                            ? "Registered ✔️"
-                            : !isRegistrationOpen
-                              ? "Registration Closed"
-                              : "Register Now"}
-                      </Button>
-                    </div>
-                    <div>
-                      {isRegistered && eventEnded ? (
-                        <Link href={eventFeedbackLink}>
-                          <Button variant="outline" className="w-full">
-                            Submit Feedback
-                          </Button>
-                        </Link>
-                      ) : null}
-                    </div>
+                    <Button
+                      variant="outline"
+                      className={`w-full mb-2 transition-transform duration-300 ease-in-out transform ${
+                        registrationClosed ||
+                        isRegistered ||
+                        !isRegistrationOpen
+                          ? "opacity-50 cursor-not-allowed"
+                          : "hover:scale-105"
+                      }`}
+                      disabled={
+                        registrationClosed ||
+                        isRegistered ||
+                        !isRegistrationOpen
+                      }
+                      onClick={isUser}
+                    >
+                      {registrationClosed
+                        ? "Registration Closed"
+                        : isRegistered
+                          ? "Registered ✔️"
+                          : !isRegistrationOpen
+                            ? "Registration Closed"
+                            : "Register Now"}
+                    </Button>
+                    {isRegistered && eventEnded && (
+                      <Link href={eventFeedbackLink}>
+                        <Button variant="outline" className="w-full mb-2">
+                          Submit Feedback
+                        </Button>
+                      </Link>
+                    )}
                     <Button
                       variant="outline"
                       className={`w-full ${isRegistered ? "" : "opacity-50 cursor-not-allowed"}`}
@@ -378,113 +376,110 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                       Save to Google Calendar
                     </Button>
                   </div>
-                  <div>
-                    {/* Comment Section */}
-                    <form
-                      onSubmit={handleCommentSubmit}
-                      className="mt-4 border border-white p-4 flex flex-col gap-4 rounded-xl"
-                    >
-                      <h1 className="text-xl">Leave Comments</h1>
-                      <textarea
-                        value={comment}
-                        onChange={handleCommentChange}
-                        placeholder="Leave a comment..."
-                        className="w-full bg-black p-2 border border-gray-300 rounded"
-                        rows={4}
+                </div>
+              </div>
+
+              {/* Additional Information Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+                {/* Organizer Card */}
+                <div className="rounded-lg p-6 bg-gradient-to-r from-gray-900 to-gray-800 shadow-lg">
+                  <h2 className="text-xl font-bold mb-4">Organizer</h2>
+                  <p>{event.organizer_name}</p>
+                  <p>{event.organizer_contact}</p>
+                  <p>{event.organizer_email}</p>
+                </div>
+
+                {/* Category & Tags Card */}
+                <div className="rounded-lg p-6 bg-gradient-to-r from-gray-900 to-gray-800 shadow-lg">
+                  <h2 className="text-xl font-bold mb-4">Category & Tags</h2>
+                  <p className="mb-2">
+                    Category:{" "}
+                    <Badge variant="secondary">{event.event_category}</Badge>
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    Tags:{" "}
+                    {tags.map((tag: any) => (
+                      <Badge key={tag}>{tag}</Badge>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Social Links Card */}
+                <div className="rounded-lg p-6 bg-gradient-to-r from-gray-900 to-gray-800 shadow-lg">
+                  <h2 className="text-xl font-bold mb-4">Social Links</h2>
+                  <div className="flex flex-col gap-2">
+                    {social.map((s: any) => (
+                      <Link
+                        key={s}
+                        href={s}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-red-500 break-all hover:underline"
+                      >
+                        {s}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Share Event Section */}
+              <div className="mt-8 rounded-lg p-6 bg-gradient-to-r from-gray-900 to-gray-800 shadow-lg">
+                <h2 className="text-xl font-bold mb-4">
+                  Share This Event On Socials
+                </h2>
+                <div className="flex gap-4">
+                  <TwitterShareButton
+                    url={shareUrl}
+                    title={title}
+                    className="hover:scale-110 transition-transform transform duration-300 ease-in-out"
+                  >
+                    <FaXTwitter size={30} />
+                  </TwitterShareButton>
+                  <WhatsappShareButton
+                    url={shareUrl}
+                    title={title}
+                    className="hover:scale-110 transition-transform transform duration-300 ease-in-out"
+                  >
+                    <WhatsappIcon size={30} round />
+                  </WhatsappShareButton>
+                </div>
+              </div>
+
+              {/* Comments Section */}
+              <div className="mt-8 rounded-lg p-6 bg-gradient-to-r from-gray-900 to-gray-800 shadow-lg">
+                <h2 className="text-xl font-bold mb-4">Comments</h2>
+                <form onSubmit={handleCommentSubmit} className="mb-6">
+                  <textarea
+                    value={comment}
+                    onChange={handleCommentChange}
+                    placeholder="Leave a comment..."
+                    className="w-full bg-gray-800 p-2 border border-gray-700 rounded mb-2"
+                    rows={4}
+                  />
+                  <Button
+                    type="submit"
+                    variant="outline"
+                    className="w-full"
+                    disabled={!isAuthenticated}
+                  >
+                    Submit Comment
+                  </Button>
+                </form>
+                {comments.length > 0 ? (
+                  <div className="space-y-4">
+                    {comments.map((c) => (
+                      <Comment
+                        key={c.id}
+                        author={c.author}
+                        timestamp={c.timestamp}
+                        text={c.text}
                       />
-                      <Button
-                        type="submit"
-                        variant="outline"
-                        className="mt-2 w-full"
-                        disabled={!isAuthenticated} // Disable if not authenticated
-                      >
-                        Submit Comment
-                      </Button>
-                    </form>
-
-                    <div className="mt-4 flex flex-col gap-4">
-                      <h2 className="text-xl">Comments</h2>
-                      {comments.length > 0 ? (
-                        <div className="space-y-2">
-                          {comments.map((c) => (
-                            <Comment
-                              key={c.id}
-                              author={c.author}
-                              timestamp={c.timestamp}
-                              text={c.text}
-                            />
-                          ))}
-                        </div>
-                      ) : (
-                        <p>No comments yet.</p>
-                      )}
-                    </div>
+                    ))}
                   </div>
-                </div>
-
-                <div className="flex flex-col gap-4">
-                  <div className="border border-white rounded-lg p-6 flex flex-col gap-2">
-                    <h1 className="text-xl font-bold">Organizer</h1>
-                    <h1>{event.organizer_name}</h1>
-                    <h1>{event.organizer_contact}</h1>
-                    <h1>{event.organizer_email}</h1>
-                  </div>
-
-                  <div className="border border-white rounded-lg p-6 flex flex-col gap-2">
-                    <h1 className="text-xl font-bold">Category & Tags</h1>
-                    <h1>
-                      Category :{" "}
-                      <Badge variant="secondary">{event.event_category}</Badge>
-                    </h1>
-                    <h1 className="flex flex-wrap gap-2">
-                      Tags :{" "}
-                      {tags.map((tag: any) => (
-                        <Badge key={tag}>{tag}</Badge>
-                      ))}
-                    </h1>
-                  </div>
-
-                  <div className="border border-white rounded-lg p-6">
-                    <h1 className="text-xl font-bold">Social Links</h1>
-                    <h1 className="w-full flex flex-col text-wrap">
-                      {social.map((s: any) => (
-                        <Link
-                          key={s}
-                          href={s}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-red-500 break-all"
-                        >
-                          {s}
-                        </Link>
-                      ))}
-                    </h1>
-                  </div>
-                  <div className="border border-white rounded-lg p-6 flex flex-col gap-4">
-                    <h1 className="text-xl font-bold">
-                      Share This Event On Socials
-                    </h1>
-                    <div className="flex gap-4">
-                      {/* Twitter Share Button */}
-                      <TwitterShareButton
-                        url={shareUrl}
-                        title={title}
-                        className="hover:scale-110 transition-transform transform duration-300 ease-in-out"
-                      >
-                        <FaXTwitter size={30} />
-                      </TwitterShareButton>
-
-                      {/* WhatsApp Share Button */}
-                      <WhatsappShareButton
-                        url={shareUrl}
-                        title={title}
-                        className="hover:scale-110 transition-transform transform duration-300 ease-in-out"
-                      >
-                        <WhatsappIcon size={30} round />
-                      </WhatsappShareButton>
-                    </div>
-                  </div>
-                </div>
+                ) : (
+                  <p>No comments yet.</p>
+                )}
               </div>
             </div>
           );
