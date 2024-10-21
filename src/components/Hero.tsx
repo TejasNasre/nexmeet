@@ -15,7 +15,7 @@ import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { CiStar } from "react-icons/ci";
 import { AiFillStar } from "react-icons/ai";
 import axios from "axios";
-import ScrollToTop from "./Scroll-to-top"
+import ScrollToTop from "./Scroll-to-top";
 
 const Hero: React.FC = () => {
   const { isAuthenticated } = useKindeBrowserClient();
@@ -25,7 +25,6 @@ const Hero: React.FC = () => {
   const [isStarred, setIsStarred] = useState(false);
 
   const [repoData, setRepoData] = useState({ stars: 0, forks: 0 });
-
 
   const nextReview = () => {
     setCurrentReview((prev) => (prev + 1) % reviews.length);
@@ -59,7 +58,6 @@ const Hero: React.FC = () => {
 
     fetchContributors();
   }, []);
-
 
   return (
     <>
@@ -229,23 +227,76 @@ const Hero: React.FC = () => {
             </div>
           </div>
         </div>
-
         <div className="w-full bg-black text-white px-4 md:px-10 py-20">
-          <h1 className="text-center text-3xl font-bold text-white sm:text-4xl py-10">
-            FAQ
+          <h1 className="text-center text-5xl font-extrabold text-white sm:text-6xl pb-16">
+            Frequently Asked Questions
           </h1>
-          <div className="rounded-xl text-white bg-black">
-            <details
-              className="group p-6 [&_summary::-webkit-details-marker]:hidden"
-              open
-            >
-              <summary className="flex cursor-pointer items-center justify-between gap-1.5 text-white">
-                <h2 className="text-lg font-medium">What is NexMeet?</h2>
-
-                <span className="relative size-5 shrink-0">
+          <div className="grid grid-cols-1 gap-8 max-w-5xl mx-auto">
+            {[
+              {
+                question: "What is NexMeet?",
+                answer:
+                  "NexMeet is your go-to platform for organizing college and social events. NexMeet makes it super easy to plan, manage, and enjoy. We're all about bringing people together and making event planning fun and hassle-free!",
+              },
+              {
+                question: "How do I register for Events?",
+                answer:
+                  "Browse events on the 'Explore Events' tab, click 'Register,' and fill in the details to sign up. Now, all you have to do is show up and have fun!",
+              },
+              {
+                question: "Where can I view the events I've registered for?",
+                answer:
+                  "Sign in, go to your profile, and view all your registered events under 'Your Events.'",
+              },
+              {
+                question: "Can I create my own custom events?",
+                answer:
+                  "Yes, go to your profile, click 'Organize Your Own Event,' and fill in the details. You are ready to go!",
+              },
+              {
+                question: "How do I cancel my event registration?",
+                answer:
+                  "Go to 'Your Events' in Profile, select the event, and click 'Cancel Registration'.",
+              },
+              {
+                question:
+                  "Can I edit the details of my event after it's created?",
+                answer:
+                  "Yes! You can update your event details anytime using 'Manage your Events' in Profile section.",
+              },
+              {
+                question: "Is there a way to invite my friends to an event?",
+                answer:
+                  "Yes, click the share button on the event page to invite friends via social media or link.",
+              },
+            ].map((item, index) => (
+              <details
+                key={index}
+                className="group border border-gray-600 rounded-xl bg-gradient-to-br from-gray-800 via-gray-900 to-black p-6 shadow-lg hover:shadow-2xl transition-shadow duration-300"
+              >
+                <summary className="flex items-center justify-between text-xl font-semibold cursor-pointer text-white group-hover:text-gray-300 transition-colors duration-300">
+                  <div className="flex items-center gap-3">
+                    <span className="bg-gray-700 p-2 rounded-full">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="w-6 h-6 text-white"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M16.24 7.76A9 9 0 117.76 16.24m12.02-2.11A9 9 0 0016.24 7.76M12 7v5l3 3"
+                        />
+                      </svg>
+                    </span>
+                    {item.question}
+                  </div>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="absolute inset-0 size-5 opacity-100 group-open:opacity-0"
+                    className="w-6 h-6 group-open:rotate-180 transform transition-transform duration-300"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -254,308 +305,19 @@ const Hero: React.FC = () => {
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                      d="M19 9l-7 7-7-7"
                     />
                   </svg>
-
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="absolute inset-0 size-5 opacity-0 group-open:opacity-100"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </span>
-              </summary>
-
-              <p className="mt-4 leading-relaxed text-justify text-white">
-                NexMeet is your go-to platform for organizing college and social
-                events. NexMeet makes it super easy to plan, manage, and enjoy.
-                We&apos;re all about bringing people together and making event
-                planning fun and hassle-free!
-              </p>
-            </details>
-
-            <details className="group p-6 [&_summary::-webkit-details-marker]:hidden">
-              <summary className="flex cursor-pointer items-center justify-between gap-1.5 text-white">
-                <h2 className="text-lg font-medium">
-                  How do I register for Events?
-                </h2>
-
-                <span className="relative size-5 shrink-0">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="absolute inset-0 size-5 opacity-100 group-open:opacity-0"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="absolute inset-0 size-5 opacity-0 group-open:opacity-100"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </span>
-              </summary>
-
-              <p className="mt-4 leading-relaxed text-justify text-white">
-                Browse events on the &quot;Explore Events&quot; tab, click
-                &quot;Register,&quot; and fill in the details to sign up. Now,
-                all you have to do is show up and have fun!
-              </p>
-            </details>
-
-            <details className="group p-6 [&_summary::-webkit-details-marker]:hidden">
-              <summary className="flex cursor-pointer items-center justify-between gap-1.5 text-white">
-                <h2 className="text-lg font-medium">
-                  Where can I view the events I&apos;ve registered for?
-                </h2>
-
-                <span className="relative size-5 shrink-0">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="absolute inset-0 size-5 opacity-100 group-open:opacity-0"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="absolute inset-0 size-5 opacity-0 group-open:opacity-100"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </span>
-              </summary>
-
-              <p className="mt-4 leading-relaxed text-justify text-white">
-                Sign in, go to your profile, and view all your registered events
-                under &quot;Your Events.&quot;
-              </p>
-            </details>
-
-            <details className="group p-6 [&_summary::-webkit-details-marker]:hidden">
-              <summary className="flex cursor-pointer items-center justify-between gap-1.5 text-white">
-                <h2 className="text-lg font-medium">
-                  Can I create my own custom events?
-                </h2>
-
-                <span className="relative size-5 shrink-0">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="absolute inset-0 size-5 opacity-100 group-open:opacity-0"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="absolute inset-0 size-5 opacity-0 group-open:opacity-100"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </span>
-              </summary>
-
-              <p className="mt-4 leading-relaxed text-justify text-white">
-                Yes, go to your profile, click &quot;Organize Your Own
-                Event,&quot; and fill in the details. You are ready to go!
-              </p>
-            </details>
-
-            <details className="group p-6 [&_summary::-webkit-details-marker]:hidden">
-              <summary className="flex cursor-pointer items-center justify-between gap-1.5 text-white">
-                <h2 className="text-lg font-medium">
-                  How do I cancel my event registration?
-                </h2>
-
-                <span className="relative size-5 shrink-0">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="absolute inset-0 size-5 opacity-100 group-open:opacity-0"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="absolute inset-0 size-5 opacity-0 group-open:opacity-100"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </span>
-              </summary>
-
-              <p className="mt-4 leading-relaxed text-justify text-white">
-                Go to &quot;Your Events&quot; in Profile, select the event, and
-                click &quot;Cancel Registration&quot;
-              </p>
-            </details>
-
-            <details className="group p-6 [&_summary::-webkit-details-marker]:hidden">
-              <summary className="flex cursor-pointer items-center justify-between gap-1.5 text-white">
-                <h2 className="text-lg font-medium">
-                  Can I edit the details of my event after it&apos;s created?
-                </h2>
-
-                <span className="relative size-5 shrink-0">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="absolute inset-0 size-5 opacity-100 group-open:opacity-0"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="absolute inset-0 size-5 opacity-0 group-open:opacity-100"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </span>
-              </summary>
-
-              <p className="mt-4 leading-relaxed text-justify text-white">
-                Yes! You can update your event details anytime using
-                &quot;Manage your Events&quot; in Profile section.
-              </p>
-            </details>
-
-            <details className="group p-6 [&_summary::-webkit-details-marker]:hidden">
-              <summary className="flex cursor-pointer items-center justify-between gap-1.5 text-white">
-                <h2 className="text-lg font-medium">
-                  Is there a way to invite my friends to an event?
-                </h2>
-
-                <span className="relative size-5 shrink-0">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="absolute inset-0 size-5 opacity-100 group-open:opacity-0"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="absolute inset-0 size-5 opacity-0 group-open:opacity-100"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </span>
-              </summary>
-
-              <p className="mt-4 leading-relaxed text-justify text-white">
-                Yes, click the share button on the event page to invite friends
-                via social media or link.
-              </p>
-            </details>
+                </summary>
+                <div className="overflow-hidden">
+                  <p className="mt-4 text-lg leading-relaxed text-gray-300">
+                    {item.answer}
+                  </p>
+                </div>
+              </details>
+            ))}
           </div>
         </div>
-        
       </div>
     </>
   );
