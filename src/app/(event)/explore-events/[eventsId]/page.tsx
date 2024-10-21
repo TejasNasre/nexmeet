@@ -24,9 +24,9 @@ export async function generateMetadata({
     eventData[0].event_description ||
     "Join events, connect with people, and make memories with NexMeet.";
 
-  const eventImageUrl =
-    JSON.parse(eventData[0].event_images[0].url)[0] ||
-    "https://jzhgfowuznosxtwzkbkx.supabase.co/storage/v1/object/public/event_image/_Black_And_Yellow_Modern_Event_Producer_Initial_Logo-removebg-preview.png"; // Default image
+  const eventImageUrl = eventData[0]?.event_images?.[0]?.url && typeof eventData[0].event_images[0].url === 'string'
+    ? JSON.parse(eventData[0].event_images[0].url)[0]
+    : "https://jzhgfowuznosxtwzkbkx.supabase.co/storage/v1/object/public/event_image/_Black_And_Yellow_Modern_Event_Producer_Initial_Logo-removebg-preview.png"; // Default image
 
   // Meta tags for WhatsApp will use OpenGraph tags
   return {
