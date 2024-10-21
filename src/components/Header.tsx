@@ -155,14 +155,14 @@ function Header() {
     return (
       <>
         <div className={`flex justify-center items-center gap-6 ${isMenuOpen ? `flex-col` : `flex-row`}`}>
-          <Link href="/" onClick={() => handleNavigation("/")} className="mono border border-white rounded-md px-4 py-2 hover:bg-gray-700">Home</Link>
-          <Link href="/explore-events" onClick={() => handleNavigation("/explore-events")} className="mono border border-white rounded-md px-4 py-2 hover:bg-gray-700">Explore Events</Link>
+          <Link href="/" onClick={() => handleNavigation("/")} className="mono rounded-md px-4 py-2 hover:bg-gray-600 transition-colors">Home</Link>
+          <Link href="/explore-events" onClick={() => handleNavigation("/explore-events")} className="mono rounded-md px-4 py-2 hover:bg-gray-600 transition-colors">Explore Events</Link>
           {isAuthenticated && (
-            <Link href="/explore-event-space" onClick={() => handleNavigation("/explore-event-space")} className="mono border border-white rounded-md px-4 py-2 hover:bg-gray-700">Explore Event Spaces</Link>
+            <Link href="/explore-event-space" onClick={() => handleNavigation("/explore-event-space")} className="mono rounded-md px-4 py-2 hover:bg-gray-600 transition-colors">Explore Event Spaces</Link>
           )}
-          <Link href="/about" onClick={() => handleNavigation("/about")} className="mono border border-white rounded-md px-4 py-2 hover:bg-gray-700">About Us</Link>
-          <Link href="/contact" onClick={() => handleNavigation("/contact")} className="mono border border-white rounded-md px-4 py-2 hover:bg-gray-700">Contact</Link>
-          <Link href="/contributors" onClick={() => handleNavigation("/contributors")} className="mono border border-white rounded-md px-4 py-2 hover:bg-gray-700">Contributors</Link>
+          <Link href="/about" onClick={() => handleNavigation("/about")} className="mono rounded-md px-4 py-2 hover:bg-gray-600 transition-colors">About Us</Link>
+          <Link href="/contact" onClick={() => handleNavigation("/contact")} className="mono rounded-md px-4 py-2 hover:bg-gray-600 transition-colors">Contact</Link>
+          <Link href="/contributors" onClick={() => handleNavigation("/contributors")} className="mono rounded-md px-4 py-2 hover:bg-gray-600 transition-colors">Contributors</Link>
         </div>
         {isAuthenticated ? (
           <>
@@ -183,13 +183,13 @@ function Header() {
                     <p className="text-sm">{user?.email}</p>
                   </div>
                   <div className="flex flex-col justify-center">
-                    <Link onClick={() => handleNavigation("/dashboard")} href="/dashboard" className="mono rounded-md px-2 py-2 hover:bg-gray-700">
+                    <Link onClick={() => handleNavigation("/dashboard")} href="/dashboard" className="mono rounded-md px-2 py-2 hover:bg-gray-600 transition-colors">
                       Dashboard
                     </Link>
                   </div>
                   <div className="flex flex-col justify-center">
                     <LogoutLink
-                      className="mono rounded-md px-2 py-2 hover:bg-gray-700"
+                      className="mono rounded-md px-2 py-2 hover:bg-gray-600 transition-colors"
                       postLogoutRedirectURL="/"
                     >
                       Log out
@@ -204,10 +204,10 @@ function Header() {
           </>
         ) : (
           <>
-            <LoginLink postLoginRedirectURL="/dashboard" className="mono transition ease-in-out delay-100 hover:scale-105 border-white border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1">
+            <LoginLink postLoginRedirectURL="/dashboard" className="mono transition ease-in-out delay-100 hover:scale-105 rounded-md px-4 py-1 hover:bg-gray-600 transition-colors">
               Sign in
             </LoginLink>
-            <RegisterLink postLoginRedirectURL="/dashboard" className="mono transition ease-in-out delay-100 hover:scale-105 border-white border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1">
+            <RegisterLink postLoginRedirectURL="/dashboard" className="mono transition ease-in-out delay-100 hover:scale-105 rounded-md px-4 py-1 hover:bg-gray-600 transition-colors">
               Sign up
             </RegisterLink>
             <button onClick={toggleTheme} className="bg-black p-2 rounded-md">
