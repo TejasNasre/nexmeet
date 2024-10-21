@@ -280,7 +280,7 @@ const Page: React.FC = () => {
           loading ? `px-0` : `px-4`
         }`}
       >
-        <div className="text-5xl md:text-6xl font-bold mb-12 text-center tracking-tight">
+        <div className="text-5xl md:text-6xl font-bold mb-12 text-center tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-500 via-violet-500 to-pink-500">
           Explore Events
         </div>
         <div className="w-full my-[3rem] flex flex-col md:flex-row gap-4 items-center">
