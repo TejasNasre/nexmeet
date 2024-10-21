@@ -11,6 +11,8 @@ import { CalendarIcon, MapPinIcon } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useSession } from "@supabase/auth-helpers-react";
+import { toast } from "sonner";
+
 const Page: React.FC = () => {
   interface CountLikes {
     [key: string]: number; // Maps event id to its like count
@@ -116,6 +118,7 @@ const Page: React.FC = () => {
     // Get the user details via the hook // Assuming you're using this hook to get user details
     if (!user) {
       console.log("User is not authenticated. Cannot like the event.");
+      toast.error("You are not logged in, Cannot like the event");
       return;
     }
 
@@ -427,9 +430,11 @@ const Page: React.FC = () => {
                           </span>
                         </div>
                         <div className="flex items-center space-x-2 text-xs">
-                          <MapPinIcon className="h-3 w-3 text-red-500" />
-                          <span className="truncate">
-                            {event.event_location}
+                          <MapPinIcon className="h-3 w-3 text-red-500 flex-shrink-0" />
+                          <span className="truncate max-w-[250px]">
+                            {event.event_location.length > 50
+                              ? `${event.event_location.substring(0, 50)}...`
+                              : event.event_location}
                           </span>
                         </div>
                       </div>
