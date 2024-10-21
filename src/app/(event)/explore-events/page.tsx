@@ -11,6 +11,8 @@ import { CalendarIcon, MapPinIcon } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useSession } from "@supabase/auth-helpers-react";
+import { toast } from "sonner";
+
 const Page: React.FC = () => {
   interface CountLikes {
     [key: string]: number; // Maps event id to its like count
@@ -116,6 +118,7 @@ const Page: React.FC = () => {
     // Get the user details via the hook // Assuming you're using this hook to get user details
     if (!user) {
       console.log("User is not authenticated. Cannot like the event.");
+      toast.error("You are not logged in, Cannot like the event");
       return;
     }
 
@@ -372,11 +375,11 @@ const Page: React.FC = () => {
                         <div className="flex flex-col items-center justify-center p-2 ">
                           <HeartIcon
                             onClick={() => handleLikeToggle(event.id)}
-                            className={`h-8 w-8 transition-all duration-300 ${
+                            className={`h-8 w-8 transition-all duration-300 bg-black rounded-full ${
                               likedEvents[event.id]
                                 ? "text-red-500 filter drop-shadow-[0_0_10px_rgba(255,0,0,0.5)]"
                                 : "text-white"
-                            } hover:text-red-500 rounded-full bg-red-100 bg-opacity-20 backdrop-filter backdrop-blur-sm p-1`}
+                            } hover:text-red-500 backdrop-filter backdrop-blur-sm p-1`}
                           />
                           <span className="text-[14px] font-semibold text-white mt-1">
                             {countLikes[event.id] || 0}
@@ -405,7 +408,7 @@ const Page: React.FC = () => {
                             {isActive ? "Active" : "Inactive"}
                           </span>
                         </span>
-                        <span className="text-sm font-semibold">
+                        <span className="text-sm font-semibold text-yellow-500">
                           ${event.event_price}
                         </span>
                       </div>
@@ -415,7 +418,7 @@ const Page: React.FC = () => {
                       <div className="space-y-2">
                         <div className="flex items-center space-x-2 text-xs">
                           <CalendarIcon className="h-3 w-3" />
-                          <span>
+                          <span className="text-sm font-semibold text-orange-500">
                             {new Date(event.event_startdate).toLocaleString(
                               undefined,
                               {
@@ -427,16 +430,18 @@ const Page: React.FC = () => {
                           </span>
                         </div>
                         <div className="flex items-center space-x-2 text-xs">
-                          <MapPinIcon className="h-3 w-3" />
-                          <span className="truncate">
-                            {event.event_location}
+                          <MapPinIcon className="h-3 w-3 text-red-500 flex-shrink-0" />
+                          <span className="truncate max-w-[250px]">
+                            {event.event_location.length > 50
+                              ? `${event.event_location.substring(0, 50)}...`
+                              : event.event_location}
                           </span>
                         </div>
                       </div>
                     </div>
                     <div className="px-4 pb-4">
                       <Link href={`/explore-events/${event.id}`}>
-                        <button className="w-full bg-black border text-white text-sm font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out">
+                        <button className="w-full bg-black border text-teal-500 text-sm font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out">
                           View Details
                         </button>
                       </Link>
