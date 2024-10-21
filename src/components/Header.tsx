@@ -1,17 +1,17 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   RegisterLink,
   LoginLink,
+  LogoutLink,
 } from "@kinde-oss/kinde-auth-nextjs/components";
 import { userDetails } from "../action/userDetails";
 import Image from "next/image";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { BsBrightnessLow } from "react-icons/bs";
 import { IoMoon } from "react-icons/io5";
-import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 
 interface User {
   picture: string;
@@ -28,6 +28,7 @@ function Header() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State for dropdown
   const [isDarkMode, setIsDarkMode] = useState(false);
   const router = useRouter();
+  const dropdownRef = useRef<HTMLDivElement | null>(null); // Ref for dropdown
 
   useEffect(() => {
     userDetails()
@@ -40,6 +41,19 @@ function Header() {
         setUser(null);
       });
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false); // Close dropdown if clicked outside
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownRef]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -152,8 +166,8 @@ function Header() {
         </div>
         {isAuthenticated ? (
           <>
-            <div className="relative">
-              <Link onClick={() => toggleDropdown()} href="" className="mono justify-center items-center flex hover:text-gray-300">
+            <div className="relative" ref={dropdownRef}>
+              <Link onClick={toggleDropdown} href="#" className="mono justify-center items-center flex hover:text-gray-300">
                 <Image
                   src={user?.picture || "/profile.jpg"}
                   alt="Profile"
@@ -170,14 +184,15 @@ function Header() {
                   </div>
                   <div className="flex flex-col justify-center">
                     <Link onClick={() => handleNavigation("/dashboard")} href="/dashboard" className="mono rounded-md px-2 py-2 hover:bg-gray-700">
-                        Dashboard
+                      Dashboard
                     </Link>
                   </div>
                   <div className="flex flex-col justify-center">
                     <LogoutLink
                       className="mono rounded-md px-2 py-2 hover:bg-gray-700"
                       postLogoutRedirectURL="/"
-                    >Log out
+                    >
+                      Log out
                     </LogoutLink>
                   </div>
                 </div>
