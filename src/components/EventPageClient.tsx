@@ -48,7 +48,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
 
       setIsRegistrationOpen(
         currentDate >= registrationStartDate &&
-        currentDate <= registrationEndDate
+          currentDate <= registrationEndDate
       );
     }
   }, [eventData]);
@@ -160,7 +160,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
 
   const img =
     eventData[0]?.event_images?.[0]?.url &&
-      typeof eventData[0].event_images[0].url === "string"
+    typeof eventData[0].event_images[0].url === "string"
       ? JSON.parse(eventData[0].event_images[0].url)
       : []; // Default to an empty array if no valid URL
 
@@ -329,12 +329,13 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                     <div>
                       <Button
                         variant="outline"
-                        className={`w-full transition-transform duration-300 ease-in-out transform ${registrationClosed ||
+                        className={`w-full transition-transform duration-300 ease-in-out transform ${
+                          registrationClosed ||
                           isRegistered ||
                           !isRegistrationOpen
-                          ? "opacity-50 cursor-not-allowed"
-                          : "hover:scale-105"
-                          }`}
+                            ? "opacity-50 cursor-not-allowed"
+                            : "hover:scale-105"
+                        }`}
                         disabled={
                           registrationClosed ||
                           isRegistered ||
@@ -347,7 +348,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                           : isRegistered
                             ? "Registered ✔️"
                             : !isRegistrationOpen
-                              ? "Registration Coming Soon"
+                              ? "Registration Closed"
                               : "Register Now"}
                       </Button>
                     </div>
@@ -366,10 +367,10 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                       onClick={
                         isRegistered
                           ? () =>
-                            window.open(
-                              createGoogleCalendarLink(event),
-                              "_blank"
-                            )
+                              window.open(
+                                createGoogleCalendarLink(event),
+                                "_blank"
+                              )
                           : undefined
                       }
                       disabled={!isRegistered}
