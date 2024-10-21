@@ -283,72 +283,73 @@ const Page: React.FC = () => {
         <div className="text-5xl md:text-6xl font-bold mb-12 text-center tracking-tight">
           Explore Events
         </div>
-        <div className="w-full my-[3rem] flex flex-col gap-4 justify-end">
-          <div>
-            <label className="flex items-center gap-2 bg-black border border-white w-full rounded-md px-4">
-              <input
-                type="text"
-                className="bg-black text-white w-full p-2 rounded-md border-0 outline-none"
-                placeholder="Search Name Or Location"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+        <div className="w-full my-[3rem] flex flex-col md:flex-row gap-4 items-center">
+          {/* Search Bar */}
+          <label className="flex items-center gap-2 bg-black border border-white w-full md:w-[100rem] rounded-md px-4">
+            <input
+              type="text"
+              className="bg-black text-white w-full p-2 rounded-md border-0 outline-none"
+              placeholder="Search Name Or Location"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              className="h-4 w-4 opacity-70 text-white"
+            >
+              <path
+                fillRule="evenodd"
+                d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                clipRule="evenodd"
               />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 16 16"
-                fill="currentColor"
-                className="h-4 w-4 opacity-70 text-white"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </label>
+            </svg>
+          </label>
+
+          {/* Start Date and End Date */}
+          <div className="flex flex-row justify-center gap-4">
+            <DatePicker
+              className="date-picker w-[8rem] border border-white p-2 rounded-md bg-black text-white"
+              selected={startDate}
+              onChange={(date) => date && handleStartDateChange(date)}
+              placeholderText="Start Date"
+            />
+            <DatePicker
+              className="date-picker w-[8rem] border border-white p-2 rounded-md bg-black text-white"
+              selected={endDate}
+              onChange={(date) => date && handleEndDateChange(date)}
+              placeholderText="End Date"
+              minDate={startDate}
+            />
           </div>
 
-          <div className="w-full flex justify-end items-center flex-col md:flex-row gap-4">
-            <div className="flex flex-row justify-center gap-4">
-              <DatePicker
-                className="date-picker w-[8rem] border border-white p-2 rounded-md bg-black text-white"
-                selected={startDate}
-                onChange={(date) => date && handleStartDateChange(date)}
-                placeholderText="Start Date"
-              />
-              <DatePicker
-                className="date-picker w-[8rem] border border-white p-2 rounded-md bg-black text-white"
-                selected={endDate}
-                onChange={(date) => date && handleEndDateChange(date)}
-                placeholderText="End Date"
-                minDate={startDate} // Prevent end date from being before start date
-              />
-            </div>{" "}
-            <div className="flex flex-row justify-center gap-4">
-              <select
-                className="w-[8rem] border border-white p-2 rounded-md bg-black text-white"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-              >
-                <option value="">Category</option>
-                <option value="technical">Technical</option>
-                <option value="sports">Sports</option>
-                <option value="cultural">Cultural</option>
-                <option value="meetup">Meetup</option>
-                <option value="conference">Conference</option>
-              </select>
-              <select
-                className="w-[10rem] border border-white p-2 rounded-md bg-black text-white"
-                value={numberOfLikes}
-                onChange={(e) => setNumberOfLikes(e.target.value)}
-              >
-                <option value="all">Likes</option>
-                <option value="high">Highest Like</option>
-                <option value="low">Lowest Likes</option>
-              </select>
-            </div>
+          {/* Category and Sort By Likes */}
+          <div className="flex flex-row justify-center gap-4">
+            <select
+              className="w-[8rem] border border-white p-2 rounded-md bg-black text-white"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              <option value="">Category</option>
+              <option value="technical">Technical</option>
+              <option value="sports">Sports</option>
+              <option value="cultural">Cultural</option>
+              <option value="meetup">Meetup</option>
+              <option value="conference">Conference</option>
+            </select>
+            <select
+              className="w-[10rem] border border-white p-2 rounded-md bg-black text-white"
+              value={numberOfLikes}
+              onChange={(e) => setNumberOfLikes(e.target.value)}
+            >
+              <option value="all">Likes</option>
+              <option value="high">Highest Like</option>
+              <option value="low">Lowest Likes</option>
+            </select>
           </div>
         </div>
+
         {loading ? (
           <Loading />
         ) : (
