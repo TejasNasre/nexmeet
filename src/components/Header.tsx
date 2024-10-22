@@ -155,14 +155,14 @@ function Header() {
     return (
       <>
         <div className={`flex justify-center items-center gap-6 ${isMenuOpen ? `flex-col` : `flex-row`}`}>
-          <Link href="/" onClick={() => handleNavigation("/")} className="mono rounded-md px-4 py-2 hover:bg-gray-600 transition-colors">Home</Link>
-          <Link href="/explore-events" onClick={() => handleNavigation("/explore-events")} className="mono rounded-md px-4 py-2 hover:bg-gray-600 transition-colors">Explore Events</Link>
+          <Link href="/" onClick={() => handleNavigation("/")} className="py-2 hover:border-b-2 border-white transition-colors">Home</Link>
+          <Link href="/explore-events" onClick={() => handleNavigation("/explore-events")} className="py-2 hover:border-b-2 border-white transition-colors">Explore Events</Link>
           {isAuthenticated && (
-            <Link href="/explore-event-space" onClick={() => handleNavigation("/explore-event-space")} className="mono rounded-md px-4 py-2 hover:bg-gray-600 transition-colors">Explore Event Spaces</Link>
+            <Link href="/explore-event-space" onClick={() => handleNavigation("/explore-event-space")} className="py-2 hover:border-b-2 border-white transition-colors">Explore Event Spaces</Link>
           )}
-          <Link href="/about" onClick={() => handleNavigation("/about")} className="mono rounded-md px-4 py-2 hover:bg-gray-600 transition-colors">About Us</Link>
-          <Link href="/contact" onClick={() => handleNavigation("/contact")} className="mono rounded-md px-4 py-2 hover:bg-gray-600 transition-colors">Contact</Link>
-          <Link href="/contributors" onClick={() => handleNavigation("/contributors")} className="mono rounded-md px-4 py-2 hover:bg-gray-600 transition-colors">Contributors</Link>
+          <Link href="/about" onClick={() => handleNavigation("/about")} className="py-2 hover:border-b-2 border-white transition-colors">About Us</Link>
+          <Link href="/contact" onClick={() => handleNavigation("/contact")} className="py-2 hover:border-b-2 border-white transition-colors">Contact</Link>
+          <Link href="/contributors" onClick={() => handleNavigation("/contributors")} className="py-2 hover:border-b-2 border-white transition-colors">Contributors</Link>
         </div>
         {isAuthenticated ? (
           <>
@@ -183,7 +183,7 @@ function Header() {
                     <p className="text-sm">{user?.email}</p>
                   </div>
                   <div className="flex flex-col justify-center">
-                    <Link onClick={() => handleNavigation("/dashboard")} href="/dashboard" className="mono rounded-md px-2 py-2 hover:bg-gray-600 transition-colors">
+                    <Link onClick={() => handleNavigation("/dashboard")} href="/dashboard" className="px-1 py-2 hover:bg-gray-600 transition-colors">
                       Dashboard
                     </Link>
                   </div>
@@ -204,12 +204,13 @@ function Header() {
           </>
         ) : (
           <>
-            <LoginLink postLoginRedirectURL="/dashboard" className="mono transition ease-in-out delay-100 hover:scale-105 rounded-md px-4 py-1 hover:bg-gray-600 transition-colors">
-              Sign in
+            <LoginLink postLoginRedirectURL="/dashboard" className="hover:scale-105 px-1 py-1 hover:border-b-2 border-white transition-colors">
+            Sign in
             </LoginLink>
-            <RegisterLink postLoginRedirectURL="/dashboard" className="mono transition ease-in-out delay-100 hover:scale-105 rounded-md px-4 py-1 hover:bg-gray-600 transition-colors">
-              Sign up
+            <RegisterLink postLoginRedirectURL="/dashboard" className="hover:scale-105 px-1 py-1 hover:border-b-2 border-white transition-colors">
+            Sign up
             </RegisterLink>
+
             <button onClick={toggleTheme} className="bg-black p-2 rounded-md">
               {isDarkMode ? <BsBrightnessLow size={24} /> : <IoMoon size={24} />}
             </button>
