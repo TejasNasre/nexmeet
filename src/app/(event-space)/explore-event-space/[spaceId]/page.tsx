@@ -55,70 +55,78 @@ const EventPage = () => {
     return <Loading />;
   }
 
-  const img = JSON.parse(spaceData[0].event_space_img_vid[0].url);
+  const img = spaceData[0]?.event_space_img_vid[0]?.url
+    ? JSON.parse(spaceData[0].event_space_img_vid[0].url)
+    : [];
+  
   const amenities = spaceData[0].amenities;
 
   return (
-    <>
-      <div className="  w-full h-auto bg-black text-white py-[8rem] px-[1rem] md:px-[2rem]">
+    <div className="min-h-screen bg-black text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {spaceData.map((space: any) => (
-          <div
-            className="flex flex-wrap items-center justify-center"
-            key={space.id}
-          >
-            <div className="w-full flex flex-col justify-center items-center">
-              <h1 className="text-2xl font-extrabold text-center md:text-4xl">
-                {space.name}
-              </h1>
-
-              <div className="w-full md:w-[80%] p-10">
-                {img.map((i: any) => {
-                  return (
-                    <div key={i}>
-                      <Image
-                        src={i}
-                        alt="event image"
-                        className="w-full"
-                        width={500}
-                        height={500}
-                        loading="lazy"
-                      />
-                    </div>
-                  );
-                })}
+          <div key={space.id} className="space-y-12 mt-10">
+            {/* Header Section */}
+            <div className="text-center space-y-8">
+              <h1 className="text-4xl font-bold tracking-tight">{space.name}</h1>
+              
+              {/* Image Section */}
+              <div className="aspect-w-16 aspect-h-9 overflow-hidden rounded-xl">
+                {img.map((i: any) => (
+                  <div key={i} className="w-full">
+                    <Image
+                      src={i}
+                      alt="event image"
+                      width={1200}
+                      height={675}
+                      className="object-cover rounded-xl"
+                      loading="lazy"
+                    />
+                  </div>
+                ))}
               </div>
             </div>
 
-            <div className="flex flex-col w-full gap-4 md:flex-row">
-              <div className="flex flex-col w-full gap-2 p-6 border border-white rounded-lg md:gap-4">
-                <h1 className="text-2xl font-extrabold">About Space</h1>
-                <p className="text-justify">{space.description}</p>
-                <h1>Space Capacity : {space.capacity}</h1>
-
-                <h1 className="flex flex-row items-center gap-4">
-                  Location : {space.location}
-                </h1>
-                <h1 className="flex flex-row items-center gap-4">
-                  <div>
-                    Price Per Hour:{" "}
-                    <Badge variant="destructive">
-                      <span>&#8377;</span>
-                      {space.price_per_hour}
-                    </Badge>
+            {/* Content Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Main Content */}
+              <div className="lg:col-span-2 space-y-8">
+                {/* About Space */}
+                <div className="bg-black border border-white rounded-xl p-8 space-y-6">
+                  <h2 className="text-2xl font-bold">About Space</h2>
+                  <p className="text-gray-300 leading-relaxed">{space.description}</p>
+                  
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2">
+                    <span className="text-[#FF5733]">Space Capacity:</span>
+                      <span>{space.capacity}</span>
+                    </div>
+                    
+                    <div className="flex items-center gap-2">
+                    <span className="text-[#28A745]">Location:</span>
+                      <span>{space.location}</span>
+                    </div>
+                    
+                    <div className="flex flex-wrap items-center gap-4">
+                      <div className="flex items-center gap-2">
+                      <span className="text-[#FFC107]">Price Per Hour:</span>
+                        <Badge variant="destructive" className="text-lg">
+                          <span>₹</span>{space.price_per_hour}
+                        </Badge>
+                      </div>
+                      
+                      <div className="flex items-center gap-2">
+                      <span className="text-[#17A2B8]">Availability:</span>
+                        <Badge variant="secondary" className="text-sm">
+                          {JSON.stringify(space.availability, null, 2)}
+                        </Badge>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    Availability:{" "}
-                    <Badge variant="secondary">
-                      {JSON.stringify(space.availability, null, 2)}
-                    </Badge>
-                  </div>
-                </h1>
-
-                <div className="border border-white"></div>
-                <div>
-                  <Button
+                  
+                  <Button 
                     variant="outline"
-                    className="w-full"
+                    className="w-full mt-6 text-white border-white hover:bg-white hover:text-black transition-colors"
                     onClick={() => isUser()}
                   >
                     Request Booking
@@ -126,28 +134,42 @@ const EventPage = () => {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-2 p-6 border border-white rounded-lg">
-                  <h1 className="text-xl font-bold">Owner Details</h1>
-                  <h1>{space.owner_contact}</h1>
-                  <h1>{space.owner_email}</h1>
+              {/* Sidebar */}
+              <div className="space-y-8">
+                {/* Owner Details */}
+                <div className="bg-black border border-white rounded-xl p-6 space-y-4">
+                  <h2 className="text-xl font-bold">Owner Details</h2>
+                  <div className="space-y-2 text-gray-300">
+                    <p>{space.owner_contact}</p>
+                    <p>{space.owner_email}</p>
+                  </div>
                 </div>
 
-                <div className="flex flex-col gap-2 p-6 border border-white rounded-lg">
-                  <h1 className="text-xl font-bold">Amenities</h1>
-                  <h1 className="flex flex-wrap gap-2">
-                    Available :{" "}
-                    {amenities.map((tag: any) => (
-                      <Badge key={tag}>{tag}</Badge>
-                    ))}
-                  </h1>
+                {/* Amenities */}
+                <div className="bg-black border border-white rounded-xl p-6 space-y-4">
+                  <h2 className="text-xl font-bold">Amenities</h2>
+                  <div className="flex flex-wrap gap-2">
+                      {amenities.map((tag: any, index: number) => (
+                        <Badge 
+                          key={tag}
+                          className={`${
+                            index % 4 === 0 ? "bg-[#FF5733]" : 
+                            index % 4 === 1 ? "bg-[#28A745]" : 
+                            index % 4 === 2 ? "bg-[#FFC107]" : 
+                            "bg-[#17A2B8]"
+                          } text-white border-none`}
+                        >
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
                 </div>
               </div>
             </div>
           </div>
         ))}
       </div>
-    </>
+    </div>
   );
 };
 
