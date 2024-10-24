@@ -1,10 +1,11 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   RegisterLink,
   LoginLink,
+  LogoutLink,
 } from "@kinde-oss/kinde-auth-nextjs/components";
 import { userDetails } from "../action/userDetails";
 import Image from "next/image";
@@ -14,15 +15,20 @@ import { IoMoon } from "react-icons/io5";
 
 interface User {
   picture: string;
+  given_name: string;
+  family_name: string;
+  email: string;
 }
 
 function Header() {
   const { isAuthenticated } = useKindeBrowserClient();
+  const pathname = usePathname(); // Use usePathname instead of useRouter
 
   const [user, setUser] = useState<User | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const router = useRouter();
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
   useEffect(() => {
     userDetails()
@@ -41,13 +47,25 @@ function Header() {
   };
 
   const handleNavigation = (path: string) => {
-    router.push(path);
-    setIsMenuOpen(false); // Close the menu
+    // Navigation logic if needed
+    setIsMenuOpen(false);
   };
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
-    document.body.classList.toggle("white"); // Ensure dark-mode CSS is applied
+    document.body.classList.toggle("white");
+  };
+
+  const toggleDropdown = () => {
+    setIsDropdownVisible(!isDropdownVisible);
+  };
+
+  const showDropdown = () => {
+    setIsDropdownVisible(true);
+  };
+
+  const hideDropdown = () => {
+    setIsDropdownVisible(false);
   };
 
   return (
@@ -119,7 +137,7 @@ function Header() {
                 />
               </svg>
             </button>
-            <div className="flex flex-col gap-8 text-white text-center">
+            <div className="flex flex-col gap-8 text-white text-center items-center">
               {renderMenuItems()}
             </div>
           </div>
@@ -129,75 +147,95 @@ function Header() {
   );
 
   function renderMenuItems() {
+    const navItems = [
+      { href: "/", label: "Home" },
+      { href: "/explore-events", label: "Explore Events" },
+      {
+        href: "/explore-event-space",
+        label: "Explore Event Spaces",
+        requiresAuth: true,
+      },
+      { href: "/about", label: "About Us" },
+      { href: "/contact", label: "Contact" },
+      { href: "/contributors", label: "Contributors" },
+    ];
+
     return (
       <>
         <div
-          className={`flex justify-center items-center gap-6 ${
-            isMenuOpen ? `flex-col` : `flex-row`
-          }`}
+          className={`flex justify-center items-center gap-6 ${isMenuOpen ? `flex-col` : `flex-row`}`}
         >
-          <Link
-            href="/"
-            onClick={() => handleNavigation("/")}
-            className="mono hover:text-gray-300"
-          >
-            Home
-          </Link>
-          <Link
-            href="/explore-events"
-            onClick={() => handleNavigation("/explore-events")}
-            className="mono hover:text-gray-300"
-          >
-            Explore Events
-          </Link>
-          {isAuthenticated && (
-            <Link
-              href="/explore-event-space"
-              onClick={() => handleNavigation("/explore-event-space")}
-              className="mono hover:text-gray-300"
-            >
-              Explore Event Spaces
-            </Link>
-          )}
-
-          <Link
-            href="/about"
-            onClick={() => handleNavigation("/about")}
-            className="mono hover:text-gray-300"
-          >
-            About Us
-          </Link>
-          <Link
-            href="/contact"
-            onClick={() => handleNavigation("/contact")}
-            className="mono hover:text-gray-300"
-          >
-            Contact
-          </Link>
-          <Link
-            href="/contributors"
-            onClick={() => handleNavigation("/contributors")}
-            className="mono hover:text-gray-300"
-          >
-            Contributors
-          </Link>
+          {navItems.map(({ href, label, requiresAuth }) => {
+            if (requiresAuth && !isAuthenticated) return null; // Skip if not authenticated
+            const isActive = pathname === href; // Use pathname to determine active link
+            return (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => handleNavigation(href)}
+                className={`pt-3 nav-link flex items-center justify-center h-12 transition-colors box-border ${isActive ? "border-b-2 border-white" : ""}`}
+              >
+                {label}
+              </Link>
+            );
+          })}
         </div>
         {isAuthenticated ? (
           <>
-            <Link
-              onClick={() => handleNavigation("/dashboard")}
-              href="/dashboard"
-              className="mono justify-center items-center flex hover:text-gray-300"
-            >
-              <Image
-                src={user?.picture || "/profile.jpg"}
-                alt="Profile"
-                width={56}
-                height={56}
-                className="rounded-full size-10 border-2 border-white"
-              />
-            </Link>
-            <button onClick={toggleTheme} className="bg-black p-2 rounded-md">
+            <div className="relative" ref={dropdownRef}>
+              <div
+                onMouseEnter={showDropdown}
+                onMouseLeave={hideDropdown}
+                className="inline-block cursor-pointer"
+              >
+                <div
+                  onTouchMove={toggleDropdown}
+                  className="mono justify-center items-center flex hover:text-gray-300"
+                  onMouseEnter={showDropdown}
+                  onMouseLeave={hideDropdown}
+                >
+                  <Image
+                    src={user?.picture || "/profile.jpg"}
+                    alt="Profile"
+                    width={56}
+                    height={56}
+                    className="rounded-full size-10 border-2 border-white"
+                  />
+                </div>
+                {isDropdownVisible && (
+                  <div
+                    className="absolute right-0 p-2 mt-0 w-auto bg-black text-white dark:bg-white dark:text-black rounded-md shadow-lg z-20"
+                    onMouseEnter={showDropdown}
+                    onMouseLeave={hideDropdown}
+                  >
+                    <div className="py-1 px-2 text-white-700">
+                      <p className="font-bold">
+                        {user?.given_name} {user?.family_name}
+                      </p>
+                      <p className="text-sm">{user?.email}</p>
+                    </div>
+                    <div className="flex flex-col justify-center">
+                      <Link
+                        onClick={() => handleNavigation("/dashboard")}
+                        href="/dashboard"
+                        className="px-1 py-2 hover:bg-black hover:text-white hover:rounded-xl text-center transition-colors"
+                      >
+                        Dashboard
+                      </Link>
+                    </div>
+                    <div className="flex flex-col justify-center">
+                      <LogoutLink
+                        className="mono rounded-md px-2 py-2 hover:bg-black hover:text-white hover:rounded-xl text-center transition-colors"
+                        postLogoutRedirectURL="/"
+                      >
+                        Log out
+                      </LogoutLink>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+            <button onClick={toggleTheme} className="p-2 rounded-md">
               {isDarkMode ? (
                 <BsBrightnessLow size={24} />
               ) : (
@@ -209,16 +247,17 @@ function Header() {
           <>
             <LoginLink
               postLoginRedirectURL="/dashboard"
-              className="mono transition ease-in-out delay-100 hover:scale-105 border-white border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1"
+              className="hover:scale-105 px-1 py-1 hover:border-b-2 border-white transition-colors"
             >
               Sign in
             </LoginLink>
             <RegisterLink
               postLoginRedirectURL="/dashboard"
-              className="mono transition ease-in-out delay-100 hover:scale-105 border-white border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1"
+              className="hover:scale-105 px-1 py-1 hover:border-b-2 border-white transition-colors"
             >
               Sign up
             </RegisterLink>
+
             <button onClick={toggleTheme} className="bg-black p-2 rounded-md">
               {isDarkMode ? (
                 <BsBrightnessLow size={24} />
