@@ -25,6 +25,7 @@ const Page: React.FC = () => {
   const [numberOfLikes, setNumberOfLikes] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("");
+  const [sortByPrice, setSortByPrice] = useState("");
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
   const [likedEvents, setLikedEvents] = useState<{ [key: string]: boolean }>(
@@ -222,8 +223,8 @@ const Page: React.FC = () => {
     }));
   };
 
-  const filteredAndSortedEvents = sortEventsByLikes(event).filter(
-    (event: any) => {
+  const filteredAndSortedEvents = (() => {
+    const filteredEvents = event.filter((event: any) => {
       const date = new Date(event.event_startdate);
 
       // Check if the event matches the category
@@ -243,8 +244,20 @@ const Page: React.FC = () => {
 
       // Return true if the event matches the category and matches the search term and is within the date range
       return matchesCategory && matchesSearchTerm && withinDateRange;
+    });
+
+    if (numberOfLikes === "high") {
+      return filteredEvents.sort((a, b) => b.event_likes - a.event_likes);
+    } else if (numberOfLikes === "low") {
+      return filteredEvents.sort((a, b) => a.event_likes - b.event_likes);
+    } else if (sortByPrice === "high") {
+      return filteredEvents.sort((a, b) => b.event_price - a.event_price);
+    } else if (sortByPrice === "low") {
+      return filteredEvents.sort((a, b) => a.event_price - b.event_price);
     }
-  );
+
+    return filteredEvents;
+  })();
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -326,25 +339,22 @@ const Page: React.FC = () => {
             </div>{" "}
             <div className="flex flex-row justify-center gap-4">
               <select
-                className="w-[8rem] border border-white p-2 rounded-md bg-black text-white"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-              >
-                <option value="">Category</option>
-                <option value="technical">Technical</option>
-                <option value="sports">Sports</option>
-                <option value="cultural">Cultural</option>
-                <option value="meetup">Meetup</option>
-                <option value="conference">Conference</option>
-              </select>
-              <select
                 className="w-[10rem] border border-white p-2 rounded-md bg-black text-white"
                 value={numberOfLikes}
                 onChange={(e) => setNumberOfLikes(e.target.value)}
               >
                 <option value="all">Likes</option>
-                <option value="high">Highest Like</option>
+                <option value="high">Highest Likes</option>
                 <option value="low">Lowest Likes</option>
+              </select>
+              <select
+                className="w-[11rem] border border-white p-2 rounded-md bg-black text-white"
+                value={sortByPrice}
+                onChange={(e) => setSortByPrice(e.target.value)}
+              >
+                <option value="">Price</option>
+                <option value="low">Lowest Price</option>
+                <option value="high">Highest Price</option>
               </select>
             </div>
           </div>
