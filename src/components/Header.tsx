@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation"; // Import usePathname
 import {
   RegisterLink,
   LoginLink,
@@ -22,13 +22,13 @@ interface User {
 
 function Header() {
   const { isAuthenticated } = useKindeBrowserClient();
+  const pathname = usePathname(); // Use usePathname instead of useRouter
 
   const [user, setUser] = useState<User | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State for dropdown
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const router = useRouter();
-  const dropdownRef = useRef<HTMLDivElement | null>(null); // Ref for dropdown
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     userDetails()
@@ -60,13 +60,13 @@ function Header() {
   };
 
   const handleNavigation = (path: string) => {
-    router.push(path);
-    setIsMenuOpen(false); // Close the menu
+    // Navigation logic if needed
+    setIsMenuOpen(false);
   };
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
-    document.body.classList.toggle("white"); // Ensure dark-mode CSS is applied
+    document.body.classList.toggle("white");
   };
 
   const toggleDropdown = () => {
@@ -152,17 +152,32 @@ function Header() {
   );
 
   function renderMenuItems() {
+    const navItems = [
+      { href: "/", label: "Home" },
+      { href: "/explore-events", label: "Explore Events" },
+      { href: "/explore-event-space", label: "Explore Event Spaces", requiresAuth: true },
+      { href: "/about", label: "About Us" },
+      { href: "/contact", label: "Contact" },
+      { href: "/contributors", label: "Contributors" },
+    ];
+
     return (
       <>
         <div className={`flex justify-center items-center gap-6 ${isMenuOpen ? `flex-col` : `flex-row`}`}>
-          <Link href="/" onClick={() => handleNavigation("/")} className="py-2 hover:border-b-2 border-white transition-colors">Home</Link>
-          <Link href="/explore-events" onClick={() => handleNavigation("/explore-events")} className="py-2 hover:border-b-2 border-white transition-colors">Explore Events</Link>
-          {isAuthenticated && (
-            <Link href="/explore-event-space" onClick={() => handleNavigation("/explore-event-space")} className="py-2 hover:border-b-2 border-white transition-colors">Explore Event Spaces</Link>
-          )}
-          <Link href="/about" onClick={() => handleNavigation("/about")} className="py-2 hover:border-b-2 border-white transition-colors">About Us</Link>
-          <Link href="/contact" onClick={() => handleNavigation("/contact")} className="py-2 hover:border-b-2 border-white transition-colors">Contact</Link>
-          <Link href="/contributors" onClick={() => handleNavigation("/contributors")} className="py-2 hover:border-b-2 border-white transition-colors">Contributors</Link>
+          {navItems.map(({ href, label, requiresAuth }) => {
+            if (requiresAuth && !isAuthenticated) return null; // Skip if not authenticated
+            const isActive = pathname === href; // Use pathname to determine active link
+            return (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => handleNavigation(href)}
+                className={`py-3 flex items-center justify-center h-12 transition-colors ${isActive ? "border-b-2 border-white" : ""} hover:border-b-2 border-white`}
+              >
+                {label}
+              </Link>
+            );
+          })}
         </div>
         {isAuthenticated ? (
           <>
