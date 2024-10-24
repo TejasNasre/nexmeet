@@ -12,6 +12,7 @@ import { userDetails } from "../action/userDetails";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { Comment } from "@/components/ui/comment";
 import { FaXTwitter } from "react-icons/fa6";
+import { toast } from "sonner";
 
 import {
   TwitterShareButton,
@@ -176,6 +177,16 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
 
   const handleCommentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!isAuthenticated) {
+        toast.error("You are not logged in! Please log in to comment.");
+        return;
+    }
+
+    if (comment.trim().length > 50) {
+        toast.error("Comment must not exceed 50 characters.");
+        return;
+    }
+
     if (comment.trim()) {
       const { error } = await supabase.from("comments").insert([
         {
