@@ -1,10 +1,11 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation"; // Import usePathname
 import {
   RegisterLink,
   LoginLink,
+  LogoutLink,
 } from "@kinde-oss/kinde-auth-nextjs/components";
 import { userDetails } from "../action/userDetails";
 import Image from "next/image";
@@ -14,15 +15,20 @@ import { IoMoon } from "react-icons/io5";
 
 interface User {
   picture: string;
+  given_name: string;
+  family_name: string;
+  email: string;
 }
 
 function Header() {
   const { isAuthenticated } = useKindeBrowserClient();
+  const pathname = usePathname(); // Use usePathname instead of useRouter
 
   const [user, setUser] = useState<User | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const router = useRouter();
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     userDetails()
@@ -36,18 +42,35 @@ function Header() {
       });
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false); // Close dropdown if clicked outside
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownRef]);
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
   const handleNavigation = (path: string) => {
-    router.push(path);
-    setIsMenuOpen(false); // Close the menu
+    // Navigation logic if needed
+    setIsMenuOpen(false);
   };
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
-    document.body.classList.toggle("white"); // Ensure dark-mode CSS is applied
+    document.body.classList.toggle("white");
+  };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
   };
 
   return (
@@ -129,102 +152,82 @@ function Header() {
   );
 
   function renderMenuItems() {
+    const navItems = [
+      { href: "/", label: "Home" },
+      { href: "/explore-events", label: "Explore Events" },
+      { href: "/explore-event-space", label: "Explore Event Spaces", requiresAuth: true },
+      { href: "/about", label: "About Us" },
+      { href: "/contact", label: "Contact" },
+      { href: "/contributors", label: "Contributors" },
+    ];
+
     return (
       <>
-        <div
-          className={`flex justify-center items-center gap-6 ${
-            isMenuOpen ? `flex-col` : `flex-row`
-          }`}
-        >
-          <Link
-            href="/"
-            onClick={() => handleNavigation("/")}
-            className="mono hover:text-gray-300"
-          >
-            Home
-          </Link>
-          <Link
-            href="/explore-events"
-            onClick={() => handleNavigation("/explore-events")}
-            className="mono hover:text-gray-300"
-          >
-            Explore Events
-          </Link>
-          {isAuthenticated && (
-            <Link
-              href="/explore-event-space"
-              onClick={() => handleNavigation("/explore-event-space")}
-              className="mono hover:text-gray-300"
-            >
-              Explore Event Spaces
-            </Link>
-          )}
-
-          <Link
-            href="/about"
-            onClick={() => handleNavigation("/about")}
-            className="mono hover:text-gray-300"
-          >
-            About Us
-          </Link>
-          <Link
-            href="/contact"
-            onClick={() => handleNavigation("/contact")}
-            className="mono hover:text-gray-300"
-          >
-            Contact
-          </Link>
-          <Link
-            href="/contributors"
-            onClick={() => handleNavigation("/contributors")}
-            className="mono hover:text-gray-300"
-          >
-            Contributors
-          </Link>
+        <div className={`flex justify-center items-center gap-6 ${isMenuOpen ? `flex-col` : `flex-row`}`}>
+          {navItems.map(({ href, label, requiresAuth }) => {
+            if (requiresAuth && !isAuthenticated) return null; // Skip if not authenticated
+            const isActive = pathname === href; // Use pathname to determine active link
+            return (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => handleNavigation(href)}
+                className={`py-3 nav-link flex items-center justify-center h-12 transition-colors ${isActive ? "border-b-2 border-white" : ""}`}
+              >
+                {label}
+              </Link>
+            );
+          })}
         </div>
         {isAuthenticated ? (
           <>
-            <Link
-              onClick={() => handleNavigation("/dashboard")}
-              href="/dashboard"
-              className="mono justify-center items-center flex hover:text-gray-300"
-            >
-              <Image
-                src={user?.picture || "/profile.jpg"}
-                alt="Profile"
-                width={56}
-                height={56}
-                className="rounded-full size-10 border-2 border-white"
-              />
-            </Link>
-            <button onClick={toggleTheme} className="bg-black p-2 rounded-md">
-              {isDarkMode ? (
-                <BsBrightnessLow size={24} />
-              ) : (
-                <IoMoon size={24} />
+            <div className="relative" ref={dropdownRef}>
+              <Link onClick={toggleDropdown} href="#" className="mono justify-center items-center flex hover:text-gray-300">
+                <Image
+                  src={user?.picture || "/profile.jpg"}
+                  alt="Profile"
+                  width={56}
+                  height={56}
+                  className="rounded-full size-10 border-2 border-white"
+                />
+              </Link>
+              {isDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-black rounded-md shadow-lg z-20">
+                  <div className="py-1 px-2 text-white-700">
+                    <p className="font-bold">{user?.given_name} {user?.family_name}</p>
+                    <p className="text-sm">{user?.email}</p>
+                  </div>
+                  <div className="flex flex-col justify-center">
+                    <Link onClick={() => handleNavigation("/dashboard")} href="/dashboard" className="px-1 py-2 hover:bg-gray-600 transition-colors">
+                      Dashboard
+                    </Link>
+                  </div>
+                  <div className="flex flex-col justify-center">
+                    <LogoutLink
+                      className="mono rounded-md px-2 py-2 hover:bg-gray-600 transition-colors"
+                      postLogoutRedirectURL="/"
+                    >
+                      Log out
+                    </LogoutLink>
+                  </div>
+                </div>
               )}
+            </div>
+            <button onClick={toggleTheme} className="bg-black p-2 rounded-md">
+              {isDarkMode ? <BsBrightnessLow size={24} /> : <IoMoon size={24} />}
             </button>
           </>
         ) : (
           <>
-            <LoginLink
-              postLoginRedirectURL="/dashboard"
-              className="mono transition ease-in-out delay-100 hover:scale-105 border-white border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1"
-            >
-              Sign in
+            <LoginLink postLoginRedirectURL="/dashboard" className="hover:scale-105 px-1 py-1 hover:border-b-2 border-white transition-colors">
+            Sign in
             </LoginLink>
-            <RegisterLink
-              postLoginRedirectURL="/dashboard"
-              className="mono transition ease-in-out delay-100 hover:scale-105 border-white border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1"
-            >
-              Sign up
+            <RegisterLink postLoginRedirectURL="/dashboard" className="hover:scale-105 px-1 py-1 hover:border-b-2 border-white transition-colors">
+            Sign up
             </RegisterLink>
+
             <button onClick={toggleTheme} className="bg-black p-2 rounded-md">
-              {isDarkMode ? (
-                <BsBrightnessLow size={24} />
-              ) : (
-                <IoMoon size={24} />
-              )}
+              {isDarkMode ? <BsBrightnessLow size={24} /> : <IoMoon size={24} />}
             </button>
           </>
         )}
