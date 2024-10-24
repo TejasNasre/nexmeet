@@ -254,7 +254,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
               </div>
 
               <div className="w-full flex flex-col md:flex-row gap-4">
-                <div>
+                <div className="">
                   <div className="w-full border border-white rounded-lg p-6 flex flex-col gap-2 md:gap-4">
                     <h1 className="text-2xl font-extrabold">About The Event</h1>
                     <p className="text-justify leading-relaxed">
@@ -393,59 +393,10 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                       Save to Google Calendar
                     </Button>
                   </div>
-                  <div>
-                    {/* Comment Section */}
-                    <form
-                      onSubmit={handleCommentSubmit}
-                      className="mt-4 border border-white p-4 flex flex-col gap-4 rounded-xl"
-                    >
-                      <h1 className="text-xl">Leave Comments</h1>
-                      <textarea
-                        value={comment}
-                        onChange={handleCommentChange}
-                        placeholder="Leave a comment..."
-                        className="w-full bg-black p-2 border border-gray-300 rounded"
-                        rows={4}
-                      />
-                      <Button
-                        type="submit"
-                        variant="outline"
-                        className="mt-2 w-full"
-                        disabled={!isAuthenticated} // Disable if not authenticated
-                      >
-                        Submit Comment
-                      </Button>
-                    </form>
-
-                    <div className="mt-4 flex flex-col gap-4">
-                      <h2 className="text-xl">Comments</h2>
-                      {comments.length > 0 ? (
-                       <div className="space-y-2">
-                       {comments.map((c) => (
-                         <div key={c.id} className="flex flex-col gap-2 p-4 border border-white rounded-lg">
-                           <div className="flex items-center gap-2">
-                             <User className="w-5 h-5 text-[#FFC107]" />
-                             <span className="text-white">{c.author}</span>
-                             <span className="text-purple-500 text-sm">
-                               {new Date(c.timestamp).toLocaleString()}
-                             </span>
-                           </div>
-                            <div className="flex items-center gap-2">
-                            <ArrowRight className="w-4 h-4 text-red-500" />
-                            <p className="text-white">{c.text}</p>
-                          </div>
-                         </div>
-                       ))}
-                     </div>
-                      ) : (
-                        <p>No comments yet.</p>
-                      )}
-                    </div>
-                  </div>
                 </div>
 
-                <div className="flex flex-col gap-4">
-                  <div className="border border-white rounded-lg p-6 flex flex-col gap-2">
+                <div className="w-full md:w-[30%]">
+                <div className="border border-white rounded-lg p-6 flex flex-col gap-2 mb-2.5">
                     <h1 className="text-xl font-bold">Organizer</h1>
                     <h1 className="flex items-center gap-2">
                       <User className="w-5 h-5 text-[#FFC107]" />
@@ -461,7 +412,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                     </h1>
                   </div>
 
-                  <div className="border border-white rounded-lg p-6 flex flex-col gap-2">
+                  <div className="border border-white rounded-lg p-6 flex flex-col gap-2 mb-2.5">
                     <h1 className="text-xl font-bold">Category & Tags</h1>
                     <h1>
                       Category :{" "}
@@ -475,7 +426,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                     </h1>
                   </div>
 
-                  <div className="border border-white rounded-lg p-6">
+                  <div className="border border-white rounded-lg p-6 flex flex-col gap-2 mb-2.5">
                     <h1 className="text-xl font-bold">Social Links</h1>
                     <h1 className="w-full flex flex-col text-wrap">
                       {social.map((s: any) => (
@@ -491,7 +442,8 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                       ))}
                     </h1>
                   </div>
-                  <div className="border border-white rounded-lg p-6 flex flex-col gap-4">
+
+                  <div className="border border-white rounded-lg p-6 flex flex-col gap-2 mb-2.5">
                     <h1 className="text-xl font-bold">
                       Share This Event On Socials
                     </h1>
@@ -515,6 +467,59 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                       </WhatsappShareButton>
                     </div>
                   </div>
+                </div>
+              </div>
+
+              {/* Comment Section moved to the end on mobile */}
+              <div className="w-full md:w-[90%] order-2 md:order-none">
+                <form
+                  onSubmit={handleCommentSubmit}
+                  className="mt-4 border border-white p-4 flex flex-col gap-4 rounded-xl"
+                >
+                  <h1 className="text-xl">Leave Comments</h1>
+                  <textarea
+                    value={comment}
+                    onChange={handleCommentChange}
+                    placeholder="Leave a comment..."
+                    className="w-full bg-black p-2 border border-gray-300 rounded"
+                    rows={4}
+                  />
+                  <Button
+                    type="submit"
+                    variant="outline"
+                    className="mt-2 w-full"
+                    disabled={!isAuthenticated} // Disable if not authenticated
+                  >
+                    Submit Comment
+                  </Button>
+                </form>
+
+                <div className="mt-4 flex flex-col gap-4">
+                  <h2 className="text-xl">Comments</h2>
+                  {comments.length > 0 ? (
+                    <div className="space-y-2">
+                      {comments.map((c) => (
+                        <div
+                          key={c.id}
+                          className="flex flex-col gap-2 p-4 border border-white rounded-lg"
+                        >
+                          <div className="flex items-center gap-2">
+                            <User className="w-5 h-5 text-[#FFC107]" />
+                            <span className="text-white">{c.author}</span>
+                            <span className="text-purple-500 text-sm">
+                              {new Date(c.timestamp).toLocaleString()}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <ArrowRight className="w-4 h-4 text-red-500" />
+                            <p className="text-white">{c.text}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p>No comments yet.</p>
+                  )}
                 </div>
               </div>
             </div>
