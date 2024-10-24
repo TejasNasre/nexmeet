@@ -407,6 +407,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                         type="submit"
                         variant="outline"
                         className="mt-2 w-full"
+                        disabled={!isAuthenticated} // Disable if not authenticated
                       >
                         Submit Comment
                       </Button>
