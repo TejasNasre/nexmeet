@@ -39,7 +39,6 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
     { id: string; text: string; author: string; timestamp: string }[]
   >([]);
   const [eventEnded, seteventEnded] = useState(false);
-  const [eventFeedbackLink, seteventFeedbackLink] = useState("");
 
   useEffect(() => {
     if (eventData.length > 0) {
@@ -83,7 +82,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
     async function fetchAndSetEventStatus() {
       const { data, error } = await supabase
         .from("event_details")
-        .select("event_enddate,event_formlink")
+        .select("event_enddate")
         .eq("id", eventsId)
         .single();
 
@@ -99,10 +98,6 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
       if (currentDate > endDate) {
         seteventEnded(true); // Event has ended
       }
-
-      seteventFeedbackLink(
-        data.event_formlink || `/event-feedback/${eventsId}`
-      );
     }
 
     fetchAndSetEventStatus();
@@ -380,7 +375,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                     </div>
                     <div>
                       {isRegistered && eventEnded ? (
-                        <Link href={eventFeedbackLink}>
+                        <Link href={`/event-feedback/${eventsId}`}>
                           <Button variant="outline" className="w-full">
                             Submit Feedback
                           </Button>
