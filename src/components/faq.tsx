@@ -66,7 +66,7 @@ const Faqs1: React.FC = () => {
           </p>
         </div>
 
-        <div className="max-w-5xl mx-auto mt-12 overflow-hidden border border-white divide-y divide-white sm:mt-16 rounded-xl">
+        <div className="max-w-5xl mx-auto mt-12 overflow-hidden border border-white divide-y sm:mt-16 rounded-xl">
           {faqs.map((faq) => (
             <div key={faq.id} role="region">
               <h3>
