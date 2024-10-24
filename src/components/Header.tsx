@@ -172,7 +172,7 @@ function Header() {
                 key={href}
                 href={href}
                 onClick={() => handleNavigation(href)}
-                className={`py-3 flex items-center justify-center h-12 transition-colors ${isActive ? "border-b-2 border-white" : ""} hover:border-b-2 border-white`}
+                className={`py-3 nav-link flex items-center justify-center h-12 transition-colors ${isActive ? "border-b-2 border-white" : ""}`}
               >
                 {label}
               </Link>
