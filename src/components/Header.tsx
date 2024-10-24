@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation"; // Import usePathname
+import { usePathname } from "next/navigation";
 import {
   RegisterLink,
   LoginLink,
@@ -26,9 +26,9 @@ function Header() {
 
   const [user, setUser] = useState<User | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
   useEffect(() => {
     userDetails()
@@ -41,19 +41,6 @@ function Header() {
         setUser(null);
       });
   }, []);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false); // Close dropdown if clicked outside
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [dropdownRef]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -70,7 +57,15 @@ function Header() {
   };
 
   const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
+    setIsDropdownVisible(!isDropdownVisible);
+  };
+
+  const showDropdown = () => {
+    setIsDropdownVisible(true);
+  };
+
+  const hideDropdown = () => {
+    setIsDropdownVisible(false);
   };
 
   return (
@@ -142,7 +137,7 @@ function Header() {
                 />
               </svg>
             </button>
-            <div className="flex flex-col gap-8 text-white text-center">
+            <div className="flex flex-col gap-8 text-white text-center items-center">
               {renderMenuItems()}
             </div>
           </div>
@@ -155,7 +150,11 @@ function Header() {
     const navItems = [
       { href: "/", label: "Home" },
       { href: "/explore-events", label: "Explore Events" },
-      { href: "/explore-event-space", label: "Explore Event Spaces", requiresAuth: true },
+      {
+        href: "/explore-event-space",
+        label: "Explore Event Spaces",
+        requiresAuth: true,
+      },
       { href: "/about", label: "About Us" },
       { href: "/contact", label: "Contact" },
       { href: "/contributors", label: "Contributors" },
@@ -163,7 +162,9 @@ function Header() {
 
     return (
       <>
-        <div className={`flex justify-center items-center gap-6 ${isMenuOpen ? `flex-col` : `flex-row`}`}>
+        <div
+          className={`flex justify-center items-center gap-6 ${isMenuOpen ? `flex-col` : `flex-row`}`}
+        >
           {navItems.map(({ href, label, requiresAuth }) => {
             if (requiresAuth && !isAuthenticated) return null; // Skip if not authenticated
             const isActive = pathname === href; // Use pathname to determine active link
@@ -172,7 +173,7 @@ function Header() {
                 key={href}
                 href={href}
                 onClick={() => handleNavigation(href)}
-                className={`py-3 nav-link flex items-center justify-center h-12 transition-colors ${isActive ? "border-b-2 border-white" : ""}`}
+                className={`pt-3 nav-link flex items-center justify-center h-12 transition-colors box-border ${isActive ? "border-b-2 border-white" : ""}`}
               >
                 {label}
               </Link>
@@ -182,52 +183,87 @@ function Header() {
         {isAuthenticated ? (
           <>
             <div className="relative" ref={dropdownRef}>
-              <Link onClick={toggleDropdown} href="#" className="mono justify-center items-center flex hover:text-gray-300">
-                <Image
-                  src={user?.picture || "/profile.jpg"}
-                  alt="Profile"
-                  width={56}
-                  height={56}
-                  className="rounded-full size-10 border-2 border-white"
-                />
-              </Link>
-              {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-black rounded-md shadow-lg z-20">
-                  <div className="py-1 px-2 text-white-700">
-                    <p className="font-bold">{user?.given_name} {user?.family_name}</p>
-                    <p className="text-sm">{user?.email}</p>
-                  </div>
-                  <div className="flex flex-col justify-center">
-                    <Link onClick={() => handleNavigation("/dashboard")} href="/dashboard" className="px-1 py-2 hover:bg-gray-600 transition-colors">
-                      Dashboard
-                    </Link>
-                  </div>
-                  <div className="flex flex-col justify-center">
-                    <LogoutLink
-                      className="mono rounded-md px-2 py-2 hover:bg-gray-600 transition-colors"
-                      postLogoutRedirectURL="/"
-                    >
-                      Log out
-                    </LogoutLink>
-                  </div>
+              <div
+                onMouseEnter={showDropdown}
+                onMouseLeave={hideDropdown}
+                className="inline-block cursor-pointer"
+              >
+                <div
+                  onTouchMove={toggleDropdown}
+                  className="mono justify-center items-center flex hover:text-gray-300"
+                  onMouseEnter={showDropdown}
+                  onMouseLeave={hideDropdown}
+                >
+                  <Image
+                    src={user?.picture || "/profile.jpg"}
+                    alt="Profile"
+                    width={56}
+                    height={56}
+                    className="rounded-full size-10 border-2 border-white"
+                  />
                 </div>
-              )}
+                {isDropdownVisible && (
+                  <div
+                    className="absolute right-0 p-2 mt-0 w-auto bg-black text-white dark:bg-white dark:text-black rounded-md shadow-lg z-20"
+                    onMouseEnter={showDropdown}
+                    onMouseLeave={hideDropdown}
+                  >
+                    <div className="py-1 px-2 text-white-700">
+                      <p className="font-bold">
+                        {user?.given_name} {user?.family_name}
+                      </p>
+                      <p className="text-sm">{user?.email}</p>
+                    </div>
+                    <div className="flex flex-col justify-center">
+                      <Link
+                        onClick={() => handleNavigation("/dashboard")}
+                        href="/dashboard"
+                        className="px-1 py-2 hover:bg-black hover:text-white hover:rounded-xl text-center transition-colors"
+                      >
+                        Dashboard
+                      </Link>
+                    </div>
+                    <div className="flex flex-col justify-center">
+                      <LogoutLink
+                        className="mono rounded-md px-2 py-2 hover:bg-black hover:text-white hover:rounded-xl text-center transition-colors"
+                        postLogoutRedirectURL="/"
+                      >
+                        Log out
+                      </LogoutLink>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
-            <button onClick={toggleTheme} className="bg-black p-2 rounded-md">
-              {isDarkMode ? <BsBrightnessLow size={24} /> : <IoMoon size={24} />}
+            <button onClick={toggleTheme} className="p-2 rounded-md">
+              {isDarkMode ? (
+                <BsBrightnessLow size={24} />
+              ) : (
+                <IoMoon size={24} />
+              )}
             </button>
           </>
         ) : (
           <>
-            <LoginLink postLoginRedirectURL="/dashboard" className="hover:scale-105 px-1 py-1 hover:border-b-2 border-white transition-colors">
-            Sign in
+            <LoginLink
+              postLoginRedirectURL="/dashboard"
+              className="hover:scale-105 px-1 py-1 hover:border-b-2 border-white transition-colors"
+            >
+              Sign in
             </LoginLink>
-            <RegisterLink postLoginRedirectURL="/dashboard" className="hover:scale-105 px-1 py-1 hover:border-b-2 border-white transition-colors">
-            Sign up
+            <RegisterLink
+              postLoginRedirectURL="/dashboard"
+              className="hover:scale-105 px-1 py-1 hover:border-b-2 border-white transition-colors"
+            >
+              Sign up
             </RegisterLink>
 
             <button onClick={toggleTheme} className="bg-black p-2 rounded-md">
-              {isDarkMode ? <BsBrightnessLow size={24} /> : <IoMoon size={24} />}
+              {isDarkMode ? (
+                <BsBrightnessLow size={24} />
+              ) : (
+                <IoMoon size={24} />
+              )}
             </button>
           </>
         )}
