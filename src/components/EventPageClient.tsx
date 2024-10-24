@@ -12,6 +12,7 @@ import { userDetails } from "../action/userDetails";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { Comment } from "@/components/ui/comment";
 import { FaXTwitter } from "react-icons/fa6";
+import { PhoneIcon, MailIcon, User, ArrowRight, Tags } from "lucide-react";
 
 import {
   TwitterShareButton,
@@ -19,6 +20,7 @@ import {
   WhatsappShareButton,
   WhatsappIcon,
 } from "react-share";
+import { CalendarDays, MapPin, Users, Clock } from "lucide-react"; // Added icons from Lucide
 
 const EventPageClient = ({ eventsId }: { eventsId: string }) => {
   const router = useRouter();
@@ -260,6 +262,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                     </p>
                     <div className="w-full flex flex-col md:flex-row gap-4">
                       <h1 className="flex flex-row items-center gap-2">
+                        <CalendarDays className="w-5 h-5 text-[#FFC107]" />
                         Event Start&apos;s From :{" "}
                         {new Date(event.event_startdate).toLocaleString(
                           undefined,
@@ -271,6 +274,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                         )}
                       </h1>
                       <h1 className="flex flex-row items-center gap-2">
+                        <CalendarDays className="w-5 h-5 text-[#FFC107]" />
                         Event End&apos;s On :{" "}
                         {new Date(event.event_enddate).toLocaleString(
                           undefined,
@@ -283,11 +287,16 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                       </h1>
                     </div>
                     <h1 className="flex flex-row items-center gap-2">
+                      <Clock className="w-5 h-5 text-[#28A745]" />
                       Duration : {event.event_duration} Hours
                     </h1>
-                    <h1>Team Size : {event.team_size}</h1>
+                    <h1 className="flex flex-row items-center gap-2">
+                      <Users className="w-5 h-5 text-[#17A2B8]" />
+                      Team Size : {event.team_size}
+                    </h1>
 
-                    <h1 className="flex flex-row items-center gap-4">
+                    <h1 className="flex flex-row items-center gap-2">
+                      <MapPin className="w-5 h-5 text-[#FFC107]" />
                       Location : {event.event_location}
                     </h1>
                     <h1 className="flex flex-row items-center gap-3">
@@ -297,7 +306,11 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                       </Badge>
                       <Badge
                         variant="destructive"
-                        className={`${isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
+                        className={`${
+                          isActive
+                            ? "bg-green-100 text-green-800"
+                            : "bg-red-100 text-red-800"
+                        }`}
                       >
                         {isActive ? "Active" : "Inactive"}
                       </Badge>
@@ -346,10 +359,10 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                         {registrationClosed
                           ? "Registration Closed"
                           : isRegistered
-                            ? "Registered ✔️"
-                            : !isRegistrationOpen
-                              ? "Registration Closed"
-                              : "Register Now"}
+                          ? "Registered ✔️"
+                          : !isRegistrationOpen
+                          ? "Registration Closed"
+                          : "Register Now"}
                       </Button>
                     </div>
                     <div>
@@ -363,7 +376,9 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                     </div>
                     <Button
                       variant="outline"
-                      className={`w-full ${isRegistered ? "" : "opacity-50 cursor-not-allowed"}`}
+                      className={`w-full ${
+                        isRegistered ? "" : "opacity-50 cursor-not-allowed"
+                      }`}
                       onClick={
                         isRegistered
                           ? () =>
@@ -405,16 +420,23 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                     <div className="mt-4 flex flex-col gap-4">
                       <h2 className="text-xl">Comments</h2>
                       {comments.length > 0 ? (
-                        <div className="space-y-2">
-                          {comments.map((c) => (
-                            <Comment
-                              key={c.id}
-                              author={c.author}
-                              timestamp={c.timestamp}
-                              text={c.text}
-                            />
-                          ))}
-                        </div>
+                       <div className="space-y-2">
+                       {comments.map((c) => (
+                         <div key={c.id} className="flex flex-col gap-2 p-4 border border-white rounded-lg">
+                           <div className="flex items-center gap-2">
+                             <User className="w-5 h-5 text-[#FFC107]" />
+                             <span className="text-white">{c.author}</span>
+                             <span className="text-purple-500 text-sm">
+                               {new Date(c.timestamp).toLocaleString()}
+                             </span>
+                           </div>
+                            <div className="flex items-center gap-2">
+                            <ArrowRight className="w-4 h-4 text-red-500" />
+                            <p className="text-white">{c.text}</p>
+                          </div>
+                         </div>
+                       ))}
+                     </div>
                       ) : (
                         <p>No comments yet.</p>
                       )}
@@ -425,9 +447,18 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                 <div className="flex flex-col gap-4">
                   <div className="border border-white rounded-lg p-6 flex flex-col gap-2">
                     <h1 className="text-xl font-bold">Organizer</h1>
-                    <h1>{event.organizer_name}</h1>
-                    <h1>{event.organizer_contact}</h1>
-                    <h1>{event.organizer_email}</h1>
+                    <h1 className="flex items-center gap-2">
+                      <User className="w-5 h-5 text-[#FFC107]" />
+                      {event.organizer_name}
+                    </h1>
+                    <h1 className="flex items-center gap-2">
+                      <PhoneIcon className="w-5 h-5 text-[#28A745]" />
+                      {event.organizer_contact}
+                    </h1>
+                    <h1 className="flex items-center gap-2">
+                      <MailIcon className="w-5 h-5 text-[#17A2B8]" />
+                      {event.organizer_email}
+                    </h1>
                   </div>
 
                   <div className="border border-white rounded-lg p-6 flex flex-col gap-2">
