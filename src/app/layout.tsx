@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import ScrollToTop from "@/components/Scroll-to-top"; 
+import Script from 'next/script';
 
 const mono = DM_Mono({
   subsets: ["latin"],
@@ -69,8 +70,28 @@ export default function RootLayout({
         <meta name="twitter:description" content="Make Your Events Memorable With NexMeet" />
         <meta name="twitter:image" content="https://jzhgfowuznosxtwzkbkx.supabase.co/storage/v1/object/public/event_image/_Black_And_Yellow_Modern_Event_Producer_Initial_Logo-removebg-preview.png" />
         <title>NexMeet</title>
+
+        <Script
+          id="gtranslate-config"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.gtranslateSettings = {
+                "default_language": "en",
+                "detect_browser_language": true,
+                "wrapper_selector": ".gtranslate_wrapper"
+              };
+            `,
+          }}
+        />
+        <Script
+          src="https://cdn.gtranslate.net/widgets/latest/float.js"
+          strategy="lazyOnload"
+          defer
+        />
       </head>
       <body suppressHydrationWarning={true} className={mono.className}>
+        <div className="gtranslate_wrapper"></div>
         <Toaster
           theme="dark"
           richColors
