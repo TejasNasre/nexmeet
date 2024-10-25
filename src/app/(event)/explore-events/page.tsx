@@ -356,9 +356,12 @@ const Page: React.FC = () => {
             {currentItems.length > 0 ? (
               currentItems.map((event: any) => {
                 const isActive = new Date(event.event_startdate) >= new Date();
+                const isApproved = event.is_approved;
                 return (
                   <div
-                    className="cursor-pointer w-[350px] mx-auto bg-black text-white rounded-xl shadow-md overflow-hidden transition duration-300 ease-in-out transform hover:scale-105"
+                    className={`w-[350px] mx-auto bg-black text-white rounded-xl shadow-md overflow-hidden transition duration-300 ease-in-out transform ${
+                        event.is_approved ? "cursor-pointer hover:scale-105" : "opacity-50 cursor-not-allowed"
+                    }`}
                     key={event.id}
                   >
                     <div className="relative h-64">
@@ -406,6 +409,15 @@ const Page: React.FC = () => {
                             }`}
                           >
                             {isActive ? "Active" : "Inactive"}
+                          </span>
+                          <span
+                            className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                              isApproved
+                                ? "bg-green-100 text-green-800"
+                                : "bg-red-100 text-red-800"
+                            }`}
+                          >
+                            {isApproved ? "Approved" : "Rejected"}
                           </span>
                         </span>
                         <span className="text-sm font-semibold text-yellow-500">
