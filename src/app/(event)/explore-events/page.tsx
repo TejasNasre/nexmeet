@@ -257,7 +257,7 @@ const Page: React.FC = () => {
       // Return true if the event matches the category and matches the search term and is within the date range
       return matchesCategory && matchesSearchTerm && withinDateRange;
     })
-    .sort((a: Event, b: Event) => {
+    .sort((a: any, b: any) => {
       if (numberOfLikes === "high") {
         return b.event_likes - a.event_likes;
       } else if (numberOfLikes === "low") {
