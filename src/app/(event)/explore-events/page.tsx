@@ -17,9 +17,20 @@ const Page: React.FC = () => {
   interface CountLikes {
     [key: string]: number; // Maps event id to its like count
   }
+  interface Event {
+    id: string;
+    event_title: string;
+    event_startdate: string;
+    event_location: string;
+    event_category: string;
+    event_price: number;
+    event_description: string;
+    event_likes: number;
+    event_images: { event_id: string; url: string }[];
+  }
 
   const [loading, setLoading] = useState(true);
-  const [event, setEvent]: any = useState([]);
+  const [event, setEvent] = useState<Event[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(9);
   const [numberOfLikes, setNumberOfLikes] = useState("all");
