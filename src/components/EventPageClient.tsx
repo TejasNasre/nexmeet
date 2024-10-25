@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { supabase } from "../utils/supabase";
 import Loading from "./loading";
@@ -114,11 +114,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
     });
   }, []);
 
-  useEffect(() => {
-    fetchComments();
-  }, [eventsId]);
-
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     const { data, error } = await supabase
       .from("comments")
       .select("*")
@@ -129,7 +125,15 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
     } else {
       setComments(data);
     }
-  };
+  },[eventsId]);
+
+  useEffect(() => {
+    fetchComments();
+  }, [eventsId,fetchComments]);
+
+  useEffect(() => {
+    fetchComments();
+  }, [fetchComments]);
 
   const checkRegistrationStatus = (data: any) => {
     const currentDate = new Date();
