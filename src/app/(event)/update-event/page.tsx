@@ -56,12 +56,19 @@ export default function UpdateEvent() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const searchParams = useSearchParams();
   const eventId = searchParams.get("eventId");
+  const status = searchParams.get("status"); // Check for approval/rejection status
 
   useEffect(() => {
     if (eventId) {
       fetchEventDetails(eventId);
     }
   }, [eventId]);
+
+  useEffect(() => {
+    if (status && event) {
+      handleApproval(status);
+    }
+  }, [status, event]);
 
   const fetchEventDetails = async (eventId: string) => {
     setLoading(true);
@@ -83,6 +90,37 @@ export default function UpdateEvent() {
       });
     }
     setLoading(false);
+  };
+
+  const handleApproval = async (status: any) => {
+    if (!event) return;
+
+    if (status !== "approve" && status !== "reject") {
+        console.log("Unexpected status value:", status);
+        return; // Exit the function if status is not recognized
+    }
+
+    const updatedEvent = {
+      ...event,
+      is_approved: status === "approve", // Assuming your event has an 'is_approved' field
+    };
+
+    const { error } = await supabase
+      .from("event_details")
+      .update(updatedEvent)
+      .eq("id", event.id);
+
+    if (error) {
+      console.error("Error updating event approval status:", error);
+      toast.error("Error updating event status. Please try again.");
+    } else {
+      setSuccessMessage(`Event ${status === "approve" ? "approved" : "rejected"} successfully.`);
+      toast.success(`Event ${status === "approve" ? "approved" : "rejected"} successfully!`);
+      setTimeout(() => {
+        setSuccessMessage(null);
+        router.push(`/explore-events/${event.id}`);
+      }, 3000);
+    }
   };
 
   const handleUpdateEvent = async () => {

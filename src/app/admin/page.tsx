@@ -33,7 +33,7 @@ interface Event {
   organizer_email: string;
 }
 
-export default function EditEvent() {
+export default function Admin() {
   const router = useRouter();
   const { isAuthenticated, isLoading } = useKindeBrowserClient();
 
@@ -172,12 +172,12 @@ export default function EditEvent() {
                     <div className="flex space-x-4">
                       <Button variant="outline"
                       className="w-32 bg-transparent hover:bg-green-500">
-                        <Link href={`/update-event?eventId=${event.id}?status=approve`}>
+                        <Link href={`/update-event?eventId=${event.id}&status=approve`}>
                           Approve
                         </Link>
                       </Button>
                       <Button variant="outline" className="w-32 bg-transparent hover:bg-red-500">
-                        <Link href={`/update-event?eventId=${event.id}?status=reject`}>
+                        <Link href={`/update-event?eventId=${event.id}&status=reject`}>
                           Reject
                         </Link>
                       </Button>
