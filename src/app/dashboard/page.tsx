@@ -156,6 +156,9 @@ export default function Page() {
   const [chartData, setChartData] = useState<ChartDataItem[]>([]);
   const [eventcount, seteventCount] = useState("");
 
+  const {getPermission} = useKindeBrowserClient();
+  const isSuperAdmin = getPermission("events:approve");
+
   useEffect(() => {
     userDetails()
       .then((res: any) => {
@@ -517,6 +520,13 @@ export default function Page() {
                 </Card>
               </div>
             </div>
+
+            {isSuperAdmin && (
+                <Button variant="outline" className="w-full" onClick={() => {
+                    router.push("/admin");
+                }}>Super Admin
+                </Button>
+            )}
 
             <div className="w-full flex flex-col md:flex-row gap-4">
               <Button variant="outline" className="w-full">
