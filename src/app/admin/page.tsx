@@ -50,8 +50,8 @@ export default function Admin() {
       setLoading(true);
       const { data: organised_events, error } = await supabase
         .from("event_details")
-        .select("*")
-        .eq("organizer_email", user.email);
+        .select("*");
+      // .eq("organizer_email", user.email);
 
       if (error) {
         console.log(error);
@@ -63,7 +63,10 @@ export default function Admin() {
     organizeEvents();
   }, [user]);
 
-  const handleEventStatusChange = async (eventId: string, isApproved: boolean) => {
+  const handleEventStatusChange = async (
+    eventId: string,
+    isApproved: boolean
+  ) => {
     const { error } = await supabase
       .from("event_details")
       .update({ is_approved: isApproved })
@@ -73,12 +76,14 @@ export default function Admin() {
       console.error(`Error changing event approval status:`, error);
     } else {
       // Update local state to reflect the change
-      setEvents(prevEvents =>
-        prevEvents.map(event =>
+      setEvents((prevEvents) =>
+        prevEvents.map((event) =>
           event.id === eventId ? { ...event, is_approved: isApproved } : event
         )
       );
-      toast.success(`Event ${isApproved ? "approved" : "rejected"} successfully.`);
+      toast.success(
+        `Event ${isApproved ? "approved" : "rejected"} successfully.`
+      );
     }
   };
 
@@ -98,7 +103,10 @@ export default function Admin() {
             </h1>
             <div className="w-full flex flex-wrap gap-6 justify-center">
               {events.map((event) => (
-                <Card key={event.id} className="bg-black w-full flex flex-col h-[auto]">
+                <Card
+                  key={event.id}
+                  className="bg-black w-full flex flex-col h-[auto]"
+                >
                   <CardHeader>
                     <CardTitle>{event.event_title}</CardTitle>
                   </CardHeader>
@@ -106,7 +114,12 @@ export default function Admin() {
                     <p className="flex-grow mb-4">{event.event_description}</p>
                     {/* Display the current approval status */}
                     <p className="mb-4">
-                        Status: {event.is_approved === null ? "Pending" : event.is_approved ? "Approved" : "Rejected"}
+                      Status:{" "}
+                      {event.is_approved === null
+                        ? "Pending"
+                        : event.is_approved
+                          ? "Approved"
+                          : "Rejected"}
                     </p>
                     <div className="flex space-x-4">
                       <Button
