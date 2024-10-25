@@ -47,10 +47,6 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
         eventData[0].event_registration_enddate
       );
 
-      console.log("currentDate", currentDate);
-      console.log("registrationStartDate", registrationStartDate);
-      console.log("registrationEndDate", registrationEndDate);
-
       if (currentDate < registrationStartDate) {
         setRegistrationStatus("Upcoming");
       } else if (currentDate > registrationEndDate) {
