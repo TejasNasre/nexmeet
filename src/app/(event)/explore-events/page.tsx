@@ -17,20 +17,20 @@ const Page: React.FC = () => {
   interface CountLikes {
     [key: string]: number; // Maps event id to its like count
   }
-  interface Event {
-    id: string;
-    event_title: string;
-    event_startdate: string;
-    event_location: string;
-    event_category: string;
-    event_price: number;
-    event_description: string;
-    event_likes: number;
-    event_images: { event_id: string; url: string }[];
-  }
+  // interface Event {
+  //   id: string;
+  //   event_title: string;
+  //   event_startdate: string;
+  //   event_location: string;
+  //   event_category: string;
+  //   event_price: number;
+  //   event_description: string;
+  //   event_likes: number;
+  //   event_images: { event_id: string; url: string }[];
+  // }
 
   const [loading, setLoading] = useState(true);
-  const [event, setEvent] = useState<Event[]>([]);
+  const [event, setEvent]: any = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(9);
   const [numberOfLikes, setNumberOfLikes] = useState("all");
@@ -46,10 +46,10 @@ const Page: React.FC = () => {
   const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
   const [countLikes, setCountLikes] = useState<CountLikes>({});
   const { user } = useUserDetails();
-  // interface Event {
-  //   id: string; // or number, based on your actual id type
-  //   event_likes: number;
-  // }
+  interface Event {
+    id: string; // or number, based on your actual id type
+    event_likes: number;
+  }
 
   useEffect(() => {
     async function getData() {
@@ -235,8 +235,8 @@ const Page: React.FC = () => {
     }));
   };
 
-  const filteredAndSortedEvents = (() => {
-    const filteredEvents = event.filter((event: any) => {
+  const filteredAndSortedEvents = event
+    .filter((event: any) => {
       const date = new Date(event.event_startdate);
 
       // Check if the event matches the category
@@ -256,20 +256,20 @@ const Page: React.FC = () => {
 
       // Return true if the event matches the category and matches the search term and is within the date range
       return matchesCategory && matchesSearchTerm && withinDateRange;
+    })
+    .sort((a, b) => {
+      if (numberOfLikes === "high") {
+        return b.event_likes - a.event_likes;
+      } else if (numberOfLikes === "low") {
+        return a.event_likes - b.event_likes;
+      }
+      if (sortByPrice === "high") {
+        return b.event_price - a.event_price;
+      } else if (sortByPrice === "low") {
+        return a.event_price - b.event_price;
+      }
+      return 0;
     });
-
-    if (numberOfLikes === "high") {
-      return filteredEvents.sort((a, b) => b.event_likes - a.event_likes);
-    } else if (numberOfLikes === "low") {
-      return filteredEvents.sort((a, b) => a.event_likes - b.event_likes);
-    } else if (sortByPrice === "high") {
-      return filteredEvents.sort((a, b) => b.event_price - a.event_price);
-    } else if (sortByPrice === "low") {
-      return filteredEvents.sort((a, b) => a.event_price - b.event_price);
-    }
-
-    return filteredEvents;
-  })();
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -304,7 +304,6 @@ const Page: React.FC = () => {
       y: ((event.clientY - button.top) / button.height) * 100,
     });
   };
-
 
   return (
     <>
