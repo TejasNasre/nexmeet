@@ -20,6 +20,7 @@ interface Event {
   event_title: string;
   event_description: string;
   organizer_email: string;
+  is_approved: boolean | null; // Include the approval status
 }
 
 export default function Admin() {
@@ -71,6 +72,12 @@ export default function Admin() {
     if (error) {
       console.error(`Error changing event approval status:`, error);
     } else {
+      // Update local state to reflect the change
+      setEvents(prevEvents =>
+        prevEvents.map(event =>
+          event.id === eventId ? { ...event, is_approved: isApproved } : event
+        )
+      );
       toast.success(`Event ${isApproved ? "approved" : "rejected"} successfully.`);
     }
   };
@@ -97,6 +104,10 @@ export default function Admin() {
                   </CardHeader>
                   <CardContent className="flex-grow flex flex-col justify-between">
                     <p className="flex-grow mb-4">{event.event_description}</p>
+                    {/* Display the current approval status */}
+                    <p className="mb-4">
+                        Status: {event.is_approved === null ? "Pending" : event.is_approved ? "Approved" : "Rejected"}
+                    </p>
                     <div className="flex space-x-4">
                       <Button
                         variant="outline"
