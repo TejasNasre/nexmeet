@@ -19,7 +19,7 @@ import Organisedevent from "@/components/Organisedevent";
 import Participatedevent from "@/components/Participatedevent";
 import { supabase } from "@/utils/supabase";
 import { useRouter } from "next/navigation";
-import { useKindeBrowserClient, useKindeAuth } from "@kinde-oss/kinde-auth-nextjs";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
 import {
   PieChart,
@@ -156,8 +156,8 @@ export default function Page() {
   const [chartData, setChartData] = useState<ChartDataItem[]>([]);
   const [eventcount, seteventCount] = useState("");
 
-  const {getPermission, getPermissions} = useKindeAuth();
-  console.log(getPermission("create:tasks"));
+  const {getPermission} = useKindeBrowserClient();
+  const isSuperAdmin = getPermission("events:approve");
 
   useEffect(() => {
     userDetails()
@@ -520,6 +520,13 @@ export default function Page() {
                 </Card>
               </div>
             </div>
+
+            {isSuperAdmin && (
+                <Button variant="outline" className="w-full" onClick={() => {
+                    router.push("/admin");
+                }}>Super Admin
+                </Button>
+            )}
 
             <div className="w-full flex flex-col md:flex-row gap-4">
               <Button variant="outline" className="w-full">
