@@ -274,7 +274,27 @@ const Page: React.FC = () => {
     }
   }, [totalPages, currentPage]);
 
-  const checkRegistrationStatus = (event) => {
+  interface Events {
+    id: string;
+    event_title: string;
+    event_description: string;
+    event_location: string;
+    event_registration_startdate: string;
+    event_registration_enddate: string;
+    event_startdate: string;
+    event_enddate: string;
+    event_duration: string;
+    team_size: string;
+    event_formlink: string;
+    event_price: string;
+    organizer_name: string;
+    organizer_email: string;
+    organizer_contact: string;
+    event_category: string;
+    event_tags: string[];
+    event_social_links: string[];
+  }
+  const checkRegistrationStatus = (event:Events) => {
     const currentDate = new Date();
     const registrationStartDate = new Date(event.event_registration_startdate);
     const registrationEndDate = new Date(event.event_registration_enddate);
