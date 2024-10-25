@@ -46,10 +46,10 @@ const Page: React.FC = () => {
   const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
   const [countLikes, setCountLikes] = useState<CountLikes>({});
   const { user } = useUserDetails();
-  interface Event {
-    id: string; // or number, based on your actual id type
-    event_likes: number;
-  }
+  // interface Event {
+  //   id: string; // or number, based on your actual id type
+  //   event_likes: number;
+  // }
 
   useEffect(() => {
     async function getData() {
@@ -332,7 +332,6 @@ const Page: React.FC = () => {
               </button>
             </Link>
           </div>
-
         </div>
         <div className="w-full my-[3rem] flex flex-col gap-4 justify-end">
           <div>
