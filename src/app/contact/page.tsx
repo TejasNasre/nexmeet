@@ -19,6 +19,12 @@ function Page() {
     e.preventDefault();
     setIsSubmitting(true);
 
+    if (message.length < 5) {
+      toast.error("Message must be at least 5 characters long.");
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       const { error } = await supabase
         .from("contact_submissions")
