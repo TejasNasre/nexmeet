@@ -350,6 +350,18 @@ const Page: React.FC = () => {
             </div>{" "}
             <div className="flex flex-row justify-center gap-4">
               <select
+                className="w-[8rem] border border-white p-2 rounded-md bg-black text-white"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                <option value="">Category</option>
+                <option value="technical">Technical</option>
+                <option value="sports">Sports</option>
+                <option value="cultural">Cultural</option>
+                <option value="meetup">Meetup</option>
+                <option value="conference">Conference</option>
+              </select>
+              <select
                 className="w-[10rem] border border-white p-2 rounded-md bg-black text-white"
                 value={numberOfLikes}
                 onChange={(e) => setNumberOfLikes(e.target.value)}
