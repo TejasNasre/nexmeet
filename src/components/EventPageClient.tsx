@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { supabase } from "../utils/supabase";
 import Loading from "./loading";
@@ -15,7 +15,6 @@ import { FaXTwitter } from "react-icons/fa6";
 
 import { PhoneIcon, MailIcon, User, ArrowRight, Tags } from "lucide-react";
 import { toast } from "sonner";
-
 
 import {
   TwitterShareButton,
@@ -114,11 +113,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
     });
   }, []);
 
-  useEffect(() => {
-    fetchComments();
-  }, [eventsId]);
-
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     const { data, error } = await supabase
       .from("comments")
       .select("*")
@@ -129,7 +124,15 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
     } else {
       setComments(data);
     }
-  };
+  }, [eventsId]);
+
+  useEffect(() => {
+    fetchComments();
+  }, [eventsId, fetchComments]);
+
+  useEffect(() => {
+    fetchComments();
+  }, [fetchComments]);
 
   const checkRegistrationStatus = (data: any) => {
     const currentDate = new Date();
@@ -182,13 +185,13 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
   const handleCommentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!isAuthenticated) {
-        toast.error("You are not logged in! Please log in to comment.");
-        return;
+      toast.error("You are not logged in! Please log in to comment.");
+      return;
     }
 
     if (comment.trim().length > 50) {
-        toast.error("Comment must not exceed 50 characters.");
-        return;
+      toast.error("Comment must not exceed 50 characters.");
+      return;
     }
 
     if (comment.trim()) {
@@ -240,7 +243,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
           const isActive = new Date(event.event_startdate) >= new Date();
           return (
             <div
-              className="flex flex-wrap justify-center items-center max-w-6xl"
+              className="flex flex-wrap justify-start items-center max-w-6xl"
               key={event.id}
             >
               <div className="w-full flex flex-col justify-center items-center">
@@ -372,10 +375,10 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                         {registrationClosed
                           ? "Registration Closed"
                           : isRegistered
-                          ? "Registered ✔️"
-                          : !isRegistrationOpen
-                          ? "Registration Closed"
-                          : "Register Now"}
+                            ? "Registered ✔️"
+                            : !isRegistrationOpen
+                              ? "Registration Closed"
+                              : "Register Now"}
                       </Button>
                     </div>
                     <div>
@@ -409,7 +412,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                 </div>
 
                 <div className="w-full md:w-[30%]">
-                <div className="border border-white rounded-lg p-6 flex flex-col gap-2 mb-2.5">
+                  <div className="border border-white rounded-lg p-6 flex flex-col gap-2 mb-2.5">
                     <h1 className="text-xl font-bold">Organizer</h1>
                     <h1 className="flex items-center gap-2">
                       <User className="w-5 h-5 text-[#FFC107]" />
@@ -484,7 +487,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
               </div>
 
               {/* Comment Section moved to the end on mobile */}
-              <div className="w-full md:w-[90%] order-2 md:order-none">
+              <div className="w-full order-2 md:order-none">
                 <form
                   onSubmit={handleCommentSubmit}
                   className="mt-4 border border-white p-4 flex flex-col gap-4 rounded-xl"

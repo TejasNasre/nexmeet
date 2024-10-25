@@ -73,7 +73,8 @@ create table
     updated_at timestamp with time zone null default (now() at time zone 'utc'::text),
     constraint event_details_pkey primary key (id),
     constraint event_details_created_at_key unique (created_at),
-    constraint event_details_event_title_key unique (event_title)
+    constraint event_details_event_title_key unique (event_title),
+    is_approved boolean null,
   ) tablespace pg_default;
 ```
 
