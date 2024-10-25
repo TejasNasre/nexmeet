@@ -434,7 +434,8 @@ body.white {
   to {
     opacity: 1;
   }
-  
+}
+
 @keyframes borderGrow {
     from {
       transform: scaleX(0);
