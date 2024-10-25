@@ -230,8 +230,6 @@ body.white {
   color: #000 !important; /* Change placeholder text to black */
 }
 
-
-
 .white .hover\:border-white:hover {
   border-color: #000 !important; /* Change border to black on hover */
 }
@@ -244,7 +242,6 @@ body.white {
 .white .hover\:text-gray-300:hover {
   color: #000 !important; /* Change hover text color to black */
 }
-
 
 /* Calendar Base Styles */
 .custom-calendar {
@@ -437,4 +434,33 @@ body.white {
   to {
     opacity: 1;
   }
+  
+@keyframes borderGrow {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+.nav-link {
+    position: relative;
+    display: inline-block; /* Ensure it only takes as much space as needed */
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px; /* Adjust thickness */
+    background-color: white; /* Border color */
+    transform: scaleX(0);
+    transition: transform 0.3s ease; /* Transition for smooth effect */
+}
+
+.nav-link:hover::after {
+    transform: scaleX(1); /* Scale to full width on hover */
 }
