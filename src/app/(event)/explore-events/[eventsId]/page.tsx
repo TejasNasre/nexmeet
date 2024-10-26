@@ -15,7 +15,7 @@ export async function generateMetadata({
     .from("event_details")
     .select("*,event_images(event_id,url)")
     .eq("id", params.eventsId);
-
+    
   if (!eventData) return {};
 
   const eventTitle = eventData[0].event_title || "Nexmeet Event";
