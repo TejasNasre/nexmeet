@@ -60,14 +60,14 @@ function CommunityPartners() {
     }
   ];
 
-  const handleNextStep = (e) => {
+  const handleNextStep = (e: React.FormEvent) => {
     e.preventDefault(); // Prevent form submission
     if (validateStep1()) {
       setStep(2);
     }
   };
 
-  const handlePrevStep = (e) => {
+  const handlePrevStep = (e: React.FormEvent) => {
     e.preventDefault(); // Prevent form submission
     setStep(1);
   };
@@ -88,7 +88,7 @@ function CommunityPartners() {
     return true;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (step === 1) {
