@@ -19,6 +19,8 @@ function CommunityPartners() {
   const [belief, setBelief] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [step, setStep] = useState(1);
+  const [emailStatus, setEmailStatus] = useState(null); // Track email validation status
+
 
   const qualityOptions = [
     {
@@ -124,6 +126,7 @@ function CommunityPartners() {
       setEmail("");
       setPhone("");
       setCommunityName("");
+      setEmailStatus(null);
       setCommunitySize("");
       setDescription("");
       setQuality("");
@@ -136,20 +139,27 @@ function CommunityPartners() {
       setIsSubmitting(false);
     }
   };
-  const checkEmailExists = async (email) => {
-    setIsCheckingEmail(true);
+  
+  const checkEmailExists = async () => {
+    if (email.trim() === "") {
+      setEmailStatus(null); // No status if the email is empty
+      return;
+    }
+  
     try {
       const { data } = await supabase
         .from("community_partners")
         .select("email")
-        .eq("email", email)
-        .single();
-      
-      setEmailExists(!!data);
+        .eq("email", email);
+  
+      if (data && data.length > 0) {
+        setEmailStatus(false);
+        toast.error("Email already exists. Please use a different email.");
+      } else {
+        setEmailStatus(true);
+      }
     } catch (error) {
       console.error("Error checking email:", error);
-    } finally {
-      setIsCheckingEmail(false);
     }
   };
 
@@ -197,14 +207,22 @@ function CommunityPartners() {
                     required
                     className="w-full p-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-white/30"
                   />
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Your Email"
-                    required
-                    className="w-full p-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-white/30"
-                  />
+                  <div className="relative">
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      onBlur={checkEmailExists}
+                      placeholder="Your Email"
+                      required
+                      className="w-full p-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-white/30"
+                    />
+                    {emailStatus !== null && (
+                      <span className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                        {emailStatus ? "✅" : "❌"}
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
