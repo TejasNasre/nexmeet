@@ -17,6 +17,17 @@ const Page: React.FC = () => {
   interface CountLikes {
     [key: string]: number; // Maps event id to its like count
   }
+  // interface Event {
+  //   id: string;
+  //   event_title: string;
+  //   event_startdate: string;
+  //   event_location: string;
+  //   event_category: string;
+  //   event_price: number;
+  //   event_description: string;
+  //   event_likes: number;
+  //   event_images: { event_id: string; url: string }[];
+  // }
 
   const [loading, setLoading] = useState(true);
   const [event, setEvent]: any = useState([]);
@@ -25,6 +36,7 @@ const Page: React.FC = () => {
   const [numberOfLikes, setNumberOfLikes] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("");
+  const [sortByPrice, setSortByPrice] = useState("");
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
   const [likedEvents, setLikedEvents] = useState<{ [key: string]: boolean }>(
@@ -223,8 +235,8 @@ const Page: React.FC = () => {
     }));
   };
 
-  const filteredAndSortedEvents = sortEventsByLikes(event).filter(
-    (event: any) => {
+  const filteredAndSortedEvents = event
+    .filter((event: any) => {
       const date = new Date(event.event_startdate);
 
       // Check if the event matches the category
@@ -244,8 +256,20 @@ const Page: React.FC = () => {
 
       // Return true if the event matches the category and matches the search term and is within the date range
       return matchesCategory && matchesSearchTerm && withinDateRange;
-    }
-  );
+    })
+    .sort((a: any, b: any) => {
+      if (numberOfLikes === "high") {
+        return b.event_likes - a.event_likes;
+      } else if (numberOfLikes === "low") {
+        return a.event_likes - b.event_likes;
+      }
+      if (sortByPrice === "high") {
+        return b.event_price - a.event_price;
+      } else if (sortByPrice === "low") {
+        return a.event_price - b.event_price;
+      }
+      return 0;
+    });
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -281,7 +305,6 @@ const Page: React.FC = () => {
     });
   };
 
-
   return (
     <>
       <div
@@ -308,7 +331,6 @@ const Page: React.FC = () => {
               </button>
             </Link>
           </div>
-
         </div>
         <div className="w-full my-[3rem] flex flex-col gap-4 justify-end">
           <div>
@@ -370,8 +392,17 @@ const Page: React.FC = () => {
                 onChange={(e) => setNumberOfLikes(e.target.value)}
               >
                 <option value="all">Likes</option>
-                <option value="high">Highest Like</option>
+                <option value="high">Highest Likes</option>
                 <option value="low">Lowest Likes</option>
+              </select>
+              <select
+                className="w-[11rem] border border-white p-2 rounded-md bg-black text-white"
+                value={sortByPrice}
+                onChange={(e) => setSortByPrice(e.target.value)}
+              >
+                <option value="">Price</option>
+                <option value="low">Lowest Price</option>
+                <option value="high">Highest Price</option>
               </select>
             </div>
           </div>
