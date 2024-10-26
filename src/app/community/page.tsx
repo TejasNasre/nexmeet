@@ -21,7 +21,7 @@ function CommunityPartners() {
   const [belief, setBelief] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [step, setStep] = useState(1);
-  const [emailStatus, setEmailStatus] = useState(null); // Track email validation status
+  const [emailStatus, setEmailStatus] = useState(false); // Track email validation status
 
 
   const qualityOptions = [
@@ -128,7 +128,7 @@ function CommunityPartners() {
       setEmail("");
       setPhone("");
       setCommunityName("");
-      setEmailStatus(null);
+      setEmailStatus(false);
       setCommunitySize("");
       setDescription("");
       setQuality("");
@@ -150,7 +150,7 @@ function CommunityPartners() {
     }
 
     if (email.trim() === "") {
-      setEmailStatus(null); // No status if the email is empty
+      setEmailStatus(false); // No status if the email is empty
       return;
     }
   
