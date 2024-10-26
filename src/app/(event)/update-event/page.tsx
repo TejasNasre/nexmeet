@@ -76,6 +76,7 @@ export default function UpdateEvent() {
   const [loading, setLoading] = useState(true);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string }>({});
   const searchParams = useSearchParams();
   const eventId = searchParams.get("eventId");
 
@@ -109,7 +110,9 @@ export default function UpdateEvent() {
   const handleUpdateEvent = async () => {
     if (!event) return;
 
-    // Validate event data
+    // Clear previous field errors
+    setFieldErrors({});
+
     try {
       eventSchema.parse({
         ...event,
@@ -145,8 +148,12 @@ export default function UpdateEvent() {
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
-        setErrorMessage(error.errors.map(e => e.message).join(", "));
-        toast.error(error.errors.map(e => e.message).join(", "));
+        const newFieldErrors: { [key: string]: string } = {};
+        error.errors.forEach((e) => {
+          newFieldErrors[e.path[0]] = e.message; // map the error to the field
+        });
+        setFieldErrors(newFieldErrors);
+        toast.error("Please fix the errors in the form.");
       }
     }
   };
@@ -179,6 +186,7 @@ export default function UpdateEvent() {
                 onChange={(e) => setEvent({ ...event, event_title: e.target.value })}
                 className="w-full p-2 text-white bg-black border border-white rounded-md"
               />
+              {fieldErrors.event_title && <p className="text-red-500">{fieldErrors.event_title}</p>}
             </div>
             <div className="flex flex-col w-full gap-2">
               <label htmlFor="event_description">Event Description: </label>
@@ -190,6 +198,7 @@ export default function UpdateEvent() {
                 onChange={(e) => setEvent({ ...event, event_description: e.target.value })}
                 className="w-full p-2 text-white bg-black border border-white rounded-md"
               />
+              {fieldErrors.event_description && <p className="text-red-500">{fieldErrors.event_description}</p>}
             </div>
             <div className="flex flex-col w-full gap-2">
               <label htmlFor="event_location">Event Location: </label>
@@ -201,6 +210,7 @@ export default function UpdateEvent() {
                 onChange={(e) => setEvent({ ...event, event_location: e.target.value })}
                 className="w-full p-2 text-white bg-black border border-white rounded-md"
               />
+              {fieldErrors.event_location && <p className="text-red-500">{fieldErrors.event_location}</p>}
             </div>
             <div className="flex flex-col w-full gap-2">
               <label htmlFor="event_registration_startdate">Event Registration Start Date: </label>
@@ -211,6 +221,7 @@ export default function UpdateEvent() {
                 onChange={(e) => setEvent({ ...event, event_registration_startdate: e.target.value })}
                 className="w-full p-2 text-white bg-black border border-white rounded-md"
               />
+              {fieldErrors.event_registration_startdate && <p className="text-red-500">{fieldErrors.event_registration_startdate}</p>}
             </div>
             <div className="flex flex-col w-full gap-2">
               <label htmlFor="event_registration_enddate">Event Registration End Date: </label>
@@ -221,6 +232,7 @@ export default function UpdateEvent() {
                 onChange={(e) => setEvent({ ...event, event_registration_enddate: e.target.value })}
                 className="w-full p-2 text-white bg-black border border-white rounded-md"
               />
+              {fieldErrors.event_registration_enddate && <p className="text-red-500">{fieldErrors.event_registration_enddate}</p>}
             </div>
             <div className="flex flex-col w-full gap-2">
               <label htmlFor="event_startdate">Event Start Date: </label>
@@ -231,6 +243,7 @@ export default function UpdateEvent() {
                 onChange={(e) => setEvent({ ...event, event_startdate: e.target.value })}
                 className="w-full p-2 text-white bg-black border border-white rounded-md"
               />
+              {fieldErrors.event_startdate && <p className="text-red-500">{fieldErrors.event_startdate}</p>}
             </div>
             <div className="flex flex-col w-full gap-2">
               <label htmlFor="event_enddate">Event End Date: </label>
@@ -241,6 +254,7 @@ export default function UpdateEvent() {
                 onChange={(e) => setEvent({ ...event, event_enddate: e.target.value })}
                 className="w-full p-2 text-white bg-black border border-white rounded-md"
               />
+              {fieldErrors.event_enddate && <p className="text-red-500">{fieldErrors.event_enddate}</p>}
             </div>
             <div className="flex flex-col w-full gap-2">
               <label htmlFor="event_duration">Event Duration (in hours): </label>
@@ -252,6 +266,7 @@ export default function UpdateEvent() {
                 onChange={(e) => setEvent({ ...event, event_duration: e.target.value })}
                 className="w-full p-2 text-white bg-black border border-white rounded-md"
               />
+              {fieldErrors.event_duration && <p className="text-red-500">{fieldErrors.event_duration}</p>}
             </div>
             <div className="flex flex-col w-full gap-2">
               <label htmlFor="team_size">Team Size: </label>
@@ -263,6 +278,7 @@ export default function UpdateEvent() {
                 onChange={(e) => setEvent({ ...event, team_size: e.target.value })}
                 className="w-full p-2 text-white bg-black border border-white rounded-md"
               />
+              {fieldErrors.team_size && <p className="text-red-500">{fieldErrors.team_size}</p>}
             </div>
             <div className="flex flex-col w-full gap-2">
               <label htmlFor="event_formlink">Event Form Link: </label>
@@ -274,6 +290,7 @@ export default function UpdateEvent() {
                 onChange={(e) => setEvent({ ...event, event_formlink: e.target.value })}
                 className="w-full p-2 text-white bg-black border border-white rounded-md"
               />
+              {fieldErrors.event_formlink && <p className="text-red-500">{fieldErrors.event_formlink}</p>}
             </div>
             <div className="flex flex-col w-full gap-2">
               <label htmlFor="event_price">Event Price: </label>
@@ -287,6 +304,7 @@ export default function UpdateEvent() {
                 className="w-full p-2 text-white bg-black border border-white rounded-md"
               />
               <p>If Free Enter 0</p>
+              {fieldErrors.event_price && <p className="text-red-500">{fieldErrors.event_price}</p>}
             </div>
             <div className="flex flex-col w-full gap-2">
               <label htmlFor="organizer_name">Organizer Name: </label>
@@ -298,6 +316,7 @@ export default function UpdateEvent() {
                 onChange={(e) => setEvent({ ...event, organizer_name: e.target.value })}
                 className="w-full p-2 text-white bg-black border border-white rounded-md"
               />
+              {fieldErrors.organizer_name && <p className="text-red-500">{fieldErrors.organizer_name}</p>}
             </div>
             <div className="flex flex-col w-full gap-2">
               <label htmlFor="organizer_email">Organizer Email: </label>
@@ -309,6 +328,7 @@ export default function UpdateEvent() {
                 onChange={(e) => setEvent({ ...event, organizer_email: e.target.value })}
                 className="w-full p-2 text-white bg-black border border-white rounded-md"
               />
+              {fieldErrors.organizer_email && <p className="text-red-500">{fieldErrors.organizer_email}</p>}
             </div>
             <div className="flex flex-col w-full gap-2">
               <label htmlFor="organizer_contact">Organizer Contact: </label>
@@ -319,6 +339,7 @@ export default function UpdateEvent() {
                 onChange={(e) => setEvent({ ...event, organizer_contact: e.target.value })}
                 className="w-full p-2 text-white bg-black border border-white rounded-md"
               />
+              {fieldErrors.organizer_contact && <p className="text-red-500">{fieldErrors.organizer_contact}</p>}
             </div>
             <div className="flex flex-col w-full gap-2">
               <label htmlFor="event_category">Event Category: </label>
@@ -330,17 +351,30 @@ export default function UpdateEvent() {
                 onChange={(e) => setEvent({ ...event, event_category: e.target.value })}
                 className="w-full p-2 text-white bg-black border border-white rounded-md"
               />
+              {fieldErrors.event_category && <p className="text-red-500">{fieldErrors.event_category}</p>}
             </div>
             <div className="flex flex-col w-full gap-2">
-              <label htmlFor="event_tags">Event Tags: </label>
+              <label htmlFor="event_tags">Event Tags (comma separated): </label>
               <input
                 required
                 type="text"
-                placeholder="Enter Event Tags (comma separated)"
+                placeholder="Enter Event Tags"
                 value={event.event_tags.join(", ")}
                 onChange={(e) => setEvent({ ...event, event_tags: e.target.value.split(",").map(tag => tag.trim()) })}
                 className="w-full p-2 text-white bg-black border border-white rounded-md"
               />
+              {fieldErrors.event_tags && <p className="text-red-500">{fieldErrors.event_tags}</p>}
+            </div>
+            <div className="flex flex-col w-full gap-2">
+              <label htmlFor="event_social_links">Event Social Links (comma separated): </label>
+              <input
+                type="text"
+                placeholder="Enter Social Links"
+                value={event.event_social_links.join(", ")}
+                onChange={(e) => setEvent({ ...event, event_social_links: e.target.value.split(",").map(link => link.trim()) })}
+                className="w-full p-2 text-white bg-black border border-white rounded-md"
+              />
+              {fieldErrors.event_social_links && <p className="text-red-500">{fieldErrors.event_social_links}</p>}
             </div>
             <AlertDialog>
               <AlertDialogTrigger asChild>
@@ -348,7 +382,7 @@ export default function UpdateEvent() {
                   Update Event
                 </Button>
               </AlertDialogTrigger>
-              <AlertDialogContent>
+              <AlertDialogContent style={{ backgroundColor: 'rgb(249, 250, 251)', borderRadius: '8px' }}>
                 <AlertDialogHeader>
                   <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                   <AlertDialogDescription>
