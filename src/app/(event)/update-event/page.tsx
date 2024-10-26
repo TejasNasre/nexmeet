@@ -34,14 +34,14 @@ const eventSchema = z.object({
   event_registration_enddate: z.string().nonempty(),
   event_startdate: z.string().nonempty(),
   event_enddate: z.string().nonempty(),
-  event_duration: z.string().nonempty().regex(/^\d+$/, "Duration must be a number"),
-  team_size: z.string().nonempty().regex(/^\d+$/, "Team size must be a number"),
+  event_duration: z.number().positive("Duration must be greater than 0"),
+  team_size: z.number().positive("Team size must be greater than 0"),
   event_formlink: z.string().url(),
   event_price: z.string().nonempty().regex(/^\d+$/, "Price must be a number")
     .transform(Number).refine((price) => price >= 0, "Price cannot be negative"),
   organizer_name: z.string().nonempty(),
   organizer_email: z.string().email(),
-  organizer_contact: z.string().optional(),
+  organizer_contact: z.string().regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number format. It should be a valid international number."),
   event_category: z.string().nonempty(),
   event_tags: z.array(z.string()).nonempty(),
   event_social_links: z.array(z.string()).optional(),
@@ -331,15 +331,20 @@ export default function UpdateEvent() {
               {fieldErrors.organizer_email && <p className="text-red-500">{fieldErrors.organizer_email}</p>}
             </div>
             <div className="flex flex-col w-full gap-2">
-              <label htmlFor="organizer_contact">Organizer Contact: </label>
-              <input
-                type="text"
-                placeholder="Enter Organizer Contact"
-                value={event.organizer_contact}
-                onChange={(e) => setEvent({ ...event, organizer_contact: e.target.value })}
-                className="w-full p-2 text-white bg-black border border-white rounded-md"
-              />
-              {fieldErrors.organizer_contact && <p className="text-red-500">{fieldErrors.organizer_contact}</p>}
+                <label htmlFor="organizer_contact">Organizer Contact: </label>
+                <input
+                    type="text" // Keep as text to handle phone number formatting
+                    placeholder="Enter Organizer Contact"
+                    value={event.organizer_contact || ''}
+                    onChange={(e) => {
+                    // Update the state with the input value
+                    const value = e.target.value;
+                    // Optionally, you can add any additional formatting or validation here
+                    setEvent({ ...event, organizer_contact: value });
+                    }}
+                    className="w-full p-2 text-white bg-black border border-white rounded-md"
+                />
+                {fieldErrors.organizer_contact && <p className="text-red-500">{fieldErrors.organizer_contact}</p>}
             </div>
             <div className="flex flex-col w-full gap-2">
               <label htmlFor="event_category">Event Category: </label>
@@ -390,8 +395,11 @@ export default function UpdateEvent() {
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleUpdateEvent}>Update</AlertDialogAction>
+                  <AlertDialogCancel
+                    className="bg-gray-200 hover:bg-red-600 text-black rounded-md px-4 py-2">Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                        onClick={handleUpdateEvent}
+                        className="bg-gray-200 border hover:bg-green-600 text-black rounded-md px-4 py-2">Update</AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
