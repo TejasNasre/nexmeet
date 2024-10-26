@@ -12,7 +12,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useSession } from "@supabase/auth-helpers-react";
 import { toast } from "sonner";
-
+import { motion } from "framer-motion";
 const Page: React.FC = () => {
   interface CountLikes {
     [key: string]: number; // Maps event id to its like count
@@ -31,6 +31,7 @@ const Page: React.FC = () => {
     {}
   );
   const session = useSession();
+  const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
   const [countLikes, setCountLikes] = useState<CountLikes>({});
   const { user } = useUserDetails();
   interface Event {
@@ -273,6 +274,14 @@ const Page: React.FC = () => {
       setCurrentPage(totalPages > 0 ? totalPages : 1);
     }
   }, [totalPages, currentPage]);
+  const handleMouseMove = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const button = event.currentTarget.getBoundingClientRect();
+    setMousePosition({
+      x: ((event.clientX - button.left) / button.width) * 100,
+      y: ((event.clientY - button.top) / button.height) * 100,
+    });
+  };
+
 
   interface Events {
     id: string;
@@ -317,6 +326,24 @@ const Page: React.FC = () => {
       >
         <div className="text-5xl md:text-6xl font-bold mb-12 text-center tracking-tight">
           Explore Events
+          <div className="flex flex-col items-center justify-end md:items-start md:justify-start md:ml-0 md:mt-4">
+            <Link href="/event-calendar">
+              <button
+                className="relative bg-black text-white px-4 py-2 rounded-full font-bold text-base border border-white transition-all duration-300 ease-in-out group mt-3 mb-0"
+                onMouseMove={handleMouseMove}
+                style={
+                  {
+                    "--mouse-x": `${mousePosition.x}%`,
+                    "--mouse-y": `${mousePosition.y}%`,
+                  } as React.CSSProperties
+                }
+              >
+                <span className="relative z-10">View Event Calendar</span>
+                <span className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_var(--mouse-x)_var(--mouse-y),_rgba(255,255,255,0.3)_10%,_transparent_80%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+              </button>
+            </Link>
+          </div>
+
         </div>
         <div className="w-full my-[3rem] flex flex-col gap-4 justify-end">
           <div>
@@ -391,9 +418,12 @@ const Page: React.FC = () => {
             {currentItems.length > 0 ? (
               currentItems.map((event: any) => {
                 const { status, closed, open } = checkRegistrationStatus(event);
+                const isApproved = event.is_approved;
                 return (
                   <div
-                    className="cursor-pointer w-[350px] mx-auto bg-black text-white rounded-xl shadow-md overflow-hidden transition duration-300 ease-in-out transform hover:scale-105"
+                    className={`w-[350px] mx-auto bg-black text-white rounded-xl shadow-md overflow-hidden transition duration-300 ease-in-out transform ${
+                        event.is_approved ? "cursor-pointer hover:scale-105" : "opacity-50 cursor-not-allowed"
+                    }`}
                     key={event.id}
                   >
                     <div className="relative h-64">
@@ -444,6 +474,15 @@ const Page: React.FC = () => {
                               }`}
                           >
                             {status}
+                          </span>
+                          <span
+                            className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                              isApproved
+                                ? "bg-green-100 text-green-800"
+                                : "bg-red-100 text-red-800"
+                            }`}
+                          >
+                            {isApproved ? "Approved" : "Rejected"}
                           </span>
                         </span>
                         <span className="text-sm font-semibold text-yellow-500">
