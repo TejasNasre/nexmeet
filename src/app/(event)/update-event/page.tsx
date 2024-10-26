@@ -260,7 +260,7 @@ export default function UpdateEvent() {
               <label htmlFor="event_duration">Event Duration (in hours): </label>
               <input
                 required
-                type="text"
+                type="number"
                 placeholder="Enter Event Duration"
                 value={event.event_duration}
                 onChange={(e) => setEvent({ ...event, event_duration: e.target.value })}
@@ -272,7 +272,7 @@ export default function UpdateEvent() {
               <label htmlFor="team_size">Team Size: </label>
               <input
                 required
-                type="text"
+                type="number"
                 placeholder="Enter Team Size"
                 value={event.team_size}
                 onChange={(e) => setEvent({ ...event, team_size: e.target.value })}
@@ -331,20 +331,19 @@ export default function UpdateEvent() {
               {fieldErrors.organizer_email && <p className="text-red-500">{fieldErrors.organizer_email}</p>}
             </div>
             <div className="flex flex-col w-full gap-2">
-                <label htmlFor="organizer_contact">Organizer Contact: </label>
-                <input
-                    type="text" // Keep as text to handle phone number formatting
-                    placeholder="Enter Organizer Contact"
-                    value={event.organizer_contact || ''}
-                    onChange={(e) => {
-                    // Update the state with the input value
-                    const value = e.target.value;
-                    // Optionally, you can add any additional formatting or validation here
-                    setEvent({ ...event, organizer_contact: value });
-                    }}
-                    className="w-full p-2 text-white bg-black border border-white rounded-md"
-                />
-                {fieldErrors.organizer_contact && <p className="text-red-500">{fieldErrors.organizer_contact}</p>}
+            <label htmlFor="organizer_contact">Organizer Contact: </label>
+            <input
+                type="tel"
+                placeholder="Enter Organizer Contact"
+                value={event.organizer_contact || ''}
+                onChange={(e) => {
+                // Ensure the value is a string
+                const value = e.target.value;
+                setEvent({ ...event, organizer_contact: value });
+                }}
+                className="w-full p-2 text-white bg-black border border-white rounded-md"
+            />
+            {fieldErrors.organizer_contact && <p className="text-red-500">{fieldErrors.organizer_contact}</p>}
             </div>
             <div className="flex flex-col w-full gap-2">
               <label htmlFor="event_category">Event Category: </label>
