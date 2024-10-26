@@ -7,6 +7,8 @@ import { Mail, Phone } from "lucide-react";
 import { toast } from "sonner";
 
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const maxDescriptionLength = 200;
 
 function CommunityPartners() {
   const [name, setName] = useState("");
@@ -141,6 +143,12 @@ function CommunityPartners() {
   };
   
   const checkEmailExists = async () => {
+    if (!emailRegex.test(email.trim())) {
+      setEmailStatus(false); 
+      toast.error("Invalid Email.");
+      return;
+    }
+
     if (email.trim() === "") {
       setEmailStatus(null); // No status if the email is empty
       return;
@@ -226,14 +234,19 @@ function CommunityPartners() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <input
+                <input
                     type="tel"
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    onChange={(e) => {
+                      const phoneValue = e.target.value;
+                      if (/^\d*$/.test(phoneValue)) { // Allow only numeric characters
+                        setPhone(phoneValue);
+                      }
+                    }}
                     placeholder="Your Phone"
                     required
                     className="w-full p-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-white/30"
-                  />
+                    />
                   <input
                     type="number"
                     value={communitySize}
@@ -252,14 +265,20 @@ function CommunityPartners() {
                   required
                   className="w-full p-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-white/30"
                 />
-
                 <textarea
                   value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  onChange={(e) => {
+                    if (e.target.value.length <= maxDescriptionLength) {
+                      setDescription(e.target.value);
+                    }
+                  }}
                   placeholder="Tell us about your community..."
                   required
                   className="w-full p-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-white/30 h-32"
                 />
+                <p className="text-sm text-gray-400">
+                  {description.length}/{maxDescriptionLength} characters
+                </p>
               </div>
             ) : (
               <div className="space-y-8">
