@@ -40,6 +40,13 @@ function Header() {
         console.error("Error fetching user details:", error);
         setUser(null);
       });
+    // Retrieve theme preference from localStorage
+    const storedTheme = localStorage.getItem('isDarkMode');
+	console.log(storedTheme);
+    if (storedTheme === 'true') {
+      setIsDarkMode(true);
+      document.body.classList.toggle("white"); // Assuming you have a class for dark mode
+    }
   }, []);
 
   const toggleMenu = () => {
@@ -52,7 +59,10 @@ function Header() {
   };
 
   const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
+    const newTheme = !isDarkMode;
+    setIsDarkMode(newTheme);
+    localStorage.setItem('isDarkMode', String(isDarkMode)); // Store theme preference
+
     document.body.classList.toggle("white");
   };
 
@@ -212,7 +222,7 @@ function Header() {
                       <p className="font-bold">
                         {user?.given_name} {user?.family_name}
                       </p>
-                      <p className="text-sm">{user?.email}</p>
+                      <p className="text-sm text-center">{user?.email}</p>
                     </div>
                     <div className="flex flex-col justify-center">
                       <Link
@@ -225,7 +235,7 @@ function Header() {
                     </div>
                     <div className="flex flex-col justify-center">
                       <LogoutLink
-                        className="mono rounded-md px-2 py-2 hover:bg-black hover:text-white hover:rounded-xl text-center transition-colors"
+                        className="mono rounded-md px-1 py-2 hover:bg-black hover:text-white hover:rounded-xl text-center transition-colors"
                         postLogoutRedirectURL="/"
                       >
                         Log out
