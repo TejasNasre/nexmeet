@@ -33,6 +33,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
   const [userData, setUserData]: any = useState([]);
   const [registrationClosed, setRegistrationClosed] = useState(false);
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
+  const [registrationStatus, setRegistrationStatus] = useState("Upcoming"); // track status
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState<
     { id: string; text: string; author: string; timestamp: string }[]
@@ -50,10 +51,15 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
         eventData[0].event_registration_enddate
       );
 
-      setIsRegistrationOpen(
-        currentDate >= registrationStartDate &&
-          currentDate <= registrationEndDate
-      );
+      if (currentDate < registrationStartDate) {
+        setRegistrationStatus("Upcoming");
+      } else if (currentDate > registrationEndDate) {
+        setRegistrationStatus("Inactive");
+        setRegistrationClosed(true);
+      } else {
+        setRegistrationStatus("Active");
+        setIsRegistrationOpen(true);
+      }
     }
   }, [eventData]);
 
@@ -69,7 +75,6 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
         console.error("Error fetching event details:", error);
       } else {
         setEventData(data);
-        checkRegistrationStatus(data); // Check registration dates
       }
       setIsLoading(false);
     }
@@ -133,21 +138,6 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
   useEffect(() => {
     fetchComments();
   }, [fetchComments]);
-
-  const checkRegistrationStatus = (data: any) => {
-    const currentDate = new Date();
-    const registrationStartDate = new Date(
-      data[0].event_registration_startdate
-    );
-    const registrationEndDate = new Date(data[0].event_registration_enddate);
-
-    if (
-      currentDate < registrationStartDate &&
-      currentDate > registrationEndDate
-    ) {
-      setRegistrationClosed(true); // Set registration closed if outside the valid period
-    }
-  };
 
   async function isUser() {
     if (!isAuthenticated) {
@@ -240,7 +230,6 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
     <>
       <div className="w-full h-auto bg-black text-white py-[5rem] md:py-[8rem] px-[1rem] md:px-[2rem] flex justify-center">
         {eventData.map((event: any) => {
-          const isActive = new Date(event.event_startdate) >= new Date();
           return (
             <div
               className="flex flex-wrap justify-start items-center max-w-6xl"
@@ -323,12 +312,14 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                       <Badge
                         variant="destructive"
                         className={`${
-                          isActive
+                          isRegistrationOpen
                             ? "bg-green-100 text-green-800"
-                            : "bg-red-100 text-red-800"
+                            : !registrationClosed && !isRegistrationOpen
+                              ? "bg-blue-200 text-blue-800"
+                              : "bg-red-100 text-red-800"
                         }`}
                       >
-                        {isActive ? "Active" : "Inactive"}
+                        {registrationStatus}
                       </Badge>
                     </h1>
 
@@ -361,14 +352,16 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                         className={`w-full transition-transform duration-300 ease-in-out transform ${
                           registrationClosed ||
                           isRegistered ||
-                          !isRegistrationOpen
+                          !isRegistrationOpen ||
+                          (!registrationClosed && !isRegistrationOpen)
                             ? "opacity-50 cursor-not-allowed"
                             : "hover:scale-105"
                         }`}
                         disabled={
                           registrationClosed ||
                           isRegistered ||
-                          !isRegistrationOpen
+                          !isRegistrationOpen ||
+                          (!registrationClosed && !isRegistrationOpen)
                         }
                         onClick={isUser}
                       >
@@ -376,8 +369,8 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                           ? "Registration Closed"
                           : isRegistered
                             ? "Registered ✔️"
-                            : !isRegistrationOpen
-                              ? "Registration Closed"
+                            : !registrationClosed && !isRegistrationOpen
+                              ? "Registration Upcoming"
                               : "Register Now"}
                       </Button>
                     </div>

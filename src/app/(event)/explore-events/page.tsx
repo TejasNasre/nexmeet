@@ -60,6 +60,7 @@ const Page: React.FC = () => {
         console.error("Error fetching event details:", error);
       } else {
         setEvent(data);
+        console.log("Event Data:", data);
       }
       setLoading(false);
     }
@@ -305,6 +306,40 @@ const Page: React.FC = () => {
     });
   };
 
+  interface Events {
+    id: string;
+    event_title: string;
+    event_description: string;
+    event_location: string;
+    event_registration_startdate: string;
+    event_registration_enddate: string;
+    event_startdate: string;
+    event_enddate: string;
+    event_duration: string;
+    team_size: string;
+    event_formlink: string;
+    event_price: string;
+    organizer_name: string;
+    organizer_email: string;
+    organizer_contact: string;
+    event_category: string;
+    event_tags: string[];
+    event_social_links: string[];
+  }
+  const checkRegistrationStatus = (event: Events) => {
+    const currentDate = new Date();
+    const registrationStartDate = new Date(event.event_registration_startdate);
+    const registrationEndDate = new Date(event.event_registration_enddate);
+
+    if (currentDate < registrationStartDate) {
+      return { status: "Upcoming", closed: false, open: false };
+    } else if (currentDate > registrationEndDate) {
+      return { status: "Inactive", closed: true, open: false };
+    } else {
+      return { status: "Active", closed: false, open: true };
+    }
+  };
+
   return (
     <>
       <div
@@ -413,12 +448,14 @@ const Page: React.FC = () => {
           <div className="w-full flex flex-wrap gap-5 justify-evenly py-[8rem]">
             {currentItems.length > 0 ? (
               currentItems.map((event: any) => {
-                const isActive = new Date(event.event_startdate) >= new Date();
+                const { status, closed, open } = checkRegistrationStatus(event);
                 const isApproved = event.is_approved;
                 return (
                   <div
                     className={`w-[350px] mx-auto bg-black text-white rounded-xl shadow-md overflow-hidden transition duration-300 ease-in-out transform ${
-                        event.is_approved ? "cursor-pointer hover:scale-105" : "opacity-50 cursor-not-allowed"
+                      event.is_approved
+                        ? "cursor-pointer hover:scale-105"
+                        : "opacity-50 cursor-not-allowed"
                     }`}
                     key={event.id}
                   >
@@ -460,13 +497,16 @@ const Page: React.FC = () => {
                             {event.event_category}
                           </span>
                           <span
-                            className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                              isActive
-                                ? "bg-green-100 text-green-800"
-                                : "bg-red-100 text-red-800"
-                            }`}
+                            className={`px-2 py-1 text-xs font-semibold rounded-full 
+                              ${
+                                open
+                                  ? "bg-green-100 text-green-800"
+                                  : !closed && !open
+                                    ? "bg-blue-200 text-blue-800"
+                                    : "bg-red-100 text-red-800"
+                              }`}
                           >
-                            {isActive ? "Active" : "Inactive"}
+                            {status}
                           </span>
                           <span
                             className={`px-2 py-1 text-xs font-semibold rounded-full ${
