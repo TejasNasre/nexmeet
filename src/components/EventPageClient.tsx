@@ -13,7 +13,7 @@ import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { Comment } from "@/components/ui/comment";
 import { FaXTwitter } from "react-icons/fa6";
 
-import { PhoneIcon, MailIcon, User, ArrowRight, Tags } from "lucide-react";
+import { PhoneIcon, MailIcon, User, ArrowRight, Tags, Trash } from "lucide-react";
 import { toast } from "sonner";
 
 import {
@@ -507,12 +507,21 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                           key={c.id}
                           className="flex flex-col gap-2 p-4 border border-white rounded-lg"
                         >
+                        <div className="flex justify-between items-center">
                           <div className="flex items-center gap-2">
                             <User className="w-5 h-5 text-[#FFC107]" />
                             <span className="text-white">{c.author}</span>
                             <span className="text-purple-500 text-sm">
                               {new Date(c.timestamp).toLocaleString()}
                             </span>
+                          </div>
+                          <Button
+                            variant="outline"
+                            className="ml-auto p-2 text-sm border-none" // Adjust padding and font size
+                            //onClick={() => handleDeleteComment(c.id)} // Trigger delete function
+                            >
+                            <Trash className="w-4 h-4 text-red-500" /> {/* Use your delete icon here */}
+                          </Button>
                           </div>
                           <div className="flex items-center gap-2">
                             <ArrowRight className="w-4 h-4 text-red-500" />
