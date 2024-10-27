@@ -140,6 +140,13 @@ function Header() {
             <div className="flex flex-col gap-8 text-white text-center items-center">
               {renderMenuItems()}
             </div>
+            <button onClick={toggleTheme} className={isMenuOpen ? "rounded-md absolute top-5 right-12 lg:hidden" : ""}>
+              {isDarkMode ? (
+                <BsBrightnessLow size={22} />
+              ) : (
+                <IoMoon size={22} />
+              )}
+            </button>
           </div>
         </div>
       )}
@@ -235,7 +242,7 @@ function Header() {
                 )}
               </div>
             </div>
-            <button onClick={toggleTheme} className="p-2 rounded-md">
+            <button onClick={toggleTheme} className="p-2 rounded-md hidden lg:block">
               {isDarkMode ? (
                 <BsBrightnessLow size={24} />
               ) : (
@@ -258,7 +265,7 @@ function Header() {
               Sign up
             </RegisterLink>
 
-            <button onClick={toggleTheme} className="bg-black p-2 rounded-md">
+            <button onClick={toggleTheme} className="bg-black p-2 rounded-md hidden lg:block">
               {isDarkMode ? (
                 <BsBrightnessLow size={24} />
               ) : (
