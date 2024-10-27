@@ -211,7 +211,7 @@ function Header() {
                 </div>
                 {isDropdownVisible && (
                   <div
-                    className="absolute right-0 p-2 mt-0 w-auto bg-black text-white dark:bg-white dark:text-black rounded-md shadow-lg z-20"
+                    className="absolute lg:right-0 p-2 mt-0 w-auto bg-black text-white dark:bg-white dark:text-black rounded-md shadow-lg z-20 lg:top-13 lg:bottom-auto bottom-12 -right-20"
                     onMouseEnter={showDropdown}
                     onMouseLeave={hideDropdown}
                   >
