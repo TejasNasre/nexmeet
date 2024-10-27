@@ -140,7 +140,7 @@ function Header() {
             <div className="flex flex-col gap-8 text-white text-center items-center">
               {renderMenuItems()}
             </div>
-            <button onClick={toggleTheme} className={isMenuOpen ? "rounded-md absolute top-5 right-12 lg:hidden" : ""}>
+            <button onClick={toggleTheme} className={isMenuOpen ? "rounded-md absolute top-5 left-4 lg:hidden" : ""}>
               {isDarkMode ? (
                 <BsBrightnessLow size={22} />
               ) : (
