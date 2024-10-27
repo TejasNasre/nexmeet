@@ -63,18 +63,18 @@ const Card: React.FC<CardProps> = ({
             />
             <div className="absolute inset-0 flex flex-col justify-between">
               <div className="p-4">
-                <h3 className="text-2xl font-bold text-white mb-2 text-shadow">
+                <h3 className="text-2xl font-bold mb-2 always-white text-shadow">
                   {title}
                 </h3>
-                <p className="text-white text-shadow">{description}</p>
+                <p className="always-white text-shadow">{description}</p>
               </div>
             </div>
           </div>
         ) : (
           <>
             <div>
-              <h3 className="text-2xl font-bold text-white mb-4">{title}</h3>
-              <p className="text-white mb-6">{description}</p>
+              <h3 className="text-2xl font-bold always-white mb-4">{title}</h3>
+              <p className="always-white mb-6">{description}</p>
             </div>
             <Image
               src={image}

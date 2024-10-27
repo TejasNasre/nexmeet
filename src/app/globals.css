@@ -149,6 +149,11 @@ body.white {
   color: hsl(var(--foreground)) !important; /* Dark text if explicitly white */
 }
 
+/* Ensure text is always white in both light/dark theme */
+.always-white {
+  color: white !important;
+}
+
 /* Override specific components with background issues */
 .white .bg-black {
   background-color: hsl(
@@ -419,7 +424,7 @@ body.white {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .custom-calendar .rbc-toolbar-label {
     text-align: center;
     margin: 0.5rem 0;
@@ -437,31 +442,31 @@ body.white {
 }
 
 @keyframes borderGrow {
-    from {
-      transform: scaleX(0);
-    }
-    to {
-      transform: scaleX(1);
-    }
+  from {
+    transform: scaleX(0);
   }
+  to {
+    transform: scaleX(1);
+  }
+}
 
 .nav-link {
-    position: relative;
-    display: inline-block; /* Ensure it only takes as much space as needed */
+  position: relative;
+  display: inline-block; /* Ensure it only takes as much space as needed */
 }
 
 .nav-link::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: 2px; /* Adjust thickness */
-    background-color: white; /* Border color */
-    transform: scaleX(0);
-    transition: transform 0.3s ease; /* Transition for smooth effect */
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px; /* Adjust thickness */
+  background-color: white; /* Border color */
+  transform: scaleX(0);
+  transition: transform 0.3s ease; /* Transition for smooth effect */
 }
 
 .nav-link:hover::after {
-    transform: scaleX(1); /* Scale to full width on hover */
+  transform: scaleX(1); /* Scale to full width on hover */
 }
