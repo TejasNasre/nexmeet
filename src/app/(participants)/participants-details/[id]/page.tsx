@@ -108,6 +108,33 @@ function Page({ params }: { params: { id: any } }) {
     }
   };
 
+  // CSV conversion function
+const convertToCSV = (data: any[]) => {
+    const headers = ["Name", "Email", "Contact", "Registration Date", "Registration Time", "Status"];
+    const rows = data.map(participant => [
+      participant.participant_name,
+      participant.participant_email,
+      participant.participant_contact,
+      new Date(participant.created_at).toLocaleString(),
+      participant.is_approved === true ? "Approved" : participant.is_approved === false ? "Rejected" : "Pending",
+    ]);
+
+    const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+    return csvContent;
+  };
+
+  const downloadCSV = () => {
+    const csvContent = convertToCSV(participants);
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `participants_${params.id}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const CustomTooltip: React.FC<{
     active: boolean;
     payload: any[];
@@ -210,6 +237,11 @@ function Page({ params }: { params: { id: any } }) {
           </div>
 
           <div className="px-8">
+            <button
+                onClick={downloadCSV}
+                className="px-4 py-2 mb-4 text-white bg-blue-500 rounded-md hover:bg-blue-600"
+                >Download Participants
+            </button>
             <div className="h-full overflow-auto border border-white rounded-lg">
               <ScrollArea className="h-full overflow-auto">
                 <Table className="min-w-full table-auto">
