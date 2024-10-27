@@ -207,6 +207,18 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
     }
   };
 
+  const handleDeleteComment = async (commentId: string) => {
+    const { error } = await supabase.from("comments").delete().eq("id", commentId);
+
+    if (error) {
+      console.error("Error deleting comment:", error);
+      toast.error("Failed to delete comment.");
+    } else {
+      setComments((prevComments) => prevComments.filter(c => c.id !== commentId));
+      toast.success("Comment deleted successfully!");
+    }
+  };
+
   const createGoogleCalendarLink = (event: any) => {
     const eventTitle = encodeURIComponent(event.event_title);
     const eventDescription = encodeURIComponent(event.event_description);
@@ -518,7 +530,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                           <Button
                             variant="outline"
                             className="ml-auto p-2 text-sm border-none" // Adjust padding and font size
-                            //onClick={() => handleDeleteComment(c.id)} // Trigger delete function
+                            onClick={() => handleDeleteComment(c.id)} // Trigger delete function
                             >
                             <Trash className="w-4 h-4 text-red-500" /> {/* Use your delete icon here */}
                           </Button>
