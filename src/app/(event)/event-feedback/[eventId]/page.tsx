@@ -5,158 +5,250 @@ import { useParams } from "next/navigation";
 import { supabase } from "@/utils/supabase";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { Button } from "@/components/ui/button";
-import { SliderField } from "@/components/form-fields/form-fields";
 import { toast } from "sonner";
+import { z } from "zod";
+import { useRouter } from "next/navigation";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Input } from "@/components/ui/input";
+
+const feedbackSchema = z.object({
+  enjoyMost: z
+    .string()
+    .min(1, "Please describe what you enjoyed.")
+    .max(120, "Enjoyment description should be less than 120 characters."),
+
+  organization_rating: z.enum(["Excellent", "Good", "Average", "Poor"]),
+
+  overall_satisfaction: z
+    .string()
+    .min(1, "Satisfaction must be between 1 and 5."),
+
+  recommendations: z.string(),
+
+  improvement: z
+    .string()
+    .min(1, "Please suggest what we can improve.")
+    .max(120, "Suggestions should be less than 120 characters.")
+    .optional(),
+});
 
 export default function ResponseForm() {
-    const params = useParams();
-    const eventId = params?.eventId; // Get the eventId from URL params
-    const { user, isAuthenticated } = useKindeBrowserClient();
+  const params = useParams();
+  const router = useRouter();
+  const eventId = params?.eventId;
+  const { user, isAuthenticated } = useKindeBrowserClient();
 
-    const [formTitle, setFormTitle] = useState<string>("");
-    const [enjoyMost, setEnjoyMost] = useState<string>("");
-    const [organizationRating, setOrganizationRating] = useState<string>("");
-    const [overallSatisfaction, setOverallSatisfaction] = useState<number>(0);
-    const [recommendation, setRecommendation] = useState<number>(0);
-    const [improvement, setImprovement] = useState<string>("");
-    const [isPending, startTransition] = useTransition();
+  const [formTitle, setFormTitle] = useState<string>("");
+  const [isPending, startTransition] = useTransition();
 
-    useEffect(() => {
-        async function fetchEventDetails() {
-            if (!eventId) return;
+  useEffect(() => {
+    async function fetchEventDetails() {
+      if (!eventId) return;
 
-            // Fetch event details from the event_details table
-            const { data: eventData } = await supabase
-                .from("event_details")
-                .select("event_title")
-                .eq("id", eventId)
-                .single();
+      const { data: eventData } = await supabase
+        .from("event_details")
+        .select("event_title")
+        .eq("id", eventId)
+        .single();
 
-            if (eventData) {
-                setFormTitle(eventData.event_title);
-            }
-        }
+      if (eventData) {
+        setFormTitle(eventData.event_title);
+      }
+    }
 
-        fetchEventDetails();
-    }, [eventId]);
+    fetchEventDetails();
+  }, [eventId]);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!isAuthenticated || !user || !eventId) return;
+  const form = useForm<z.infer<typeof feedbackSchema>>({
+    resolver: zodResolver(feedbackSchema),
+    defaultValues: {
+      enjoyMost: "",
+      organization_rating: "Average",
+      overall_satisfaction: "",
+      recommendations: "",
+      improvement: "",
+    },
+  });
 
-        startTransition(async () => {
-            try {
-                // Insert feedback into the event_feedback table
-                const { error: feedbackError } = await supabase
-                    .from("event_feedback")
-                    .insert({
-                        event_id: eventId,
-                        enjoy_most: enjoyMost,
-                        organization_rating: organizationRating,
-                        overall_satisfaction: overallSatisfaction,
-                        recommendation: recommendation,
-                        improvement: improvement,
-                        respondent_email: user.email
-                    });
+  const handleSubmit = async (values: z.infer<typeof feedbackSchema>) => {
+    if (!isAuthenticated || !user || !eventId) return;
 
-                if (feedbackError) throw feedbackError;
-                toast.success("Feedback submitted successfully!");
-            } catch (error) {
-                console.error("Error submitting feedback:", error);
-                toast.error("There was an error submitting your feedback.");
-            }
-        });
-    };
+    startTransition(async () => {
+      try {
+        const { error: feedbackError } = await supabase
+          .from("event_feedback")
+          .insert({
+            event_id: eventId,
+            enjoy_most: values.enjoyMost,
+            organization_rating: values.organization_rating,
+            overall_satisfaction: Number(values.overall_satisfaction),
+            recommendation: Number(values.recommendations),
+            improvement: values.improvement,
+            respondent_email: user.email,
+          });
 
-    return (
-        <div className="w-full h-auto bg-black text-white py-[8rem] px-[2rem] flex flex-col justify-center items-center">
-            <h1 className="text-2xl font-bold mb-4">Feedback Form for {formTitle}</h1>
-            <form
-                className="w-full flex flex-col gap-10 md:w-2/3"
-                onSubmit={handleSubmit}
-            >
-                {/* What did you enjoy the most about the event? */}
-                <div className="mb-4">
-                    <label className="block mb-2">What did you enjoy the most?</label>
-                    <input
-                        type="text"
-                        className="w-full p-2 border rounded"
-                        value={enjoyMost}
-                        onChange={(e) => setEnjoyMost(e.target.value)}
-                        required
-                    />
-                </div>
+        if (feedbackError) throw feedbackError;
+        toast.success("Feedback submitted successfully!");
+        router.push("/dashboard");
+      } catch (error) {
+        console.error("Error submitting feedback:", error);
+        toast.error("There was an error submitting your feedback.");
+      }
+    });
+  };
 
-                {/* How would you rate the overall organization? */}
-                <div className="mb-4">
-                    <label className="block mb-2">
-                        How would you rate the overall organization of the event?
-                    </label>
-                    <div className="space-y-2">
-                        {["Excellent", "Good", "Average", "Poor"].map((option) => (
-                            <div key={option} className="flex gap-2 items-center">
-                                <input
-                                    type="radio"
-                                    name="organization_rating"
-                                    value={option}
-                                    onChange={() => setOrganizationRating(option)}
-                                    required
-                                />
-                                <span>{option}</span>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+  return (
+    <div className="w-full h-auto bg-black text-white py-[8rem] px-[2rem] flex flex-col justify-center items-center">
+      <h1 className="text-2xl font-bold mb-4">Feedback Form for {formTitle}</h1>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(handleSubmit)}
+          className="w-full flex flex-col gap-10 md:w-2/3"
+        >
+          {/* What did you enjoy the most about the event? */}
+          <FormField
+            control={form.control}
+            name="enjoyMost"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-base">
+                  What did you enjoy the most?
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder=""
+                    {...field}
+                    className="bg-black border-white text-white"
+                  />
+                </FormControl>
+                <FormMessage className="text-red-400" />
+              </FormItem>
+            )}
+          />
 
-                {/* How would you rate your overall satisfaction? */}
-                <div className="mb-4">
-                    <label className="block mb-2">
-                        How would you rate your overall satisfaction with the event?
-                    </label>
-                    <div className="rating">
-                        {[1, 2, 3, 4, 5].map((value) => (
-                            <input
-                                key={value}
-                                type="radio"
-                                name="overall_satisfaction"
-                                className="mask mask-star-2 bg-orange-400"
-                                value={value}
-                                onChange={() => setOverallSatisfaction(value)}
-                                required
-                            />
-                        ))}
-                    </div>
-                </div>
+          {/* How would you rate your overall satisfaction? */}
+          <FormField
+            control={form.control}
+            name="overall_satisfaction"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="block mb-2">
+                  How would you rate your overall satisfaction with the event?
+                </FormLabel>
+                <FormControl>
+                  <div className="flex gap-2 mb-4 rating">
+                    {[1, 2, 3, 4, 5].map((value: number) => (
+                      <Input
+                        key={value} // Add key to prevent React warnings
+                        type="radio"
+                        {...field} // Spread the field props
+                        value={value.toString()}
+                        className="mask mask-star-2 bg-orange-400 h-6 w-6" // Adjust size as needed
+                      />
+                    ))}
+                  </div>
+                </FormControl>
+                <FormMessage className="text-red-400" />
+              </FormItem>
+            )}
+          />
 
-                {/* How likely are you to recommend this event? */}
-                <SliderField
-                    label="How likely are you to recommend this event to a friend or colleague?"
-                    min={1}
+          {/* How would you rate the overall organization of the event? */}
+          <FormField
+            control={form.control}
+            name="organization_rating"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="block mb-2">
+                  How would you rate the overall organization of the event?
+                </FormLabel>
+                <FormControl>
+                  <div className="space-y-2">
+                    {["Excellent", "Good", "Average", "Poor"].map(
+                      (label, index) => (
+                        <div key={label} className="flex gap-2 items-center">
+                          <input
+                            type="radio"
+                            {...field}
+                            value={label}
+                            className="cursor-pointer"
+                            required
+                          />
+                          <span>{label}</span>
+                        </div>
+                      )
+                    )}
+                  </div>
+                </FormControl>
+                <FormMessage className="text-red-400" />
+              </FormItem>
+            )}
+          />
+
+          {/* How likely are you to recommend this event? */}
+          <FormField
+            control={form.control}
+            name="recommendations"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="mb-2">
+                  How likely are you to recommend this event to a friend or
+                  colleague?
+                </FormLabel>
+                <FormControl>
+                  <input
+                    type="range"
+                    min={0}
                     max={10}
-                    onChange={(value) => setRecommendation(value as number)}
-                />
+                    className="range range-xs w-full"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage className="text-red-400" />
+              </FormItem>
+            )}
+          />
 
-                {/* What could we improve? */}
-                <div className="mb-4">
-                    <label className="block mb-2">What could we improve?</label>
-                    <input
-                        type="text"
-                        className="w-full p-2 border rounded"
-                        value={improvement}
-                        onChange={(e) => setImprovement(e.target.value)}
-                        required
-                    />
-                </div>
+          {/* What could we improve? */}
+          <FormField
+            control={form.control}
+            name="improvement"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-base">
+                  What could we improve?
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder=""
+                    {...field}
+                    className="bg-black border-white text-white"
+                  />
+                </FormControl>
+                <FormMessage className="text-red-400" />
+              </FormItem>
+            )}
+          />
 
-                {/* Submit button */}
-                <Button
-                    type="submit"
-                    className="w-full border border-white p-2 rounded-md bg-black text-white hover:bg-white hover:text-black"
-                    disabled={isPending}
-                >
-                    {isPending ? "Submitting..." : "Submit Feedback"}
-                </Button>
-            </form>
-        </div>
-    );
+          {/* Submit button */}
+          <Button
+            type="submit"
+            className="w-full border border-white p-2 rounded-md bg-black text-white hover:bg-white hover:text-black"
+            disabled={isPending}
+          >
+            {isPending ? "Submitting..." : "Submit Feedback"}
+          </Button>
+        </form>
+      </Form>
+    </div>
+  );
 }
