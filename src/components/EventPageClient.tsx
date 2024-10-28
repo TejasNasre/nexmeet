@@ -13,7 +13,7 @@ import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { Comment } from "@/components/ui/comment";
 import { FaXTwitter } from "react-icons/fa6";
 
-import { PhoneIcon, MailIcon, User, ArrowRight, Tags } from "lucide-react";
+import { PhoneIcon, MailIcon, User, ArrowRight, Tags, Trash } from "lucide-react";
 import { toast } from "sonner";
 
 import {
@@ -204,6 +204,30 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
         ]);
         setComment(""); // Clear the comment input
       }
+    }
+  };
+
+  const handleDeleteComment = async (commentId: string) => {
+    const commentToDelete = comments.find(c => c.id === commentId);
+    if (!commentToDelete) {
+        toast.error("Comment not found.");
+        return;
+    }
+
+    // Check if the comment belongs to the logged-in user
+    if (commentToDelete.author !== `${userData?.given_name} ${userData?.family_name}`) {
+        toast.error("You can only delete your own comments.");
+        return;
+    }
+
+    const { error } = await supabase.from("comments").delete().eq("id", commentId);
+
+    if (error) {
+      console.error("Error deleting comment:", error);
+      toast.error("Failed to delete comment.");
+    } else {
+      setComments((prevComments) => prevComments.filter(c => c.id !== commentId));
+      toast.success("Comment deleted successfully!");
     }
   };
 
@@ -507,12 +531,21 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                           key={c.id}
                           className="flex flex-col gap-2 p-4 border border-white rounded-lg"
                         >
+                        <div className="flex justify-between items-center">
                           <div className="flex items-center gap-2">
                             <User className="w-5 h-5 text-[#FFC107]" />
                             <span className="text-white">{c.author}</span>
                             <span className="text-purple-500 text-sm">
                               {new Date(c.timestamp).toLocaleString()}
                             </span>
+                          </div>
+                          <Button
+                            variant="outline"
+                            className="ml-auto p-2 text-sm border-none" // Adjust padding and font size
+                            onClick={() => handleDeleteComment(c.id)} // Trigger delete function
+                            >
+                            <Trash className="w-4 h-4 text-red-500" /> {/* Use your delete icon here */}
+                          </Button>
                           </div>
                           <div className="flex items-center gap-2">
                             <ArrowRight className="w-4 h-4 text-red-500" />
