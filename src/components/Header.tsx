@@ -40,13 +40,16 @@ function Header() {
         console.error("Error fetching user details:", error);
         setUser(null);
       });
-    // Retrieve theme preference from localStorage
-    const storedTheme = localStorage.getItem('isDarkMode');
-	console.log(storedTheme);
-    if (storedTheme === 'true') {
-      setIsDarkMode(true);
-      document.body.classList.toggle("white"); // Assuming you have a class for dark mode
-    }
+
+      // Retrieve theme preference from localStorage
+      const storedTheme = localStorage.getItem('isDarkMode');
+
+      if (storedTheme === 'true') {
+        setIsDarkMode(true);
+        document.body.classList.add("white"); // Apply dark mode class
+      } else {
+        document.body.classList.remove("white"); // Ensure dark mode class is removed
+      }
   }, []);
 
   const toggleMenu = () => {
@@ -61,8 +64,7 @@ function Header() {
   const toggleTheme = () => {
     const newTheme = !isDarkMode;
     setIsDarkMode(newTheme);
-    localStorage.setItem('isDarkMode', String(isDarkMode)); // Store theme preference
-
+    localStorage.setItem('isDarkMode', String(newTheme)); // Store theme preference
     document.body.classList.toggle("white");
   };
 
