@@ -360,6 +360,10 @@ body.white {
     background-color: transparent; /* Keep outline buttons transparent */
 }
 
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.5); /* Adjust the calendar icon color */
+}
+
 /* Light Theme */
 :root[data-theme="light"] .custom-calendar {
   background-color: #fff;
