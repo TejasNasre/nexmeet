@@ -208,6 +208,18 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
   };
 
   const handleDeleteComment = async (commentId: string) => {
+    const commentToDelete = comments.find(c => c.id === commentId);
+    if (!commentToDelete) {
+        toast.error("Comment not found.");
+        return;
+    }
+
+    // Check if the comment belongs to the logged-in user
+    if (commentToDelete.author !== `${userData?.given_name} ${userData?.family_name}`) {
+        toast.error("You can only delete your own comments.");
+        return;
+    }
+
     const { error } = await supabase.from("comments").delete().eq("id", commentId);
 
     if (error) {
