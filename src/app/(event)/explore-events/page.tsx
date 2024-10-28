@@ -37,6 +37,7 @@ const Page: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("");
   const [sortByPrice, setSortByPrice] = useState("");
+  const [eventStatus, setEventStatus]= useState("all");
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
   const [likedEvents, setLikedEvents] = useState<{ [key: string]: boolean }>(
@@ -236,8 +237,24 @@ const Page: React.FC = () => {
     }));
   };
 
+  const checkRegistrationStatus = (event: Events) => {
+    const currentDate = new Date();
+    const registrationStartDate = new Date(event.event_registration_startdate);
+    const registrationEndDate = new Date(event.event_registration_enddate);
+
+    if (currentDate < registrationStartDate) {
+      return { status: "Upcoming", closed: false, open: false };
+    } else if (currentDate > registrationEndDate) {
+      return { status: "Inactive", closed: true, open: false };
+    } else {
+      return { status: "Active", closed: false, open: true };
+    }
+  };
+
   const filteredAndSortedEvents = event
     .filter((event: any) => {
+      const { status } = checkRegistrationStatus(event);
+
       const date = new Date(event.event_startdate);
 
       // Check if the event matches the category
@@ -255,8 +272,10 @@ const Page: React.FC = () => {
         (startDate == null || new Date(startDate) < date) &&
         (endDate == null || date < new Date(endDate));
 
+      const matchesStatus = eventStatus === 'all' || status.toLowerCase() === eventStatus.toLowerCase();
+
       // Return true if the event matches the category and matches the search term and is within the date range
-      return matchesCategory && matchesSearchTerm && withinDateRange;
+      return matchesCategory && matchesSearchTerm && withinDateRange && matchesStatus;
     })
     .sort((a: any, b: any) => {
       if (numberOfLikes === "high") {
@@ -326,19 +345,6 @@ const Page: React.FC = () => {
     event_tags: string[];
     event_social_links: string[];
   }
-  const checkRegistrationStatus = (event: Events) => {
-    const currentDate = new Date();
-    const registrationStartDate = new Date(event.event_registration_startdate);
-    const registrationEndDate = new Date(event.event_registration_enddate);
-
-    if (currentDate < registrationStartDate) {
-      return { status: "Upcoming", closed: false, open: false };
-    } else if (currentDate > registrationEndDate) {
-      return { status: "Inactive", closed: true, open: false };
-    } else {
-      return { status: "Active", closed: false, open: true };
-    }
-  };
 
   return (
     <>
@@ -408,9 +414,9 @@ const Page: React.FC = () => {
                 minDate={startDate} // Prevent end date from being before start date
               />
             </div>{" "}
-            <div className="flex flex-row justify-center gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 justify-center gap-4">
               <select
-                className="w-[8rem] border border-white p-2 rounded-md bg-black text-white"
+                className=" border border-white p-2 rounded-md bg-black text-white"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
               >
@@ -422,7 +428,7 @@ const Page: React.FC = () => {
                 <option value="conference">Conference</option>
               </select>
               <select
-                className="w-[10rem] border border-white p-2 rounded-md bg-black text-white"
+                className=" border border-white p-2 rounded-md bg-black text-white"
                 value={numberOfLikes}
                 onChange={(e) => setNumberOfLikes(e.target.value)}
               >
@@ -431,13 +437,23 @@ const Page: React.FC = () => {
                 <option value="low">Lowest Likes</option>
               </select>
               <select
-                className="w-[11rem] border border-white p-2 rounded-md bg-black text-white"
+                className=" border border-white p-2 rounded-md bg-black text-white"
                 value={sortByPrice}
                 onChange={(e) => setSortByPrice(e.target.value)}
               >
                 <option value="">Price</option>
                 <option value="low">Lowest Price</option>
                 <option value="high">Highest Price</option>
+              </select>
+              <select
+                className=" border border-white p-2 rounded-md bg-black text-white"
+                value={eventStatus}
+                onChange={(e) => setEventStatus(e.target.value)}
+              >
+                <option value="all">All</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+                <option value="upcoming">Upcoming</option>
               </select>
             </div>
           </div>
