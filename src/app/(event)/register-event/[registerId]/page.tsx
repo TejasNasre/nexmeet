@@ -12,7 +12,7 @@ import { toast } from "sonner";
 
 function Registerevent() {
   const params = useParams();
-  const { registerId } = params;
+  const { registerId } = params as { registerId: string };
 
   const router = useRouter();
   const { isAuthenticated, isLoading } = useKindeBrowserClient();

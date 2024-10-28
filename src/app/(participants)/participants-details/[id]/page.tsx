@@ -90,6 +90,7 @@ function Page({ params }: { params: { id: any } }) {
   );
 
   const handleApproval = async (id: string, status: boolean) => {
+    try{
     const { error } = await supabase
       .from("event_participants")
       .update({ is_approved: status ? true : false })
@@ -97,14 +98,47 @@ function Page({ params }: { params: { id: any } }) {
 
     if (error) {
       toast.error("Failed to update approval status.");
-    } else {
-      toast.success(`Participant ${status ? "accepted" : "rejected"}!`);
-      // Fetch updated participants
+      return;
+    }
+     // Immediately update the UI state
+     setParticipants(prevParticipants =>
+      prevParticipants.map(participant =>
+        participant.id === id
+          ? { ...participant, is_approved: status }
+          : participant
+      )
+    );
+    toast.success(`Participant ${status ? "accepted" : "rejected"}!`);
+    try {
+      await fetch('/api/email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type: 'approval',
+          eventId: params.id,
+          participantId: id,
+        }),
+      });
+      toast.success('Notification email sent successfully!');
+    } catch (emailError) {
+      console.error('Failed to send email notification:', emailError);
+      toast.error('Failed to send email notification');
+    }
+      // Fetch updated data in the background
       const { data: updatedParticipants } = await supabase
         .from("event_participants")
         .select("*")
         .eq("event_id", params.id);
-      setParticipants(updatedParticipants || []);
+
+      if (updatedParticipants) {
+        setParticipants(updatedParticipants);
+        processChartData(updatedParticipants);
+      }
+    } catch (error) {
+      console.error('Error in handleApproval:', error);
+      toast.error('An error occurred while processing the approval');
     }
   };
 
