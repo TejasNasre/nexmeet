@@ -544,22 +544,22 @@ export default function Page() {
                   <CardTitle>Your Events</CardTitle>
                   <div className="flex space-x-2">
                     <Button
-                      variant={
-                        activeTab === "organized" ? "default" : "outline"
-                      }
-                      size="sm"
-                      onClick={() => setActiveTab("organized")}
-                    >
-                      Organized
+                        className={`${
+                            activeTab === "organized" ? "active-tab" : "outline"
+                        }`}
+                        size="sm"
+                        onClick={() => setActiveTab("organized")}
+                        >
+                        Organized
                     </Button>
                     <Button
-                      variant={
-                        activeTab === "participated" ? "default" : "outline"
-                      }
-                      size="sm"
-                      onClick={() => setActiveTab("participated")}
-                    >
-                      Participated
+                        className={`${
+                            activeTab === "participated" ? "active-tab" : "outline"
+                        }`}
+                        size="sm"
+                        onClick={() => setActiveTab("participated")}
+                        >
+                        Participated
                     </Button>
                   </div>
                 </div>
