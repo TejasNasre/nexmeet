@@ -357,6 +357,18 @@ body.white {
   background-color: rgb(239, 68, 68);
 }
 
+.active-tab {
+    background-color: mediumseagreen; /* Make background transparent */
+}
+
+.outline {
+    background-color: transparent; /* Keep outline buttons transparent */
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.5); /* Adjust the calendar icon color */
+}
+
 /* Light Theme */
 :root[data-theme="light"] .custom-calendar {
   background-color: #fff;
