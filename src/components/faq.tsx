@@ -74,6 +74,16 @@ const Faqs1: React.FC = () => {
                   onClick={() => toggleAccordion(faq.id)}
                   aria-expanded={activeId === faq.id}
                   className="flex items-center justify-between w-full px-6 py-5 text-lg font-semibold text-left sm:p-6"
+                  onMouseEnter={(event) => {
+                    const button = event.currentTarget as HTMLButtonElement;
+                    button.style.backgroundColor = 'rgba(240, 240, 240, 0.5)'; // Cream white
+                    button.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+                  }}
+                  onMouseLeave={(event) => {
+                    const button = event.currentTarget as HTMLButtonElement;
+                    button.style.backgroundColor = 'transparent';
+                    button.style.boxShadow = 'none';
+                  }}
                 >
                   <span>{faq.question}</span>
                   <span className="ml-4">

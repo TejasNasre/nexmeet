@@ -11,7 +11,7 @@
   "dependencies": {
     "@heroicons/react": "^1.0.6",
     "@hookform/resolvers": "^3.9.0",
-    "@kinde-oss/kinde-auth-nextjs": "^2.3.6",
+    "@kinde-oss/kinde-auth-nextjs": "^2.4.3",
     "@radix-ui/react-alert-dialog": "^1.1.1",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-label": "^2.1.0",
@@ -37,6 +37,7 @@
     "lucide-react": "^0.427.0",
     "moment": "^2.30.1",
     "mongoose": "^8.5.3",
+    "nexmeet": "file:",
     "next": "^14.2.5",
     "next-sitemap": "^4.2.3",
     "next-themes": "^0.3.0",
