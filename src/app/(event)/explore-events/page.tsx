@@ -139,7 +139,7 @@ const Page: React.FC = () => {
         console.error("Error fetching event likes:", error);
       } else if (data) {
         const likesMap: CountLikes = {}; // Use the CountLikes interface
-        data.forEach((event: Event) => {
+        data.forEach((event: any) => {
           likesMap[event.id] = event.event_likes; // Create a map of eventId to like counts
         });
         setCountLikes(likesMap); // Set the initial state with all event likes
