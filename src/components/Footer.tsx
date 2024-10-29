@@ -9,7 +9,8 @@ const Footer: React.FC = () => {
   const [currentYear, setCurrentYear] = useState<number>(
     new Date().getFullYear()
   );
-  const isScriptAdded = useRef(false); 
+  const isScriptAdded = useRef(false); // Track if script is added
+
   useEffect(() => {
     if (typeof window !== "undefined" && !isScriptAdded.current) {
       window.gtranslateSettings = {
@@ -25,7 +26,7 @@ const Footer: React.FC = () => {
       script.defer = true;
       document.body.appendChild(script);
 
-      isScriptAdded.current = true; 
+      isScriptAdded.current = true; // Mark script as added
     }
   }, []);
 
