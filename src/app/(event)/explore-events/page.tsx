@@ -37,6 +37,7 @@ const Page: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("");
   const [sortByPrice, setSortByPrice] = useState("");
+  const [sortByStatus, setSortByStatus] = useState("");
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
   const [likedEvents, setLikedEvents] = useState<{ [key: string]: boolean }>(
@@ -46,11 +47,31 @@ const Page: React.FC = () => {
   const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
   const [countLikes, setCountLikes] = useState<CountLikes>({});
   const { user } = useUserDetails();
-  interface Event {
-    id: string; // or number, based on your actual id type
-    event_likes: number;
-  }
+  // interface Event {
+  //   id: string; // or number, based on your actual id type
+  //   event_likes: number;
+  // }
 
+    interface Events {
+      id: string;
+      event_title: string;
+      event_description: string;
+      event_location: string;
+      event_registration_startdate: string;
+      event_registration_enddate: string;
+      event_startdate: string;
+      event_enddate: string;
+      event_duration: string;
+      team_size: string;
+      event_formlink: string;
+      event_price: string;
+      organizer_name: string;
+      organizer_email: string;
+      organizer_contact: string;
+      event_category: string;
+      event_tags: string[];
+      event_social_links: string[];
+    }
   useEffect(() => {
     async function getData() {
       let { data, error }: any = await supabase
@@ -236,6 +257,21 @@ const Page: React.FC = () => {
     }));
   };
 
+  const checkRegistrationStatus = (event: Events) => {
+    const currentDate = new Date();
+    const registrationStartDate = new Date(
+      event.event_registration_startdate
+    );
+    const registrationEndDate = new Date(event.event_registration_enddate);
+
+    if (currentDate < registrationStartDate) {
+      return { status: "Upcoming", closed: false, open: false };
+    } else if (currentDate > registrationEndDate) {
+      return { status: "Inactive", closed: true, open: false };
+    } else {
+      return { status: "Active", closed: false, open: true };
+    }
+  };
   const filteredAndSortedEvents = event
     .filter((event: any) => {
       const date = new Date(event.event_startdate);
@@ -256,7 +292,16 @@ const Page: React.FC = () => {
         (endDate == null || date < new Date(endDate));
 
       // Return true if the event matches the category and matches the search term and is within the date range
-      return matchesCategory && matchesSearchTerm && withinDateRange;
+
+      const eventStatus = checkRegistrationStatus(event).status;
+      // console.log("Event Status:", eventStatus);
+
+      const matchesStatus = sortByStatus ? eventStatus === sortByStatus : true;
+      // console.log(matchesStatus);
+
+      return (
+        matchesCategory && matchesSearchTerm && withinDateRange && matchesStatus
+      );
     })
     .sort((a: any, b: any) => {
       if (numberOfLikes === "high") {
@@ -306,39 +351,6 @@ const Page: React.FC = () => {
     });
   };
 
-  interface Events {
-    id: string;
-    event_title: string;
-    event_description: string;
-    event_location: string;
-    event_registration_startdate: string;
-    event_registration_enddate: string;
-    event_startdate: string;
-    event_enddate: string;
-    event_duration: string;
-    team_size: string;
-    event_formlink: string;
-    event_price: string;
-    organizer_name: string;
-    organizer_email: string;
-    organizer_contact: string;
-    event_category: string;
-    event_tags: string[];
-    event_social_links: string[];
-  }
-  const checkRegistrationStatus = (event: Events) => {
-    const currentDate = new Date();
-    const registrationStartDate = new Date(event.event_registration_startdate);
-    const registrationEndDate = new Date(event.event_registration_enddate);
-
-    if (currentDate < registrationStartDate) {
-      return { status: "Upcoming", closed: false, open: false };
-    } else if (currentDate > registrationEndDate) {
-      return { status: "Inactive", closed: true, open: false };
-    } else {
-      return { status: "Active", closed: false, open: true };
-    }
-  };
 
   return (
     <>
@@ -420,6 +432,16 @@ const Page: React.FC = () => {
                 <option value="cultural">Cultural</option>
                 <option value="meetup">Meetup</option>
                 <option value="conference">Conference</option>
+              </select>
+              <select
+                className="w-[11rem] border border-white p-2 rounded-md bg-black text-white"
+                value={sortByStatus}
+                onChange={(e) => setSortByStatus(e.target.value)}
+              >
+                <option value="">Status</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+                <option value="Upcoming">Upcoming</option>
               </select>
               <select
                 className="w-[10rem] border border-white p-2 rounded-md bg-black text-white"
