@@ -37,7 +37,7 @@ const Page: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("");
   const [sortByPrice, setSortByPrice] = useState("");
-  const [eventStatus, setEventStatus]= useState("all");
+  const [eventStatus, setEventStatus]= useState("active");
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
   const [likedEvents, setLikedEvents] = useState<{ [key: string]: boolean }>(
@@ -450,10 +450,10 @@ const Page: React.FC = () => {
                 value={eventStatus}
                 onChange={(e) => setEventStatus(e.target.value)}
               >
-                <option value="all">All</option>
                 <option value="active">Active</option>
                 <option value="inactive">Inactive</option>
                 <option value="upcoming">Upcoming</option>
+                <option value="all">All</option>
               </select>
             </div>
           </div>
