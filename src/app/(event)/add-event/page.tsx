@@ -84,12 +84,27 @@ const formSchema = z
       .min(1, { message: "Team size is required." })
       .regex(/^[1-9]\d*$/, { message: "Team size must be a positive number." }),
     event_formlink: z.string().url({ message: "Please enter a valid URL." }),
+    price_type: z.string().min(1, { message: "Please select a price type." }),
     event_price: z
-      .string()
-      .min(1, { message: "Price is required." })
-      .regex(/^(0|[1-9]\d*)$/, {
-        message: "Price must be a positive number.",
-      }),
+    .string()
+    .optional()
+    .superRefine((data, ctx) => {
+      if (data.price_type === "paid") {
+        if (!data.event_price || Number(data.event_price) <= 0) {
+          ctx.addIssue({
+            path: ["event_price"],
+            message: "Price must be greater than 0 if the event is paid.",
+          });
+        }
+      }
+    
+      if (data.event_price && !/^(0|[1-9]\d*)$/.test(data.event_price)) {
+        ctx.addIssue({
+          path: ["event_price"],
+          message: "Price must be a positive number.",
+        });
+      }
+    }),
     organizer_name: z
       .string()
       .min(2, { message: "Organizer name must be at least 2 characters." }),
@@ -264,6 +279,7 @@ export default function AddEvent() {
     startTransition(async () => {
       try {
         // check for date validation here
+        const price = values.price_type === "free" ? 0 : parseInt(values.event_price, 10);
         if (
           values.event_registration_startdate >
           values.event_registration_enddate
@@ -305,7 +321,7 @@ export default function AddEvent() {
           event_duration: parseInt(values.event_duration, 10),
           team_size: parseInt(values.team_size, 10),
           event_formlink: values.event_formlink,
-          event_price: parseInt(values.event_price, 10),
+          event_price: price,
           organizer_name: values.organizer_name,
           organizer_email: user?.email,
           organizer_contact: values.organizer_contact,
@@ -567,24 +583,67 @@ export default function AddEvent() {
               control={form.control}
               name="event_price"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-base">Event Price:</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      placeholder="Enter Event Price (INR)"
-                      {...field}
-                      step="1"
-                      min="0"
-                      className="bg-black border-white text-white"
-                    />
-                  </FormControl>
-                  <p className="text-sm text-gray-400 mb-2">If Free Enter 0</p>
-                  <FormMessage className="text-red-400" />
-                </FormItem>
+                // <FormItem>
+                //   <FormLabel className="text-base">Event Price:</FormLabel>
+                //   <FormControl>
+                //     <Input
+                //       type="number"
+                //       placeholder="Enter Event Price (INR)"
+                //       {...field}
+                //       step="1"
+                //       min="0"
+                //       className="bg-black border-white text-white"
+                //     />
+                //   </FormControl>
+                //   <p className="text-sm text-gray-400 mb-2">If Free Enter 0</p>
+                //   <FormMessage className="text-red-400" />
+                // </FormItem>
+                <FormField
+                    control={form.control}
+                    name="price_type"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-base">Price Type:</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue="free">
+                          <FormControl>
+                            <SelectTrigger className="bg-black border-white text-white">
+                              <SelectValue placeholder="Select Price Type" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent className="bg-black border-white text-white">
+                            <SelectItem value="free">Free</SelectItem>
+                            <SelectItem value="paid">Paid</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage className="text-red-400" />
+                      </FormItem>
+                    )}
+                  />
               )}
             />
-
+              
+              {form.watch("price_type") === "paid" && (
+              <FormField
+                control={form.control}
+                name="event_price"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-base">Event Price:</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Enter Event Price (INR)"
+                        {...field}
+                        step="1"
+                        min="0"
+                        className="bg-black border-white text-white"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-400" />
+                  </FormItem>
+                )}
+              />
+            )}
             <FormField
               control={form.control}
               name="organizer_name"
