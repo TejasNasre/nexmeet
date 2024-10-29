@@ -85,26 +85,8 @@ const formSchema = z
       .regex(/^[1-9]\d*$/, { message: "Team size must be a positive number." }),
     event_formlink: z.string().url({ message: "Please enter a valid URL." }),
     price_type: z.string().min(1, { message: "Please select a price type." }),
-    event_price: z
-    .string()
-    .optional()
-    .superRefine((data, ctx) => {
-      if (data.price_type === "paid") {
-        if (!data.event_price || Number(data.event_price) <= 0) {
-          ctx.addIssue({
-            path: ["event_price"],
-            message: "Price must be greater than 0 if the event is paid.",
-          });
-        }
-      }
-    
-      if (data.event_price && !/^(0|[1-9]\d*)$/.test(data.event_price)) {
-        ctx.addIssue({
-          path: ["event_price"],
-          message: "Price must be a positive number.",
-        });
-      }
-    }),
+    event_price: z.string().optional(),
+    qr_image: z.custom<FileList>().optional(),
     organizer_name: z
       .string()
       .min(2, { message: "Organizer name must be at least 2 characters." }),
@@ -131,6 +113,40 @@ const formSchema = z
         (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
         "Only .jpg, .jpeg, .png and .webp formats are supported."
       ),
+  })
+  .superRefine((data, ctx) => {
+    // Handle QR image validation for "paid" events
+    if (data.price_type === "paid") {
+      const files = data.qr_image ? Array.from(data.qr_image) : [];
+      if (files.length === 0) {
+        ctx.addIssue({
+          path: ["qr_image"],
+          message: "QR image is required for paid events.",
+        });
+      } else {
+        const file = files[0];
+        if (file.size > MAX_FILE_SIZE) {
+          ctx.addIssue({
+            path: ["qr_image"],
+            message: "Max file size is 2MB.",
+          });
+        }
+        if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+          ctx.addIssue({
+            path: ["qr_image"],
+            message: "Only .jpg, .jpeg, .png, and .webp formats are supported.",
+          });
+        }
+      }
+    }
+
+    // Ensure event_price is a positive number if provided
+    if (data.price_type === "paid" && (!data.event_price || Number(data.event_price) <= 0)) {
+      ctx.addIssue({
+        path: ["event_price"],
+        message: "Price must be greater than 0 if the event is paid.",
+      });
+    }
   })
   .refine(
     (data) => {
@@ -357,7 +373,20 @@ export default function AddEvent() {
 
           if (imageError) throw imageError;
         }
-
+       
+        if (values.price_type === "paid" && values.qr_image?.[0]) {
+          const qrImageFile = await convertBlobUrlToFile(URL.createObjectURL(values.qr_image[0]));
+          const { imageUrl: qrImageUrl, error: qrUploadError } = await uploadImage({
+            file: qrImageFile,
+            bucket: "qr_image",
+          });
+  
+          if (qrUploadError) throw qrUploadError;
+  
+          await supabase
+            .from("qr_images")
+            .insert([{ event_id: eventId, url: qrImageUrl }]);
+        }
         toast.success("Event created successfully!");
         router.push(`/explore-events/${eventId}`);
       } catch (error) {
@@ -644,6 +673,26 @@ export default function AddEvent() {
                 )}
               />
             )}
+            {form.watch("price_type") === "paid" && (
+                <FormField
+                  control={form.control}
+                  name="qr_image"
+                  render={({ field: { onChange } }) => (
+                    <FormItem>
+                      <FormLabel className="text-base">QR Image:</FormLabel>
+                      <FormControl>
+                        <input
+                          type="file"
+                          accept={ACCEPTED_IMAGE_TYPES.join(",")}
+                          onChange={(e) => onChange(e.target.files)}
+                          className="w-full p-2 text-white bg-black border border-white rounded-md"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-red-400" />
+                    </FormItem>
+                  )}
+                />
+              )}
             <FormField
               control={form.control}
               name="organizer_name"
