@@ -27,7 +27,7 @@ import { CalendarDays, MapPin, Users, Clock } from "lucide-react"; // Added icon
 const EventPageClient = ({ eventsId }: { eventsId: string }) => {
   const router = useRouter();
   const { isAuthenticated } = useKindeBrowserClient();
-
+ 
   const [eventData, setEventData]: any = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData]: any = useState([]);
@@ -39,6 +39,30 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
     { id: string; text: string; author: string; timestamp: string }[]
   >([]);
   const [eventEnded, seteventEnded] = useState(false);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const Modal = ({ isOpen, onClose, children }) => {
+    if (!isOpen) return null;
+    
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div className="bg-white p-6 rounded-lg max-w-md w-full">
+          <button onClick={onClose} className="text-black mb-4">Close</button>
+          {children}
+        </div>
+      </div>
+    );
+  };
+  
+  useEffect(() => {
+    if (eventData.length > 0 && eventData[0].qr_images?.length > 0) {
+      // Accessing the first QR image URL in the qr_images array
+      setImageUrls([eventData[0].qr_images[0].url]);
+      console.log("QR Image URL:", eventData[0].qr_images[0].url);
+    }
+  }, [eventData]);
+  
+  
 
   useEffect(() => {
     if (eventData.length > 0) {
@@ -64,23 +88,30 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
 
   useEffect(() => {
     async function getData() {
-      let { data, error }: any = await supabase
+      setIsLoading(true); // Set loading at the start of data fetch
+  
+      // Fetch event details along with images, participants, and QR images
+      let { data, error } = await supabase
         .from("event_details")
         .select(
-          "*,event_images(event_id,url),event_participants(participant_email,is_registered)"
+          "*, event_images(event_id, url), event_participants(participant_email, is_registered), qr_images(event_id, url)"
         )
         .eq("id", eventsId);
+  
       if (error) {
         console.error("Error fetching event details:", error);
       } else {
         setEventData(data);
+        console.log("Full Event Data with QR Images:", data);
       }
-      setIsLoading(false);
+  
+      setIsLoading(false); // Set loading to false after data fetch
     }
+  
     if (eventsId) {
       getData();
     }
-  }, [eventsId]);
+  }, [eventsId]);  
 
   useEffect(() => {
     async function fetchAndSetEventStatus() {
@@ -159,13 +190,17 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
 
   const tags = eventData[0].event_tags;
   const social = eventData[0].event_social_links;
-
+  const isPaidEvent = eventData[0]?.price_type === "paid";
   const shareUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/explore-events/${eventsId}`;
   const title = "Check out this event on Nexmeet";
 
   const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setComment(e.target.value);
   };
+
+  
+  const handleOpenModal = () => setModalOpen(true);
+  const handleCloseModal = () => setModalOpen(false);
 
   const handleCommentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -276,7 +311,18 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                   })}
                 </div>
               </div>
-
+              {/* {isPaidEvent && ( */}
+                <Button onClick={handleOpenModal} className="bg-green-500 text-white">
+                  Pay Now
+                </Button>
+              {/* )} */}
+              <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+                {imageUrls.length > 0 ? (
+                  <Image src={imageUrls[0]} alt="QR Code" width={200} height={200} />
+                ) : (
+                  <p>No QR code available</p>
+                )}
+              </Modal>
               <div className="w-full flex flex-col md:flex-row gap-4">
                 <div className="">
                   <div className="w-full border border-white rounded-lg p-6 flex flex-col gap-2 md:gap-4">
