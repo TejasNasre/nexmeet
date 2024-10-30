@@ -45,6 +45,7 @@
     "react-countup": "^6.5.3",
     "react-datepicker": "^7.3.0",
     "react-dom": "^18",
+    "react-google-autocomplete": "^2.7.3",
     "react-hook-form": "^7.53.0",
     "react-icons": "^5.2.1",
     "react-intersection-observer": "^9.13.1",
