@@ -41,15 +41,15 @@ function Header() {
         setUser(null);
       });
 
-      // Retrieve theme preference from localStorage
-      const storedTheme = localStorage.getItem('isDarkMode');
+    // Retrieve theme preference from localStorage
+    const storedTheme = localStorage.getItem('isDarkMode');
 
-      if (storedTheme === 'true') {
-        setIsDarkMode(true);
-        document.body.classList.add("white"); // Apply dark mode class
-      } else {
-        document.body.classList.remove("white"); // Ensure dark mode class is removed
-      }
+    if (storedTheme === 'true') {
+      setIsDarkMode(true);
+      document.body.classList.add("white"); // Apply dark mode class
+    } else {
+      document.body.classList.remove("white"); // Ensure dark mode class is removed
+    }
   }, []);
 
   const toggleMenu = () => {
@@ -81,8 +81,8 @@ function Header() {
   };
 
   return (
-    <div className="absolute top-0 bg-transparent w-full z-[999] py-6 pr-4 md:px-4 md:py-6">
-      <div className="flex justify-between items-center">
+<div className="fixed top-0 left-0 w-full z-50 bg-black py-4 px-4 md:py-6 shadow-[0_4px_10px_rgba(128,128,128,0.3)]">
+<div className="flex justify-between items-center">
         <Link href={"/"} className="mono text-2xl text-white">
           <Image
             src={"/nexmeet.png"}
