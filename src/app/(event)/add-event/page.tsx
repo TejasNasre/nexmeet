@@ -28,6 +28,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Loading from "@/components/loading";
+import LocationAutocomplete from "@/components/form-fields/LocationAutocomplete";
 
 import { supabase } from "../../../utils/supabase";
 import { uploadImage } from "../../../action/uploadSupabase";
@@ -416,11 +417,10 @@ export default function AddEvent() {
                 <FormItem>
                   <FormLabel className="text-base">Event Location:</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Enter Event Location"
-                      {...field}
-                      className="bg-black border-white text-white"
-                    />
+                  <LocationAutocomplete
+                    onSelect={field.onChange} 
+                    placeholder="Enter Event Location"
+                  />
                   </FormControl>
                   <FormMessage className="text-red-400" />
                 </FormItem>
