@@ -37,7 +37,7 @@ const Page: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("");
   const [sortByPrice, setSortByPrice] = useState("");
-  const [eventStatus, setEventStatus]= useState("active");
+  const [eventStatus, setEventStatus] = useState("active");
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
   const [likedEvents, setLikedEvents] = useState<{ [key: string]: boolean }>(
@@ -61,7 +61,7 @@ const Page: React.FC = () => {
         console.error("Error fetching event details:", error);
       } else {
         setEvent(data);
-        console.log("Event Data:", data);
+        // console.log("Event Data:", data);
       }
       setLoading(false);
     }
@@ -272,10 +272,14 @@ const Page: React.FC = () => {
         (startDate == null || new Date(startDate) < date) &&
         (endDate == null || date < new Date(endDate));
 
-      const matchesStatus = eventStatus === 'all' || status.toLowerCase() === eventStatus.toLowerCase();
+      const matchesStatus =
+        eventStatus === "all" ||
+        status.toLowerCase() === eventStatus.toLowerCase();
 
       // Return true if the event matches the category and matches the search term and is within the date range
-      return matchesCategory && matchesSearchTerm && withinDateRange && matchesStatus;
+      return (
+        matchesCategory && matchesSearchTerm && withinDateRange && matchesStatus
+      );
     })
     .sort((a: any, b: any) => {
       if (numberOfLikes === "high") {
