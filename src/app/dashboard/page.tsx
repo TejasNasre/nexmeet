@@ -113,6 +113,12 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
+const categoryChartConfig = {
+    label: {
+      color: "hsl(var(--background))",
+    },
+};
+
 const totalAttendeesData = [
   { name: "Online", value: 1200 },
   { name: "In-person", value: 800 },
@@ -152,8 +158,11 @@ export default function Page() {
   const [organisedEvent, setOrganisedEvent]: any = useState([]);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [totalEventCount, setTotalEventCount] = useState(0);
+  const [totalAttendeesCount, setTotalAttendeesCount] = useState(0);
 
   const [chartData, setChartData] = useState<ChartDataItem[]>([]);
+  const [formatChartData, setFormatChartData] = useState<ChartDataItem[]>([]);
   const [eventcount, seteventCount] = useState("");
 
   const {getPermission} = useKindeBrowserClient();
@@ -183,8 +192,29 @@ export default function Page() {
       if (error) {
         console.log(error);
       }
-      {
-        // console.log(organised_events);
+      else {
+        // Calculate total events and total attendees
+        setTotalEventCount(organised_events?.length || 0);
+        // Count the occurrences of each event category
+        const categoryCounts: any = organised_events?.reduce<Record<string, number>>(
+            (acc, curr) => {
+            acc[curr.event_category] = (acc[curr.event_category] || 0) + 1;
+            return acc;
+            }, {}
+        );
+
+        // Prepare chart data for the pie chart
+        const formattedChartData: any= Object.entries(categoryCounts).map(
+            ([category, count]) => ({
+            category,
+            eventcount: count,
+            fill: categoryColors[category as keyof typeof categoryColors] || "var(--color-other)",
+            })
+        );
+
+        console.log(formattedChartData);
+
+        setFormatChartData(formattedChartData);
         setLoading(true);
         setOrganisedEvent(organised_events);
         setLoading(false);
@@ -327,7 +357,7 @@ export default function Page() {
                                       y={viewBox.cy}
                                       className="fill-white text-3xl font-bold"
                                     >
-                                      {eventcount.toLocaleString()}
+                                      {totalEventCount}
                                     </tspan>
                                     <tspan
                                       x={viewBox.cx}
