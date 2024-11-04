@@ -87,6 +87,22 @@ const chartConfig2 = {
   },
 } satisfies ChartConfig;
 
+
+const barChartConfig = {
+    category: {
+        label: "category",
+        color: "hsl(var(--chart-1))",
+    },
+    count: {
+        label: "count",
+        color: "hsl(var(--chart-2))",
+    },
+    label: {
+        color: "hsl(var(--background))",
+    },
+} satisfies ChartConfig;
+
+
 const chartConfig = {
   visitors: {
     label: "Visitors",
@@ -112,6 +128,12 @@ const chartConfig = {
     color: "hsl(var(--chart-5))",
   },
 } satisfies ChartConfig;
+
+const categoryChartConfig = {
+    label: {
+      color: "hsl(var(--background))",
+    },
+};
 
 const totalAttendeesData = [
   { name: "Online", value: 1200 },
@@ -152,8 +174,12 @@ export default function Page() {
   const [organisedEvent, setOrganisedEvent]: any = useState([]);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [totalEventCount, setTotalEventCount] = useState(0);
+  const [totalAttendees, setTotalAttendees] = useState<any[]>([]);
+  const [totalAttendeesByEvent, setTotalAttendeesByEvent] = useState<any[]>([]);
 
   const [chartData, setChartData] = useState<ChartDataItem[]>([]);
+  const [formatChartData, setFormatChartData] = useState<ChartDataItem[]>([]);
   const [eventcount, seteventCount] = useState("");
 
   const {getPermission} = useKindeBrowserClient();
@@ -183,16 +209,76 @@ export default function Page() {
       if (error) {
         console.log(error);
       }
-      {
-        // console.log(organised_events);
+      else {
+        // Calculate total events
+        setTotalEventCount(organised_events?.length || 0);
+        // Count the occurrences of each event category
+        const categoryCounts: any = organised_events?.reduce<Record<string, number>>(
+            (acc, curr) => {
+            acc[curr.event_category] = (acc[curr.event_category] || 0) + 1;
+            return acc;
+            }, {}
+        );
+
+        // Prepare chart data for the pie chart
+        const formattedChartData: any= Object.entries(categoryCounts).map(
+            ([category, count]) => ({
+                category,
+                eventcount: count,
+                fill: categoryColors[category as keyof typeof categoryColors] || "var(--color-other)",
+            })
+        );
+        setFormatChartData(formattedChartData);
         setLoading(true);
         setOrganisedEvent(organised_events);
         setLoading(false);
       }
     };
-
     organizeEvents();
   }, [user]);
+
+  /* Total participants grouped by event category */
+  useEffect(() => {
+    const eventCategory: any = async () => {
+      const { data, error } = await supabase.from('event_participants')
+        .select(`
+          event_id,
+          event_details (event_category, event_title)
+        `);
+
+      if (error) {
+        console.error('Error fetching participants:', error);
+      } else {
+
+        // Process the data to count participants per category
+        const counts = data.reduce((acc: any, participant: any) => {
+          const category = participant.event_details.event_category;
+          acc[category] = (acc[category] || 0) + 1;
+          return acc;
+        }, {});
+
+        const participantsByCategory = Object.entries(counts).map(([category, count]) => ({
+            category,
+            count,
+        }));
+        setTotalAttendees(participantsByCategory);
+
+        // Process the data to count participants per event title
+        const countsByEvent = data.reduce((acc: any, participant: any) => {
+            const title = participant.event_details.event_title;
+            acc[title] = (acc[title] || 0) + 1;
+            return acc;
+          }, {});
+
+          const participantsByTitle = Object.entries(countsByEvent).map(([title, count]) => ({
+              title,
+              count,
+          }));
+          setTotalAttendeesByEvent(participantsByTitle);
+      }
+   }
+   eventCategory();
+  }, []);
 
   useEffect(() => {
     const fetchEventStats = async () => {
@@ -327,7 +413,7 @@ export default function Page() {
                                       y={viewBox.cy}
                                       className="fill-white text-3xl font-bold"
                                     >
-                                      {eventcount.toLocaleString()}
+                                      {totalEventCount}
                                     </tspan>
                                     <tspan
                                       x={viewBox.cx}
@@ -347,6 +433,7 @@ export default function Page() {
                   </CardContent>
                 </Card>
 
+{/*
                 <Card>
                   <CardHeader>
                     <CardTitle className="text-center">
@@ -399,66 +486,104 @@ export default function Page() {
                     </ChartContainer>
                   </CardContent>
                 </Card>
+*/}
 
                 <Card>
-                  <CardHeader>
-                    <CardTitle className="text-center">
-                      Average Rating
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="mt-2 md:mt-4">
-                    <ChartContainer config={chartConfig2}>
-                      <BarChart
-                        accessibilityLayer
-                        data={chartData2}
-                        layout="vertical"
-                        margin={{
-                          right: 20,
-                        }}
-                      >
-                        <YAxis
-                          dataKey="month"
-                          type="category"
-                          tickLine={false}
-                          tickMargin={10}
-                          axisLine={false}
-                          tickFormatter={(value) => value.slice(0, 3)}
-                          hide
-                        />
-                        <XAxis dataKey="desktop" type="number" hide />
-                        <ChartTooltip
-                          cursor={false}
-                          content={
-                            <ChartTooltipContent
-                              indicator="line"
-                              className="bg-black"
-                            />
-                          }
-                        />
-                        <Bar
-                          dataKey="desktop"
-                          layout="vertical"
-                          fill="var(--color-desktop)"
-                          radius={4}
-                        >
-                          <LabelList
-                            dataKey="month"
-                            position="insideLeft"
-                            offset={8}
-                            className="fill-[--color-label]"
-                            fontSize={12}
-                          />
-                          <LabelList
-                            dataKey="desktop"
-                            position="right"
-                            offset={8}
-                            className="fill-foreground"
-                            fontSize={12}
-                          />
-                        </Bar>
-                      </BarChart>
-                    </ChartContainer>
-                  </CardContent>
+                    <CardHeader>
+                        <CardTitle className="text-center">
+                            Participants By Event
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="mt-2 md:mt-4">
+                        <ChartContainer config={barChartConfig}>
+                            <BarChart
+                                accessibilityLayer
+                                data={totalAttendeesByEvent}
+                                layout="vertical"
+                                margin={{ left: 12 }}  // Adjust the left margin for Y-axis labels
+                            >
+                                <YAxis
+                                    dataKey="title"
+                                    type="category"
+                                    tickLine={false}
+                                    axisLine={false}
+                                    tickFormatter={(value) => value}  // Return the full value
+                                />
+                                <XAxis dataKey="count" type="number" hide />
+                                <ChartTooltip
+                                    cursor={false}
+                                    content={
+                                        <ChartTooltipContent
+                                            indicator="line"
+                                            className="bg-black"
+                                        />
+                                    }
+                                />
+                                <Bar
+                                    dataKey="count"
+                                    fill="#4CAF50"
+                                    radius={4}
+                                >
+                                    <LabelList
+                                        dataKey="count"
+                                        position="insideLeft"
+                                        offset={8}
+                                        className="fill-[--color-label]"
+                                        fontSize={12}
+                                    />
+                                </Bar>
+                            </BarChart>
+                        </ChartContainer>
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="text-center">
+                            Participants By Category
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="mt-2 md:mt-4">
+                        <ChartContainer config={barChartConfig}>
+                            <BarChart
+                                accessibilityLayer
+                                data={totalAttendees}
+                                layout="vertical"
+                                margin={{ left: 12 }}  // Adjust the left margin for Y-axis labels
+                            >
+                                <YAxis
+                                    dataKey="category"
+                                    type="category"
+                                    tickLine={false}
+                                    axisLine={false}
+                                    tickFormatter={(value) => value}  // Return the full value
+                                />
+                                <XAxis dataKey="count" type="number" hide />
+                                <ChartTooltip
+                                    cursor={false}
+                                    content={
+                                        <ChartTooltipContent
+                                            indicator="line"
+                                            className="bg-black"
+                                        />
+                                    }
+                                />
+                                <Bar
+                                    dataKey="count"
+                                    fill="var(--color-category)"
+                                    radius={4}
+                                >
+                                    <LabelList
+                                        dataKey="count"
+                                        position="insideLeft"
+                                        offset={8}
+                                        className="fill-[--color-label]"
+                                        fontSize={12}
+                                    />
+                                </Bar>
+                            </BarChart>
+                        </ChartContainer>
+                    </CardContent>
                 </Card>
 
                 <Card>
