@@ -176,6 +176,7 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
   const [totalEventCount, setTotalEventCount] = useState(0);
   const [totalAttendees, setTotalAttendees] = useState<any[]>([]);
+  const [totalAttendeesByEvent, setTotalAttendeesByEvent] = useState<any[]>([]);
 
   const [chartData, setChartData] = useState<ChartDataItem[]>([]);
   const [formatChartData, setFormatChartData] = useState<ChartDataItem[]>([]);
@@ -222,21 +223,17 @@ export default function Page() {
         // Prepare chart data for the pie chart
         const formattedChartData: any= Object.entries(categoryCounts).map(
             ([category, count]) => ({
-            category,
-            eventcount: count,
-            fill: categoryColors[category as keyof typeof categoryColors] || "var(--color-other)",
+                category,
+                eventcount: count,
+                fill: categoryColors[category as keyof typeof categoryColors] || "var(--color-other)",
             })
         );
-
-        console.log(formattedChartData);
-
         setFormatChartData(formattedChartData);
         setLoading(true);
         setOrganisedEvent(organised_events);
         setLoading(false);
       }
     };
-
     organizeEvents();
   }, [user]);
 
@@ -246,12 +243,13 @@ export default function Page() {
       const { data, error } = await supabase.from('event_participants')
         .select(`
           event_id,
-          event_details (event_category)
+          event_details (event_category, event_title)
         `);
 
       if (error) {
         console.error('Error fetching participants:', error);
       } else {
+
         // Process the data to count participants per category
         const counts = data.reduce((acc: any, participant: any) => {
           const category = participant.event_details.event_category;
@@ -259,12 +257,24 @@ export default function Page() {
           return acc;
         }, {});
 
-        const totalParticipants = Object.entries(counts).map(([category, count]) => ({
+        const participantsByCategory = Object.entries(counts).map(([category, count]) => ({
             category,
             count,
         }));
-        setTotalAttendees(totalParticipants);
-        console.log('Participant counts -', totalParticipants);
+        setTotalAttendees(participantsByCategory);
+
+        // Process the data to count participants per event title
+        const countsByEvent = data.reduce((acc: any, participant: any) => {
+            const title = participant.event_details.event_title;
+            acc[title] = (acc[title] || 0) + 1;
+            return acc;
+          }, {});
+
+          const participantsByTitle = Object.entries(countsByEvent).map(([title, count]) => ({
+              title,
+              count,
+          }));
+          setTotalAttendeesByEvent(participantsByTitle);
       }
    }
    eventCategory();
@@ -423,6 +433,7 @@ export default function Page() {
                   </CardContent>
                 </Card>
 
+{/*
                 <Card>
                   <CardHeader>
                     <CardTitle className="text-center">
@@ -475,11 +486,61 @@ export default function Page() {
                     </ChartContainer>
                   </CardContent>
                 </Card>
+*/}
 
                 <Card>
                     <CardHeader>
                         <CardTitle className="text-center">
-                            Total Participants
+                            Participants By Event
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="mt-2 md:mt-4">
+                        <ChartContainer config={barChartConfig}>
+                            <BarChart
+                                accessibilityLayer
+                                data={totalAttendeesByEvent}
+                                layout="vertical"
+                                margin={{ left: 12 }}  // Adjust the left margin for Y-axis labels
+                            >
+                                <YAxis
+                                    dataKey="title"
+                                    type="category"
+                                    tickLine={false}
+                                    axisLine={false}
+                                    tickFormatter={(value) => value}  // Return the full value
+                                />
+                                <XAxis dataKey="count" type="number" hide />
+                                <ChartTooltip
+                                    cursor={false}
+                                    content={
+                                        <ChartTooltipContent
+                                            indicator="line"
+                                            className="bg-black"
+                                        />
+                                    }
+                                />
+                                <Bar
+                                    dataKey="count"
+                                    fill="#4CAF50"
+                                    radius={4}
+                                >
+                                    <LabelList
+                                        dataKey="count"
+                                        position="insideLeft"
+                                        offset={8}
+                                        className="fill-[--color-label]"
+                                        fontSize={12}
+                                    />
+                                </Bar>
+                            </BarChart>
+                        </ChartContainer>
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="text-center">
+                            Participants By Category
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="mt-2 md:mt-4">
