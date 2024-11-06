@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import ScrollToTop from "@/components/Scroll-to-top"; 
+import ClientServiceWorker from "./ClientServiceWorker";
 
 const mono = DM_Mono({
   subsets: ["latin"],
@@ -94,6 +95,7 @@ export default function RootLayout({
             },
           }}
         />
+        <ClientServiceWorker />
         <Header />
         <ScrollToTop /> 
         <main>{children}</main>
