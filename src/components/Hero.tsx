@@ -16,7 +16,7 @@ import { CiStar } from "react-icons/ci";
 import { AiFillStar } from "react-icons/ai";
 import axios from "axios";
 import ScrollToTop from "./Scroll-to-top";
-import Faq1 from "./faq"
+import Faq1 from "./faq";
 
 const Hero: React.FC = () => {
   const { isAuthenticated } = useKindeBrowserClient();
@@ -97,7 +97,7 @@ const Hero: React.FC = () => {
                 </RegisterLink>
               )}
             </div>
-            <h1 className="-mb-6">project is in development phase</h1>
+            {/* <h1 className="-mb-6">project is in development phase</h1> */}
 
             <div className="text-center">
               <span className="mr-4">⭐ Stars: {repoData.stars}</span>
@@ -228,7 +228,7 @@ const Hero: React.FC = () => {
             </div>
           </div>
         </div>
-       <Faq1 />
+        <Faq1 />
       </div>
     </>
   );

@@ -6,6 +6,7 @@ import { Space_Grotesk } from "next/font/google";
 import { motion } from "framer-motion";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
 
@@ -85,7 +86,7 @@ function Page() {
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Your Name"
                 required
-                className="w-full p-3 bg-white bg-opacity-5 rounded-xl text-white placeholder-gray-400"
+                className="w-full p-3 border dark:border-white border-black bg-white bg-opacity-5 rounded-xl text-white placeholder-gray-400"
               />
               <input
                 type="email"
@@ -93,24 +94,18 @@ function Page() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Your Email"
                 required
-                className="w-full p-3 bg-white bg-opacity-5 rounded-xl text-white placeholder-gray-400"
+                className="w-full p-3 border dark:border-white border-black bg-white bg-opacity-5 rounded-xl text-white placeholder-gray-400"
               />
               <textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Your Message"
                 required
-                className="w-full p-3 bg-white bg-opacity-5 rounded-xl text-white placeholder-gray-400 h-32"
+                className="w-full p-3 border dark:border-white border-black bg-white bg-opacity-5 rounded-xl text-white placeholder-gray-400 h-32"
               />
-              <motion.button
-                type="submit"
-                className="w-full p-3 bg-blue-600 hover:bg-blue-700 rounded-xl text-white font-semibold transition-colors duration-300"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                disabled={isSubmitting}
-              >
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
                 {isSubmitting ? "Sending..." : "Send Message"}
-              </motion.button>
+              </Button>
             </motion.form>
 
             <motion.div
@@ -121,21 +116,15 @@ function Page() {
             >
               <div className="flex items-center space-x-4">
                 <Mail size={24} className="text-gray-400" />
-                <p className="text-xl">contact@nexmeet.com</p>
-              </div>
-              <div className="flex items-center space-x-4">
-                <Phone size={24} className="text-gray-400" />
-                <p className="text-xl">+1 (123) 456-7890</p>
+                <p className="text-xl">nexmeetup@gmail.com</p>
               </div>
               <div className="flex items-center space-x-4">
                 <MapPin size={24} className="text-gray-400" />
-                <p className="text-xl">
-                  123 Event Street, College Town, ST 12345
-                </p>
+                <p className="text-xl">Nagpur,Maharashtra</p>
               </div>
               <div className="h-64 md:h-auto mt-6">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.1422937950147!2d-73.98731968482413!3d40.75889497932681!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25855c6480299%3A0x55194ec5a1ae072e!2sTimes+Square!5e0!3m2!1sen!2sus!4v1560412335839!5m2!1sen!2sus"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d238129.6392486545!2d78.90769466099978!3d21.16132625804449!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bd4c0a5a31faf13%3A0x19b37d06d0bb3e2b!2sNagpur%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1730995893207!5m2!1sen!2sin"
                   width="100%"
                   height="100%"
                   style={{ border: 0, borderRadius: "0.75rem" }}

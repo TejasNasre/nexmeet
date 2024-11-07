@@ -8,10 +8,11 @@ const Footer: React.FC = () => {
   return (
     <footer className="w-full bg-black text-white py-10 px-4 md:px-10 z-[999]">
       <div className="container mx-auto flex flex-col gap-8 md:flex-row justify-between items-center">
-        <div className="text-center md:text-left">
-        <Link
+        <div className="text-center md:text-left flex flex-col justify-center items-center">
+          <Link
             href={"/"}
-            className=" transition duration-300 ease-in-out transform hover:scale-105">
+            className=" transition duration-300 ease-in-out transform hover:scale-105"
+          >
             <Image
               src={"/nexmeet.png"}
               width={500}
@@ -24,13 +25,13 @@ const Footer: React.FC = () => {
         </div>
 
         <div className="flex justify-center md:justify-end gap-6">
-          <Link
+          {/* <Link
             href="/"
             target="_blank"
             className="transition hover:scale-110 hover:text-blue-500"
           >
             <FaXTwitter className="h-6 w-6 text-white" />
-          </Link>
+          </Link> */}
           <Link
             href="https://github.com/TejasNasre/nexmeet"
             target="_blank"
@@ -38,13 +39,13 @@ const Footer: React.FC = () => {
           >
             <IoLogoGithub className="h-6 w-6 text-white" />
           </Link>
-          <Link
+          {/* <Link
             href="/"
             target="_blank"
             className="transition hover:scale-110 hover:text-blue-500"
           >
             <IoLogoLinkedin className="h-6 w-6 text-white" />
-          </Link>
+          </Link> */}
         </div>
 
         <div className="flex flex-col md:flex-row gap-6 text-center">

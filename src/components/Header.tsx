@@ -41,15 +41,15 @@ function Header() {
         setUser(null);
       });
 
-      // Retrieve theme preference from localStorage
-      const storedTheme = localStorage.getItem('isDarkMode');
+    // Retrieve theme preference from localStorage
+    const storedTheme = localStorage.getItem("isDarkMode");
 
-      if (storedTheme === 'true') {
-        setIsDarkMode(true);
-        document.body.classList.add("white"); // Apply dark mode class
-      } else {
-        document.body.classList.remove("white"); // Ensure dark mode class is removed
-      }
+    if (storedTheme === "true") {
+      setIsDarkMode(true);
+      document.body.classList.add("white"); // Apply dark mode class
+    } else {
+      document.body.classList.remove("white"); // Ensure dark mode class is removed
+    }
   }, []);
 
   const toggleMenu = () => {
@@ -64,7 +64,7 @@ function Header() {
   const toggleTheme = () => {
     const newTheme = !isDarkMode;
     setIsDarkMode(newTheme);
-    localStorage.setItem('isDarkMode', String(newTheme)); // Store theme preference
+    localStorage.setItem("isDarkMode", String(newTheme)); // Store theme preference
     document.body.classList.toggle("white");
   };
 
@@ -152,7 +152,12 @@ function Header() {
             <div className="flex flex-col gap-8 text-white text-center items-center">
               {renderMenuItems()}
             </div>
-            <button onClick={toggleTheme} className={isMenuOpen ? "rounded-md absolute top-5 left-4 lg:hidden" : ""}>
+            <button
+              onClick={toggleTheme}
+              className={
+                isMenuOpen ? "rounded-md absolute top-5 left-4 lg:hidden" : ""
+              }
+            >
               {isDarkMode ? (
                 <BsBrightnessLow size={22} />
               ) : (
@@ -170,8 +175,8 @@ function Header() {
       { href: "/", label: "Home" },
       { href: "/explore-events", label: "Explore Events" },
       {
-        href: "/explore-event-space",
-        label: "Explore Event Spaces",
+        href: "/explore-community",
+        label: "Explore Community",
         requiresAuth: true,
       },
       { href: "/about", label: "About Us" },
@@ -254,7 +259,10 @@ function Header() {
                 )}
               </div>
             </div>
-            <button onClick={toggleTheme} className="p-2 rounded-md hidden lg:block">
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-md hidden lg:block"
+            >
               {isDarkMode ? (
                 <BsBrightnessLow size={24} />
               ) : (
@@ -266,18 +274,21 @@ function Header() {
           <>
             <LoginLink
               postLoginRedirectURL="/dashboard"
-              className="hover:scale-105 px-1 py-1 hover:border-b-2 border-white transition-colors"
+              className="transition ease-in-out duration-300 hover:scale-105 border-white border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-2"
             >
               Sign in
             </LoginLink>
             <RegisterLink
               postLoginRedirectURL="/dashboard"
-              className="hover:scale-105 px-1 py-1 hover:border-b-2 border-white transition-colors"
+              className="transition ease-in-out duration-300 hover:scale-105 border-white border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4"
             >
               Sign up
             </RegisterLink>
 
-            <button onClick={toggleTheme} className="bg-black p-2 rounded-md hidden lg:block">
+            <button
+              onClick={toggleTheme}
+              className="bg-black p-2 rounded-md hidden lg:block"
+            >
               {isDarkMode ? (
                 <BsBrightnessLow size={24} />
               ) : (
