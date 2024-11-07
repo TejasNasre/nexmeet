@@ -646,7 +646,7 @@ export default function Page() {
               </div>
             </div>
 
-            {isSuperAdmin && (
+            {isSuperAdmin?.isGranted && (
                 <Button variant="outline" className="w-full" onClick={() => {
                     router.push("/admin");
                 }}>Super Admin
