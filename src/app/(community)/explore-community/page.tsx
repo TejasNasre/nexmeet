@@ -10,6 +10,7 @@ import { useUserDetails } from "../../../hooks/useUserDetails";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { CalendarIcon, MapPinIcon } from "lucide-react";
+import { SearchIcon } from '@heroicons/react/solid'; // Import the search icon
 
 const Page: React.FC = () => {
   // Define types
@@ -131,6 +132,11 @@ const Page: React.FC = () => {
     }
   };
 
+  const handleSearchClick = () => {
+    // Perform search action here
+    console.log("Search clicked!");
+  };
+
   // Filtering and sorting communities
   const filteredAndSortedCommunities = useMemo(() => {
     return communities
@@ -168,36 +174,47 @@ const Page: React.FC = () => {
           loading ? `px-0` : `px-4`
         }`}
     >
+    <div className="text-5xl md:text-6xl font-bold mb-12 text-center items-center justify-center tracking-tight">
+        Explore Communities
+    </div>
     <div className="container mx-auto p-6">
-      <div className="flex justify-between items-center mb-6">
+      <div className="w-full my-[3rem] flex flex-col gap-4 justify-end">
         <div className="flex space-x-4">
-          <input
-            type="text"
-            placeholder="Search communities..."
-            className="bg-black text-white w-full p-2 rounded-md border-0 outline-none"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <select
+            <div className="relative w-full">
+                <input
+                    type="text"
+                    placeholder="Search communities..."
+                    className="bg-black text-white w-full p-2 rounded-md border border-white outline-none pr-10" // Added padding-right for icon space
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                {/* Clickable Search Icon */}
+                <div
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                    onClick={handleSearchClick} // Handle the click event
+                ><SearchIcon className="w-5 h-5 text-white" />
+            </div>
+        </div>
+        <select
             className=" border border-white p-2 rounded-md bg-black text-white"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-          >
+        >
             <option value="">All Categories</option>
             <option value="Tech">Tech</option>
             <option value="Sports">Sports</option>
             <option value="Music">Music</option>
             <option value="Art">Art</option>
-          </select>
-          <select
+        </select>
+        <select
             className=" border border-white p-2 rounded-md bg-black text-white"
             value={sortByLikes}
             onChange={(e) => setSortByLikes(e.target.value)}
-          >
+        >
             <option value="">Sort by Likes</option>
             <option value="high">High to Low</option>
             <option value="low">Low to High</option>
-          </select>
+        </select>
         </div>
       </div>
 
