@@ -105,6 +105,17 @@ const Page: React.FC = () => {
     }
   };
 
+  const handleCancel = () => {
+    setNewCommunity({
+      community_name: "",
+      community_description: "",
+      community_location: "",
+      community_category: "",
+      community_image: "",
+    }); // Reset the form fields
+    setShowAddCommunityForm(false); // Close the form modal
+  };
+
   const filteredAndSortedCommunities = useMemo(() => {
     return communities
       .filter((community) => {
@@ -295,7 +306,7 @@ const Page: React.FC = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setShowAddCommunityForm(false)}
+                  onClick={handleCancel} // Call handleCancel here
                   className="bg-red-500 text-white py-2 px-4 rounded-md"
                 >
                   Cancel
