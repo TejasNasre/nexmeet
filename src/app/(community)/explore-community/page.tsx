@@ -70,17 +70,15 @@ const Page: React.FC = () => {
 
     const { data, error } = await supabase
       .from("communities")
-      .insert([
-        {
-          community_name,
-          community_description,
-          community_location,
-          community_category,
-          community_image,
-          community_members_count: 0, // Initialize with 0 members
-          community_creation_date: new Date().toISOString(),
-        },
-      ]);
+      .insert([{
+        community_name,
+        community_description,
+        community_location,
+        community_category,
+        community_image,
+        community_members_count: 0, // Initialize with 0 members
+        community_creation_date: new Date().toISOString(),
+      }]);
 
     if (error) {
       toast.error("Failed to create community.");
@@ -123,24 +121,53 @@ const Page: React.FC = () => {
     }
 
     try {
-      // Insert into `community_members` table to add the user to the community using email
-      const { error } = await supabase
+      // Check if the user is already a member of the community
+      const { data, error } = await supabase
         .from("community_members")
-        .insert([{ email: user.email, community_id: communityId }]);
+        .select("*")
+        .eq("email", user.email)
+        .eq("community_id", communityId)
+        .single();
 
-      if (error) {
-        toast.error("Failed to join community. Please try again.");
-        console.error("Error joining community:", error);
+      if (error && error.code !== 'PGRST116') { // PGRST116 is the code for 'no rows found'
+        toast.error("An error occurred while checking membership.");
+        console.error("Error checking membership:", error);
+        return;
+      }
+
+      if (data) {
+        // If the user is already a member, show a toast message
+        toast.error("You are already a member of this community.");
       } else {
-        toast.success("You have joined the community!");
-        // Update community data to reflect the new member
-        setCommunities((prev) =>
-          prev.map((community) =>
-            community.id === communityId
-              ? { ...community, community_members_count: community.community_members_count + 1 }
-              : community
-          )
-        );
+        // If not a member, add the user to the community
+        const { error: insertError } = await supabase
+          .from("community_members")
+          .insert([{ email: user.email, community_id: communityId }]);
+
+        if (insertError) {
+          toast.error("Failed to join community. Please try again.");
+          console.error("Error joining community:", insertError);
+        } else {
+          toast.success("You have joined the community!");
+
+          // Call the stored procedure to increment the community's member count
+          const { error: incrementError } = await supabase
+            .rpc('increment_community_members_count', { community_id: communityId });
+
+          if (incrementError) {
+            toast.error("Failed to update community member count.");
+            console.error("Error incrementing member count:", incrementError);
+          } else {
+            // Update local community state to reflect the new member count
+            setCommunities((prev) =>
+              prev.map((community) =>
+                community.id === communityId
+                  ? { ...community, community_members_count: community.community_members_count + 1 }
+                  : community
+              )
+            );
+          }
+        }
       }
     } catch (error) {
       toast.error("An error occurred while joining the community.");
@@ -251,15 +278,14 @@ const Page: React.FC = () => {
               />
               <h3 className="text-xl font-semibold mt-3">{community.community_name}</h3>
               <p className="text-gray-500 mt-2">{community.community_location}</p>
-              {/* Join button for logged-in users */}
-              {user && (
+              <div className="flex justify-between items-center mt-4">
                 <button
                   onClick={() => handleJoinCommunity(community.id)}
-                  className="bg-blue-500 text-white py-2 px-4 rounded-md mt-4 w-full"
+                  className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600"
                 >
                   Join Community
                 </button>
-              )}
+              </div>
             </motion.div>
           ))}
         </div>
@@ -342,7 +368,7 @@ const Page: React.FC = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={handleCancel}
+                  onClick={handleCancel} // Call handleCancel here
                   className="bg-red-500 text-white py-2 px-4 rounded-md"
                 >
                   Cancel
