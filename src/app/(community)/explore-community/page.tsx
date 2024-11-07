@@ -218,12 +218,13 @@ const Page: React.FC = () => {
                 className="w-full h-48 object-cover rounded-lg"
               />
               <h3 className="text-xl font-semibold mt-3">{community.community_name}</h3>
-              <p className="text-gray-500 mt-2">{community.community_description}</p>
+              <p className="text-gray-500 mt-2">{community.community_location}</p>
+              {/*
               <div className="flex justify-between items-center mt-4">
                 <Link href={`/community/${community.id}`} className="text-blue-500 hover:text-blue-700">
                   View Community
                 </Link>
-              </div>
+              </div>*/}
             </motion.div>
           ))}
         </div>
