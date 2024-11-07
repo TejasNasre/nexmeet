@@ -116,6 +116,38 @@ const Page: React.FC = () => {
     setShowAddCommunityForm(false); // Close the form modal
   };
 
+  const handleJoinCommunity = async (communityId: string) => {
+    if (!user || !user.email) {
+      toast.error("You need to be logged in to join a community.");
+      return;
+    }
+
+    try {
+      // Insert into `community_members` table to add the user to the community using email
+      const { error } = await supabase
+        .from("community_members")
+        .insert([{ email: user.email, community_id: communityId }]);
+
+      if (error) {
+        toast.error("Failed to join community. Please try again.");
+        console.error("Error joining community:", error);
+      } else {
+        toast.success("You have joined the community!");
+        // Update community data to reflect the new member
+        setCommunities((prev) =>
+          prev.map((community) =>
+            community.id === communityId
+              ? { ...community, community_members_count: community.community_members_count + 1 }
+              : community
+          )
+        );
+      }
+    } catch (error) {
+      toast.error("An error occurred while joining the community.");
+      console.error("Error joining community:", error);
+    }
+  };
+
   const filteredAndSortedCommunities = useMemo(() => {
     return communities
       .filter((community) => {
@@ -219,12 +251,15 @@ const Page: React.FC = () => {
               />
               <h3 className="text-xl font-semibold mt-3">{community.community_name}</h3>
               <p className="text-gray-500 mt-2">{community.community_location}</p>
-              {/*
-              <div className="flex justify-between items-center mt-4">
-                <Link href={`/community/${community.id}`} className="text-blue-500 hover:text-blue-700">
-                  View Community
-                </Link>
-              </div>*/}
+              {/* Join button for logged-in users */}
+              {user && (
+                <button
+                  onClick={() => handleJoinCommunity(community.id)}
+                  className="bg-blue-500 text-white py-2 px-4 rounded-md mt-4 w-full"
+                >
+                  Join Community
+                </button>
+              )}
             </motion.div>
           ))}
         </div>
@@ -307,7 +342,7 @@ const Page: React.FC = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={handleCancel} // Call handleCancel here
+                  onClick={handleCancel}
                   className="bg-red-500 text-white py-2 px-4 rounded-md"
                 >
                   Cancel
