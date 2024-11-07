@@ -141,6 +141,16 @@ const Page: React.FC = () => {
       </div>
 
       <div className="container mx-auto p-6">
+        {/* Button to Show Add Community Form */}
+        <div className="flex justify-end mb-4">
+          <button
+            className="bg-blue-500 text-white py-2 px-4 rounded-md"
+            onClick={() => setShowAddCommunityForm(true)}
+          >
+            Add New Community
+          </button>
+        </div>
+
         <div className="w-full my-[3rem] flex flex-col gap-4 justify-end">
           <div className="flex space-x-4">
             <div className="relative w-full">
@@ -219,7 +229,7 @@ const Page: React.FC = () => {
       {/* Add Community Form Modal */}
       {showAddCommunityForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg w-full max-w-lg">
+          <div className="bg-black p-6 rounded-lg w-full max-w-lg">
             <h2 className="text-2xl font-bold mb-4">Add New Community</h2>
             <form onSubmit={handleFormSubmit}>
               <div className="mb-4">
@@ -227,7 +237,7 @@ const Page: React.FC = () => {
                 <input
                   type="text"
                   id="community_name"
-                  className="border border-gray-300 rounded-md w-full p-2 mt-2"
+                  className="border border-gray-300 rounded-md w-full p-2 mt-2 text-black"
                   value={newCommunity.community_name}
                   onChange={(e) => setNewCommunity({ ...newCommunity, community_name: e.target.value })}
                   required
@@ -237,7 +247,7 @@ const Page: React.FC = () => {
                 <label htmlFor="community_description" className="block text-sm font-semibold">Description</label>
                 <textarea
                   id="community_description"
-                  className="border border-gray-300 rounded-md w-full p-2 mt-2"
+                  className="border border-gray-300 rounded-md w-full p-2 mt-2 text-black"
                   value={newCommunity.community_description}
                   onChange={(e) => setNewCommunity({ ...newCommunity, community_description: e.target.value })}
                   required
@@ -248,7 +258,7 @@ const Page: React.FC = () => {
                 <input
                   type="text"
                   id="community_location"
-                  className="border border-gray-300 rounded-md w-full p-2 mt-2"
+                  className="border border-gray-300 rounded-md w-full p-2 mt-2 text-black"
                   value={newCommunity.community_location}
                   onChange={(e) => setNewCommunity({ ...newCommunity, community_location: e.target.value })}
                   required
@@ -259,7 +269,7 @@ const Page: React.FC = () => {
                 <input
                   type="text"
                   id="community_category"
-                  className="border border-gray-300 rounded-md w-full p-2 mt-2"
+                  className="border border-gray-300 rounded-md w-full p-2 mt-2 text-black"
                   value={newCommunity.community_category}
                   onChange={(e) => setNewCommunity({ ...newCommunity, community_category: e.target.value })}
                   required
@@ -270,7 +280,7 @@ const Page: React.FC = () => {
                 <input
                   type="text"
                   id="community_image"
-                  className="border border-gray-300 rounded-md w-full p-2 mt-2"
+                  className="border border-gray-300 rounded-md w-full p-2 mt-2 text-black"
                   value={newCommunity.community_image}
                   onChange={(e) => setNewCommunity({ ...newCommunity, community_image: e.target.value })}
                   required
