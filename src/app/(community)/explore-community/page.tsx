@@ -9,6 +9,7 @@ import { useUserDetails } from "../../../hooks/useUserDetails";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { SearchIcon } from '@heroicons/react/solid'; // Import the search icon
+import { LocationMarkerIcon } from '@heroicons/react/solid';
 
 const Page: React.FC = () => {
   // Define types
@@ -277,13 +278,16 @@ const Page: React.FC = () => {
                 className="w-full h-48 object-cover rounded-lg"
               />
               <h3 className="text-xl font-semibold mt-3">{community.community_name}</h3>
-              <p className="text-gray-500 mt-2">{community.community_location}</p>
+              <p className="text-gray-500 mt-2 flex items-center">
+                <LocationMarkerIcon className="w-5 h-5 text-gray-400 mr-2" />
+                {community.community_location}
+                </p>
               <div className="flex justify-between items-center mt-4">
                 <button
                   onClick={() => handleJoinCommunity(community.id)}
                   className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600"
                 >
-                  Join Community
+                  Join
                 </button>
               </div>
             </motion.div>
@@ -310,7 +314,7 @@ const Page: React.FC = () => {
                 <input
                   type="text"
                   id="community_name"
-                  className="border border-gray-300 rounded-md w-full p-2 mt-2 text-black"
+                  className="border border-gray-300 rounded-md w-full p-2 mt-2 bg-black"
                   value={newCommunity.community_name}
                   onChange={(e) => setNewCommunity({ ...newCommunity, community_name: e.target.value })}
                   required
@@ -320,7 +324,7 @@ const Page: React.FC = () => {
                 <label htmlFor="community_description" className="block text-sm font-semibold">Description</label>
                 <textarea
                   id="community_description"
-                  className="border border-gray-300 rounded-md w-full p-2 mt-2 text-black"
+                  className="border border-gray-300 rounded-md w-full p-2 mt-2 bg-black"
                   value={newCommunity.community_description}
                   onChange={(e) => setNewCommunity({ ...newCommunity, community_description: e.target.value })}
                   required
@@ -331,7 +335,7 @@ const Page: React.FC = () => {
                 <input
                   type="text"
                   id="community_location"
-                  className="border border-gray-300 rounded-md w-full p-2 mt-2 text-black"
+                  className="border border-gray-300 rounded-md w-full p-2 mt-2 bg-black"
                   value={newCommunity.community_location}
                   onChange={(e) => setNewCommunity({ ...newCommunity, community_location: e.target.value })}
                   required
@@ -342,7 +346,7 @@ const Page: React.FC = () => {
                 <input
                   type="text"
                   id="community_category"
-                  className="border border-gray-300 rounded-md w-full p-2 mt-2 text-black"
+                  className="border border-gray-300 rounded-md w-full p-2 mt-2 bg-black"
                   value={newCommunity.community_category}
                   onChange={(e) => setNewCommunity({ ...newCommunity, community_category: e.target.value })}
                   required
@@ -353,7 +357,7 @@ const Page: React.FC = () => {
                 <input
                   type="text"
                   id="community_image"
-                  className="border border-gray-300 rounded-md w-full p-2 mt-2 text-black"
+                  className="border border-gray-300 rounded-md w-full p-2 mt-2 bg-black"
                   value={newCommunity.community_image}
                   onChange={(e) => setNewCommunity({ ...newCommunity, community_image: e.target.value })}
                   required
