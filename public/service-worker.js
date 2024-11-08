@@ -1,3 +1,10 @@
+const CACHE_NAME = 'nexmeet-offline-v1';
+const OFFLINE_ASSETS = [
+  '/offline.html',
+  '/', // Cache the home page
+  '/favicon.ico',
+  // Add other important assets here
+];
 const CACHE_NAME = 'offline-v1';
 const OFFLINE_URL = '/offline.html';
 
@@ -6,6 +13,8 @@ self.addEventListener('install', (event) => {
         (async () => {
             const cache = await caches.open(CACHE_NAME);
             // Cache the offline page
+            // Cache all offline assets
+            await cache.addAll(OFFLINE_ASSETS);
             await cache.add(new Request(OFFLINE_URL, { cache: 'reload' }));
         })()
     );
@@ -26,6 +35,35 @@ self.addEventListener('activate', (event) => {
     self.clients.claim();
 });
 
+self.addEventListener('fetch', (event) => {
+    if (event.request.mode === 'navigate') {
+        event.respondWith(
+            (async () => {
+                try {
+                    const preloadResponse = await event.preloadResponse;
+                    if (preloadResponse) {
+                        return preloadResponse;
+                    }
+
+                    const networkResponse = await fetch(event.request);
+                    return networkResponse;
+                } catch (error) {
+                    console.log('Fetch failed; returning offline page instead.', error);
+                    const cache = await caches.open(CACHE_NAME);
+                    const cachedResponse = await cache.match(OFFLINE_URL);
+                    return cachedResponse;
+                }
+            })()
+        );
+    } else {
+        event.respondWith(
+            caches.match(event.request)
+                .then((response) => {
+                    return response || fetch(event.request);
+                })
+        );
+    }
+});
 self.addEventListener('fetch', (event) => {
     if (event.request.mode === 'navigate') {
         event.respondWith(
