@@ -40,6 +40,7 @@ const Page: React.FC = () => {
     community_category: "",
     community_image: "",
   });
+  const [editingCommunityId, setEditingCommunityId] = useState<string | null>(null); // To track the community being edited
 
   const session = useSession();
   const { user } = useUserDetails();
@@ -69,37 +70,65 @@ const Page: React.FC = () => {
 
     const { community_name, community_description, community_location, community_category, community_image } = newCommunity;
 
-    const { data, error } = await supabase
-      .from("communities")
-      .insert([{
-        community_name,
-        community_description,
-        community_location,
-        community_category,
-        community_image,
-        community_members_count: 0, // Initialize with 0 members
-        community_creation_date: new Date().toISOString(),
-      }]);
+    if (editingCommunityId) {
+      // Update the community
+      const { data, error } = await supabase
+        .from("communities")
+        .update({
+          community_name,
+          community_description,
+          community_location,
+          community_category,
+          community_image,
+        })
+        .eq("id", editingCommunityId);
 
-    if (error) {
-      toast.error("Failed to create community.");
-      console.error("Error creating community:", error);
-    } else {
-      toast.success("Community created successfully!");
-      setShowAddCommunityForm(false); // Hide form after submission
-      setNewCommunity({
-        community_name: "",
-        community_description: "",
-        community_location: "",
-        community_category: "",
-        community_image: "",
-      });
-
-      // Ensure that `data` is an array before updating the state
-      if (Array.isArray(data)) {
-        setCommunities((prev) => [...prev, ...data]);
+      if (error) {
+        toast.error("Failed to update community.");
+        console.error("Error updating community:", error);
       } else {
-        console.error("Data returned is not an array:", data);
+        toast.success("Community updated successfully!");
+        setShowAddCommunityForm(false);
+        setEditingCommunityId(null); // Reset editingCommunityId
+        // Optionally, update the state locally to reflect the change
+        setCommunities((prev) =>
+          prev.map((community) =>
+            community.id === editingCommunityId
+              ? { ...community, ...newCommunity }
+              : community
+          )
+        );
+      }
+    } else {
+      // Insert new community (as before)
+      const { data, error } = await supabase
+        .from("communities")
+        .insert([{
+          community_name,
+          community_description,
+          community_location,
+          community_category,
+          community_image,
+          community_members_count: 0,
+          community_creation_date: new Date().toISOString(),
+        }]);
+
+      if (error) {
+        toast.error("Failed to create community.");
+        console.error("Error creating community:", error);
+      } else {
+        toast.success("Community created successfully!");
+        setShowAddCommunityForm(false);
+        setNewCommunity({
+          community_name: "",
+          community_description: "",
+          community_location: "",
+          community_category: "",
+          community_image: "",
+        });
+        if (Array.isArray(data)) {
+          setCommunities((prev) => [...prev, ...data]);
+        }
       }
     }
   };
@@ -111,7 +140,7 @@ const Page: React.FC = () => {
       community_location: "",
       community_category: "",
       community_image: "",
-    }); // Reset the form fields
+    });
     setShowAddCommunityForm(false); // Close the form modal
   };
 
@@ -122,7 +151,6 @@ const Page: React.FC = () => {
     }
 
     try {
-      // Check if the user is already a member of the community
       const { data, error } = await supabase
         .from("community_members")
         .select("*")
@@ -130,17 +158,15 @@ const Page: React.FC = () => {
         .eq("community_id", communityId)
         .single();
 
-      if (error && error.code !== 'PGRST116') { // PGRST116 is the code for 'no rows found'
+      if (error && error.code !== 'PGRST116') {
         toast.error("An error occurred while checking membership.");
         console.error("Error checking membership:", error);
         return;
       }
 
       if (data) {
-        // If the user is already a member, show a toast message
         toast.error("You are already a member of this community.");
       } else {
-        // If not a member, add the user to the community
         const { error: insertError } = await supabase
           .from("community_members")
           .insert([{ email: user.email, community_id: communityId }]);
@@ -150,8 +176,6 @@ const Page: React.FC = () => {
           console.error("Error joining community:", insertError);
         } else {
           toast.success("You have joined the community!");
-
-          // Call the stored procedure to increment the community's member count
           const { error: incrementError } = await supabase
             .rpc('increment_community_members_count', { community_id: communityId });
 
@@ -159,7 +183,6 @@ const Page: React.FC = () => {
             toast.error("Failed to update community member count.");
             console.error("Error incrementing member count:", incrementError);
           } else {
-            // Update local community state to reflect the new member count
             setCommunities((prev) =>
               prev.map((community) =>
                 community.id === communityId
@@ -176,6 +199,18 @@ const Page: React.FC = () => {
     }
   };
 
+  const handleViewEditCommunity = (community: Community) => {
+    setNewCommunity({
+      community_name: community.community_name,
+      community_description: community.community_description,
+      community_location: community.community_location,
+      community_category: community.community_category,
+      community_image: community.community_image,
+    });
+    setEditingCommunityId(community.id); // Set the community ID being edited
+    setShowAddCommunityForm(true); // Show the form to edit
+  };
+
   const filteredAndSortedCommunities = useMemo(() => {
     return communities
       .filter((community) => {
@@ -187,7 +222,7 @@ const Page: React.FC = () => {
       })
       .sort((a, b) => {
         if (sortByLikes === "high") {
-          return b.community_members_count - a.community_members_count; // Sorting based on members count
+          return b.community_members_count - a.community_members_count;
         } else if (sortByLikes === "low") {
           return a.community_members_count - b.community_members_count;
         }
@@ -228,14 +263,13 @@ const Page: React.FC = () => {
               <input
                 type="text"
                 placeholder="Search communities..."
-                className="bg-black text-white w-full p-2 rounded-md border border-white outline-none pr-10" // Added padding-right for icon space
+                className="bg-black text-white w-full p-2 rounded-md border border-white outline-none pr-10"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
-              {/* Clickable Search Icon */}
               <div
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
-                onClick={handleSearchClick} // Handle the click event
+                onClick={handleSearchClick}
               >
                 <SearchIcon className="w-5 h-5 text-white" />
               </div>
@@ -281,13 +315,19 @@ const Page: React.FC = () => {
               <p className="text-gray-500 mt-2 flex items-center">
                 <LocationMarkerIcon className="w-5 h-5 text-gray-400 mr-2" />
                 {community.community_location}
-                </p>
+              </p>
               <div className="flex justify-between items-center mt-4">
                 <button
                   onClick={() => handleJoinCommunity(community.id)}
                   className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600"
                 >
                   Join
+                </button>
+                <button
+                  onClick={() => handleViewEditCommunity(community)} // View/Edit button
+                  className="bg-yellow-500 text-white py-2 px-4 rounded-md hover:bg-yellow-600"
+                >
+                  Edit
                 </button>
               </div>
             </motion.div>
@@ -303,11 +343,11 @@ const Page: React.FC = () => {
         </div>
       </div>
 
-      {/* Add Community Form Modal */}
+      {/* Add or Edit Community Form Modal */}
       {showAddCommunityForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-black p-6 rounded-lg w-full max-w-lg">
-            <h2 className="text-2xl font-bold mb-4">Add New Community</h2>
+            <h2 className="text-2xl font-bold mb-4">{editingCommunityId ? "Edit Community" : "Add New Community"}</h2>
             <form onSubmit={handleFormSubmit}>
               <div className="mb-4">
                 <label htmlFor="community_name" className="block text-sm font-semibold">Community Name</label>
@@ -368,11 +408,11 @@ const Page: React.FC = () => {
                   type="submit"
                   className="bg-blue-500 text-white py-2 px-4 rounded-md"
                 >
-                  Create Community
+                  {editingCommunityId ? "Update Community" : "Create Community"}
                 </button>
                 <button
                   type="button"
-                  onClick={handleCancel} // Call handleCancel here
+                  onClick={handleCancel}
                   className="bg-red-500 text-white py-2 px-4 rounded-md"
                 >
                   Cancel
