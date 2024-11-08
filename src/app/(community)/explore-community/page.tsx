@@ -8,7 +8,7 @@ import Loading from "../../../components/loading";
 import { useUserDetails } from "../../../hooks/useUserDetails";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { SearchIcon } from '@heroicons/react/solid'; // Import the search icon
+import { SearchIcon, TrashIcon } from '@heroicons/react/solid'; // Import the search icon
 import { LocationMarkerIcon } from '@heroicons/react/solid';
 
 const Page: React.FC = () => {
@@ -211,6 +211,42 @@ const Page: React.FC = () => {
     setShowAddCommunityForm(true); // Show the form to edit
   };
 
+  const handleDeleteCommunity = async (communityId: string) => {
+    const confirmation = window.confirm("Are you sure you want to delete this community?");
+    if (!confirmation) return;
+
+    try {
+      // Step 1: Delete all members in the community
+      const { error: deleteMembersError } = await supabase
+        .from("community_members")
+        .delete()
+        .eq("community_id", communityId);
+
+      if (deleteMembersError) {
+        toast.error("Failed to delete community members.");
+        console.error("Error deleting community members:", deleteMembersError);
+        return;
+      }
+
+      // Step 2: Delete the community
+      const { error } = await supabase
+        .from("communities")
+        .delete()
+        .eq("id", communityId);
+
+      if (error) {
+        toast.error("Failed to delete community.");
+        console.error("Error deleting community:", error);
+      } else {
+        toast.success("Community deleted successfully!");
+        setCommunities((prev) => prev.filter((community) => community.id !== communityId));
+      }
+    } catch (error) {
+      toast.error("An unexpected error occurred.");
+      console.error("Unexpected error deleting community:", error);
+    }
+  };
+
   const filteredAndSortedCommunities = useMemo(() => {
     return communities
       .filter((community) => {
@@ -306,6 +342,13 @@ const Page: React.FC = () => {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
             >
+              {/* Trash Icon for Delete */}
+              <button
+                onClick={() => handleDeleteCommunity(community.id)}
+                className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+              >
+                <TrashIcon className="w-6 h-6" />
+              </button>
               <img
                 src={community.community_image}
                 alt={community.community_name}
