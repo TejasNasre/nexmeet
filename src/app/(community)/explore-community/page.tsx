@@ -22,7 +22,8 @@ const Page: React.FC = () => {
     community_members_count: number;
     community_image: string;
     community_creation_date: string;
-  }
+    is_approved: boolean;
+}
 
   // State hooks
   const [loading, setLoading] = useState(true);
@@ -117,6 +118,7 @@ const Page: React.FC = () => {
           community_image,
           community_members_count: 0,
           community_creation_date: new Date().toISOString(),
+          is_approved: false
         }]);
 
       if (error) {
