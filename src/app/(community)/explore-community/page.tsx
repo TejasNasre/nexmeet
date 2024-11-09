@@ -33,7 +33,6 @@ const Page: React.FC = () => {
   const [category, setCategory] = useState("");
   const [sortByLikes, setSortByLikes] = useState("");
   const [showAddCommunityForm, setShowAddCommunityForm] = useState(false); // To toggle the form visibility
-  const [selectedCommunityId, setSelectedCommunityId] = useState<string | null>(null); // New state for selected community ID
   const [newCommunity, setNewCommunity] = useState({
     community_name: "",
     community_description: "",
@@ -43,7 +42,6 @@ const Page: React.FC = () => {
   });
   const [editingCommunityId, setEditingCommunityId] = useState<string | null>(null); // To track the community being edited
 
-  const [showJoinForm, setShowJoinForm] = useState(false); // New state for Join Form Modal
   const [joinFormData, setJoinFormData] = useState({
     name: "",
     email: "",
@@ -141,16 +139,6 @@ const Page: React.FC = () => {
     }
   };
 
-  // Function to handle cancel action and close the form, and clear form data
-  const handleJoinCancel = () => {
-    setJoinFormData({
-      name: '',
-      email: '',
-      contact: '',
-    });  // Clear form data
-    setShowJoinForm(false);  // Close the Join modal by updating state
-  };
-
   const handleCancel = () => {
     setNewCommunity({
       community_name: "",
@@ -196,64 +184,6 @@ const Page: React.FC = () => {
       toast.error("An unexpected error occurred.");
       console.error("Unexpected error deleting community:", error);
     }
-  };
-
-
-  const handleJoinCommunity = async (communityId: string) => {
-    if (!user || !user.email) {
-      toast.error("You need to be logged in to join a community.");
-      return;
-    }
-
-    setSelectedCommunityId(communityId); // Set the selected community ID
-    setShowJoinForm(true); // Show the join form modal
-
-    // Handle the actual join community logic after the user submits the form
-  };
-
-  const handleJoinFormSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const { name, email, contact } = joinFormData;
-    const communityId = selectedCommunityId; // Use selectedCommunityId from state
-
-    try {
-      const { data, error } = await supabase
-        .from("community_members")
-        .select("*")
-        .eq("email", email)
-        .eq("community_id", communityId)
-        .single();
-
-      if (error && error.code !== 'PGRST116') {
-        toast.error("An error occurred while checking membership.");
-        console.error("Error checking membership:", error);
-        return;
-      }
-
-      if (data) {
-        toast.error("You are already a member of this community.");
-      } else {
-        const { error: insertError } = await supabase
-          .from("community_members")
-          .insert([{ email, community_id: communityId, name, contact }]);
-
-        if (insertError) {
-          toast.error("Failed to join community. Please try again.");
-          console.error("Error joining community:", insertError);
-        } else {
-          toast.success("You have joined the community!");
-          setShowJoinForm(false); // Close the form after successful submission
-        }
-      }
-    } catch (error) {
-      toast.error("An error occurred while joining the community.");
-      console.error("Error joining community:", error);
-    }
-  };
-
-  const handleJoinFormCancel = () => {
-    setShowJoinForm(false); // Close the form without submitting
   };
 
   const handleViewEditCommunity = (community: Community) => {
@@ -387,12 +317,6 @@ const Page: React.FC = () => {
               </p>
               <div className="flex justify-between items-center mt-4">
                 <button
-                  onClick={() => handleJoinCommunity(community.id)} // Open Join Form Modal
-                  className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600"
-                >
-                  Join
-                </button>
-                <button
                   onClick={() => handleViewEditCommunity(community)} // View/Edit button
                   className="bg-yellow-500 text-white py-2 px-4 rounded-md hover:bg-yellow-600"
                 >
@@ -482,68 +406,6 @@ const Page: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleCancel}
-                  className="bg-red-500 text-white py-2 px-4 rounded-md"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Join Form Modal */}
-      {showJoinForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-black p-6 rounded-lg w-full max-w-lg">
-            <h2 className="text-2xl font-bold mb-4">Join Community</h2>
-            <form onSubmit={handleJoinFormSubmit}>
-              <div className="mb-4">
-                <label htmlFor="name" className="block text-sm font-semibold">Full Name</label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  className="border border-gray-300 rounded-md w-full p-2 mt-2 bg-black"
-                  value={joinFormData.name}
-                  onChange={handleJoinFormChange}
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label htmlFor="email" className="block text-sm font-semibold">Email</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  className="border border-gray-300 rounded-md w-full p-2 mt-2 bg-black"
-                  value={joinFormData.email}
-                  onChange={handleJoinFormChange}
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label htmlFor="contact" className="block text-sm font-semibold">Contact</label>
-                <input
-                  type="text"
-                  id="contact"
-                  name="contact"
-                  className="border border-gray-300 rounded-md w-full p-2 mt-2 bg-black"
-                  value={joinFormData.contact}
-                  onChange={handleJoinFormChange}
-                  required
-                />
-              </div>
-              <div className="flex justify-between">
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white py-2 px-4 rounded-md"
-                >
-                  Join
-                </button>
-                <button
-                  type="button"
-                  onClick={handleJoinCancel}
                   className="bg-red-500 text-white py-2 px-4 rounded-md"
                 >
                   Cancel
