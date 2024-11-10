@@ -8,8 +8,9 @@ import Loading from "../../../components/loading";
 import { useUserDetails } from "../../../hooks/useUserDetails";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { SearchIcon, TrashIcon } from '@heroicons/react/solid'; // Import the search icon
-import { LocationMarkerIcon } from '@heroicons/react/solid';
+import { SearchIcon, TrashIcon } from "@heroicons/react/solid"; // Import the search icon
+import { LocationMarkerIcon } from "@heroicons/react/solid";
+import Image from "next/image";
 
 const Page: React.FC = () => {
   // Define types
@@ -23,7 +24,7 @@ const Page: React.FC = () => {
     community_image: string;
     community_creation_date: string;
     is_approved: boolean;
-}
+  }
 
   // State hooks
   const [loading, setLoading] = useState(true);
@@ -41,7 +42,9 @@ const Page: React.FC = () => {
     community_category: "",
     community_image: "",
   });
-  const [editingCommunityId, setEditingCommunityId] = useState<string | null>(null); // To track the community being edited
+  const [editingCommunityId, setEditingCommunityId] = useState<string | null>(
+    null
+  ); // To track the community being edited
 
   const [joinFormData, setJoinFormData] = useState({
     name: "",
@@ -75,7 +78,13 @@ const Page: React.FC = () => {
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const { community_name, community_description, community_location, community_category, community_image } = newCommunity;
+    const {
+      community_name,
+      community_description,
+      community_location,
+      community_category,
+      community_image,
+    } = newCommunity;
 
     if (editingCommunityId) {
       // Update the community
@@ -108,9 +117,8 @@ const Page: React.FC = () => {
       }
     } else {
       // Insert new community (as before)
-      const { data, error } = await supabase
-        .from("communities")
-        .insert([{
+      const { data, error } = await supabase.from("communities").insert([
+        {
           community_name,
           community_description,
           community_location,
@@ -118,8 +126,9 @@ const Page: React.FC = () => {
           community_image,
           community_members_count: 0,
           community_creation_date: new Date().toISOString(),
-          is_approved: false
-        }]);
+          is_approved: false,
+        },
+      ]);
 
       if (error) {
         toast.error("Failed to create community.");
@@ -153,7 +162,9 @@ const Page: React.FC = () => {
   };
 
   const handleDeleteCommunity = async (communityId: string) => {
-    const confirmation = window.confirm("Are you sure you want to delete this community?");
+    const confirmation = window.confirm(
+      "Are you sure you want to delete this community?"
+    );
     if (!confirmation) return;
 
     try {
@@ -180,7 +191,9 @@ const Page: React.FC = () => {
         console.error("Error deleting community:", error);
       } else {
         toast.success("Community deleted successfully!");
-        setCommunities((prev) => prev.filter((community) => community.id !== communityId));
+        setCommunities((prev) =>
+          prev.filter((community) => community.id !== communityId)
+        );
       }
     } catch (error) {
       toast.error("An unexpected error occurred.");
@@ -208,10 +221,16 @@ const Page: React.FC = () => {
   const filteredAndSortedCommunities = useMemo(() => {
     return communities
       .filter((community) => {
-        const matchesCategory = category ? community.community_category === category : true;
+        const matchesCategory = category
+          ? community.community_category === category
+          : true;
         const matchesSearchTerm =
-          community.community_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          community.community_location.toLowerCase().includes(searchTerm.toLowerCase());
+          community.community_name
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          community.community_location
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase());
         return matchesCategory && matchesSearchTerm;
       })
       .sort((a, b) => {
@@ -226,16 +245,23 @@ const Page: React.FC = () => {
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentCommunities = filteredAndSortedCommunities.slice(indexOfFirstItem, indexOfLastItem);
+  const currentCommunities = filteredAndSortedCommunities.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
 
-  const totalPages = Math.ceil(filteredAndSortedCommunities.length / itemsPerPage);
+  const totalPages = Math.ceil(
+    filteredAndSortedCommunities.length / itemsPerPage
+  );
 
   if (loading) {
     return <Loading />;
   }
 
   return (
-    <div className={`w-full h-auto bg-black text-white py-[8rem] ${loading ? `px-0` : `px-4`}`}>
+    <div
+      className={`w-full h-auto bg-black text-white py-[8rem] ${loading ? `px-0` : `px-4`}`}
+    >
       <div className="text-5xl md:text-6xl font-bold mb-12 text-center items-center justify-center tracking-tight">
         Explore Communities
       </div>
@@ -307,12 +333,16 @@ const Page: React.FC = () => {
               >
                 <TrashIcon className="w-6 h-6" />
               </button>
-              <img
+              <Image
                 src={community.community_image}
                 alt={community.community_name}
                 className="w-full h-48 object-cover rounded-lg"
+                width={500}
+                height={500}
               />
-              <h3 className="text-xl font-semibold mt-3">{community.community_name}</h3>
+              <h3 className="text-xl font-semibold mt-3">
+                {community.community_name}
+              </h3>
               <p className="text-gray-500 mt-2 flex items-center">
                 <LocationMarkerIcon className="w-5 h-5 text-gray-400 mr-2" />
                 {community.community_location}
@@ -342,59 +372,111 @@ const Page: React.FC = () => {
       {showAddCommunityForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-black p-6 rounded-lg w-full max-w-lg">
-            <h2 className="text-2xl font-bold mb-4">{editingCommunityId ? "Edit Community" : "Add New Community"}</h2>
+            <h2 className="text-2xl font-bold mb-4">
+              {editingCommunityId ? "Edit Community" : "Add New Community"}
+            </h2>
             <form onSubmit={handleFormSubmit}>
               <div className="mb-4">
-                <label htmlFor="community_name" className="block text-sm font-semibold">Community Name</label>
+                <label
+                  htmlFor="community_name"
+                  className="block text-sm font-semibold"
+                >
+                  Community Name
+                </label>
                 <input
                   type="text"
                   id="community_name"
                   className="border border-gray-300 rounded-md w-full p-2 mt-2 bg-black"
                   value={newCommunity.community_name}
-                  onChange={(e) => setNewCommunity({ ...newCommunity, community_name: e.target.value })}
+                  onChange={(e) =>
+                    setNewCommunity({
+                      ...newCommunity,
+                      community_name: e.target.value,
+                    })
+                  }
                   required
                 />
               </div>
               <div className="mb-4">
-                <label htmlFor="community_description" className="block text-sm font-semibold">Description</label>
+                <label
+                  htmlFor="community_description"
+                  className="block text-sm font-semibold"
+                >
+                  Description
+                </label>
                 <textarea
                   id="community_description"
                   className="border border-gray-300 rounded-md w-full p-2 mt-2 bg-black"
                   value={newCommunity.community_description}
-                  onChange={(e) => setNewCommunity({ ...newCommunity, community_description: e.target.value })}
+                  onChange={(e) =>
+                    setNewCommunity({
+                      ...newCommunity,
+                      community_description: e.target.value,
+                    })
+                  }
                   required
                 />
               </div>
               <div className="mb-4">
-                <label htmlFor="community_location" className="block text-sm font-semibold">Location</label>
+                <label
+                  htmlFor="community_location"
+                  className="block text-sm font-semibold"
+                >
+                  Location
+                </label>
                 <input
                   type="text"
                   id="community_location"
                   className="border border-gray-300 rounded-md w-full p-2 mt-2 bg-black"
                   value={newCommunity.community_location}
-                  onChange={(e) => setNewCommunity({ ...newCommunity, community_location: e.target.value })}
+                  onChange={(e) =>
+                    setNewCommunity({
+                      ...newCommunity,
+                      community_location: e.target.value,
+                    })
+                  }
                   required
                 />
               </div>
               <div className="mb-4">
-                <label htmlFor="community_category" className="block text-sm font-semibold">Category</label>
+                <label
+                  htmlFor="community_category"
+                  className="block text-sm font-semibold"
+                >
+                  Category
+                </label>
                 <input
                   type="text"
                   id="community_category"
                   className="border border-gray-300 rounded-md w-full p-2 mt-2 bg-black"
                   value={newCommunity.community_category}
-                  onChange={(e) => setNewCommunity({ ...newCommunity, community_category: e.target.value })}
+                  onChange={(e) =>
+                    setNewCommunity({
+                      ...newCommunity,
+                      community_category: e.target.value,
+                    })
+                  }
                   required
                 />
               </div>
               <div className="mb-4">
-                <label htmlFor="community_image" className="block text-sm font-semibold">Community Image URL</label>
+                <label
+                  htmlFor="community_image"
+                  className="block text-sm font-semibold"
+                >
+                  Community Image URL
+                </label>
                 <input
                   type="text"
                   id="community_image"
                   className="border border-gray-300 rounded-md w-full p-2 mt-2 bg-black"
                   value={newCommunity.community_image}
-                  onChange={(e) => setNewCommunity({ ...newCommunity, community_image: e.target.value })}
+                  onChange={(e) =>
+                    setNewCommunity({
+                      ...newCommunity,
+                      community_image: e.target.value,
+                    })
+                  }
                   required
                 />
               </div>
