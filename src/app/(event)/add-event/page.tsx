@@ -49,17 +49,12 @@ const formSchema = z
   .object({
     event_title: z
       .string()
-      .nonempty({ message: "Event title is required." })
       .min(2, { message: "Event title must be at least 2 characters." }),
-    event_description: z
-      .string()
-      .nonempty({ message: "Event description is required." })
-      .min(10, {
-        message: "Event description must be at least 10 characters.",
-      }),
+    event_description: z.string().min(10, {
+      message: "Event description must be at least 10 characters.",
+    }),
     event_location: z
       .string()
-      .nonempty({ message: "Event location is required." })
       .min(2, { message: "Event location must be at least 2 characters." }),
     event_registration_startdate: z
       .string()
@@ -85,12 +80,15 @@ const formSchema = z
       .min(1, { message: "Team size is required." })
       .regex(/^[1-9]\d*$/, { message: "Team size must be a positive number." }),
     event_formlink: z.string().url({ message: "Please enter a valid URL." }),
-    event_price: z
+    isEventFree: z.string(),
+    account_holder_name: z.string().min(2, {
+      message: "Account holder name must be at least 2 characters.",
+    }),
+    upi_id: z.string().min(1, { message: "Upi id is required." }),
+    event_amount: z
       .string()
-      .min(1, { message: "Price is required." })
-      .regex(/^(0|[1-9]\d*)$/, {
-        message: "Price must be a positive number.",
-      }),
+      .min(1, { message: "Amount is required" })
+      .regex(/^[1-9]\d*$/, { message: "Amount must be a positive number." }),
     organizer_name: z
       .string()
       .min(2, { message: "Organizer name must be at least 2 characters." }),
@@ -201,6 +199,7 @@ export default function AddEvent() {
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [isPending, startTransition] = useTransition();
   const [file, setFile] = useState<File | null>(null);
+  const [fee, setFee] = useState("free");
 
   const today = format(new Date(), "yyyy-MM-dd'T'HH:mm");
 
@@ -223,7 +222,10 @@ export default function AddEvent() {
       event_duration: "",
       team_size: "",
       event_formlink: "",
-      event_price: "",
+      isEventFree: "",
+      account_holder_name: "",
+      upi_id: "",
+      event_amount: "",
       organizer_name: "",
       organizer_contact: "",
       event_category: "",
@@ -306,7 +308,10 @@ export default function AddEvent() {
           event_duration: parseInt(values.event_duration, 10),
           team_size: parseInt(values.team_size, 10),
           event_formlink: values.event_formlink,
-          event_price: parseInt(values.event_price, 10),
+          isEventFree: values.isEventFree,
+          account_holder_name: values.account_holder_name,
+          upi_id: values.upi_id,
+          event_amount: parseInt(values.event_amount, 10),
           organizer_name: values.organizer_name,
           organizer_email: user?.email,
           organizer_contact: values.organizer_contact,
@@ -389,7 +394,6 @@ export default function AddEvent() {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="event_description"
@@ -409,7 +413,6 @@ export default function AddEvent() {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="event_location"
@@ -417,16 +420,23 @@ export default function AddEvent() {
                 <FormItem>
                   <FormLabel className="text-base">Event Location:</FormLabel>
                   <FormControl>
-                  <LocationAutocomplete
-                    onSelect={field.onChange} 
-                    placeholder="Enter Event Location"
-                  />
+                    {/* <LocationAutocomplete
+                      onSelect={(value) => {
+                        field.onChange(value);
+                        form.setValue("event_location", value, { shouldValidate: true });
+                      }}
+                      placeholder="Enter Event Location"
+                    /> */}
+                    <Input
+                      placeholder="Enter Event Location"
+                      {...field}
+                      className="bg-black border-white text-white"
+                    />
                   </FormControl>
                   <FormMessage className="text-red-400" />
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="event_registration_startdate"
@@ -447,7 +457,6 @@ export default function AddEvent() {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="event_registration_enddate"
@@ -468,7 +477,6 @@ export default function AddEvent() {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="event_startdate"
@@ -487,7 +495,6 @@ export default function AddEvent() {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="event_enddate"
@@ -506,7 +513,6 @@ export default function AddEvent() {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="event_duration"
@@ -525,7 +531,6 @@ export default function AddEvent() {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="team_size"
@@ -544,7 +549,6 @@ export default function AddEvent() {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="event_formlink"
@@ -562,28 +566,104 @@ export default function AddEvent() {
                 </FormItem>
               )}
             />
-
-            <FormField
-              control={form.control}
-              name="event_price"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-base">Event Price:</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      placeholder="Enter Event Price (INR)"
-                      {...field}
-                      step="1"
-                      min="0"
-                      className="bg-black border-white text-white"
-                    />
-                  </FormControl>
-                  <p className="text-sm text-gray-400 mb-2">If Free Enter 0</p>
-                  <FormMessage className="text-red-400" />
-                </FormItem>
+            <div className="flex flex-col justify-start gap-4">
+              <FormField
+                control={form.control}
+                name="isEventFree"
+                render={({ field }) => (
+                  <FormItem className="flex justify-start items-center gap-4">
+                    <FormLabel className="text-base">
+                      Event Cost Type :
+                    </FormLabel>
+                    <FormControl>
+                      <select
+                        {...field}
+                        className="bg-black border-2 border-white text-white py-1 px-2 rounded-md"
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          field.onChange(value);
+                          setFee(value === "0" ? "free" : "paid");
+                        }}
+                      >
+                        <option value="0">Free</option>
+                        <option value="paid">Paid</option>
+                      </select>
+                    </FormControl>
+                    <FormMessage className="text-red-400" />
+                  </FormItem>
+                )}
+              />
+              {fee === "free" ? (
+                <>Your Event Is Free</>
+              ) : (
+                <>Your Event Is Paid</>
               )}
-            />
+              {fee === "free" ? (
+                ""
+              ) : (
+                <>
+                  <div className="flex flex-col gap-4">
+                    <FormField
+                      control={form.control}
+                      name="account_holder_name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-base">
+                            Account Holder Name:
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Enter account holder name"
+                              {...field}
+                              className="bg-black border-white text-white"
+                            />
+                          </FormControl>
+                          <FormMessage className="text-red-400" />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="upi_id"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-base">Upi Id:</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="text"
+                              placeholder="Enter Upi Id"
+                              {...field}
+                              className="bg-black border-white text-white"
+                            />
+                          </FormControl>
+                          <FormMessage className="text-red-400" />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="event_amount"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-base">
+                            Event Price (Amount):
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              placeholder="Enter Upi Id"
+                              {...field}
+                              className="bg-black border-white text-white"
+                            />
+                          </FormControl>
+                          <FormMessage className="text-red-400" />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </>
+              )}
+            </div>
 
             <FormField
               control={form.control}
@@ -604,7 +684,6 @@ export default function AddEvent() {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="organizer_contact"
@@ -625,7 +704,6 @@ export default function AddEvent() {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="event_category"
@@ -687,7 +765,6 @@ export default function AddEvent() {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="event_tags"
@@ -705,7 +782,6 @@ export default function AddEvent() {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="event_social_links"
@@ -725,7 +801,6 @@ export default function AddEvent() {
                 </FormItem>
               )}
             />
-
             <Button
               type="submit"
               className="w-full bg-white text-black hover:bg-gray-200"
