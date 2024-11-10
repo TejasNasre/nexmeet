@@ -80,6 +80,29 @@ function Registerevent() {
       return;
     }
 
+    // Send registration email
+    try {
+      await fetch("/api/email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: "registration",
+          eventDetails: {
+            ...eventDetails,
+            event_startdate: eventDetails.event_startdate.toString(),
+            event_enddate: eventDetails.event_enddate.toString(),
+          },
+          participant: event_participants,
+        }),
+      });
+      toast.success("Registration email sent successfully!");
+    } catch (emailError) {
+      console.error("Failed to send registration email:", emailError);
+      toast.error("Failed to send registration email");
+    }
+
     toast.success("Registration successful!");
     router.push(`/dashboard`);
   };

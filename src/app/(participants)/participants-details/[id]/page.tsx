@@ -3,15 +3,6 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "../../../../utils/supabase";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import {
   LineChart,
   Line,
   XAxis,
@@ -90,70 +81,108 @@ function Page({ params }: { params: { id: any } }) {
   );
 
   const handleApproval = async (id: string, status: boolean) => {
-    try{
-    const { error } = await supabase
-      .from("event_participants")
-      .update({ is_approved: status ? true : false })
-      .eq("id", id);
-
-    if (error) {
-      toast.error("Failed to update approval status.");
-      return;
-    }
-     // Immediately update the UI state
-     setParticipants(prevParticipants =>
-      prevParticipants.map(participant =>
-        participant.id === id
-          ? { ...participant, is_approved: status }
-          : participant
-      )
-    );
-    toast.success(`Participant ${status ? "accepted" : "rejected"}!`);
     try {
-      await fetch('/api/email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          type: 'approval',
-          eventId: params.id,
-          participantId: id,
-        }),
-      });
-      toast.success('Notification email sent successfully!');
-    } catch (emailError) {
-      console.error('Failed to send email notification:', emailError);
-      toast.error('Failed to send email notification');
-    }
-      // Fetch updated data in the background
-      const { data: updatedParticipants } = await supabase
+      const { error } = await supabase
+        .from("event_participants")
+        .update({ is_approved: status ? true : false })
+        .eq("id", id);
+
+      if (error) {
+        toast.error("Failed to update approval status.");
+        return;
+      }
+
+      // Immediately update the UI state
+      setParticipants((prevParticipants) =>
+        prevParticipants.map((participant) =>
+          participant.id === id
+            ? { ...participant, is_approved: status }
+            : participant
+        )
+      );
+      toast.success(`Participant ${status ? "accepted" : "rejected"}!`);
+
+      // Fetch updated participant details
+      const { data: updatedParticipant, error: fetchError } = await supabase
         .from("event_participants")
         .select("*")
-        .eq("event_id", params.id);
+        .eq("id", id)
+        .single();
 
-      if (updatedParticipants) {
-        setParticipants(updatedParticipants);
-        processChartData(updatedParticipants);
+      if (fetchError) {
+        console.error(
+          "Failed to fetch updated participant details:",
+          fetchError
+        );
+        toast.error("Failed to fetch updated participant details.");
+        return;
+      }
+
+      // Fetch event details
+      const { data: eventDetails, error: eventError } = await supabase
+        .from("event_details")
+        .select("*")
+        .eq("id", updatedParticipant.event_id)
+        .single();
+
+      if (eventError) {
+        console.error("Failed to fetch event details:", eventError);
+        toast.error("Failed to fetch event details.");
+        return;
+      }
+
+      // Send approval/rejection email
+      try {
+        await fetch("/api/email", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            type: "approval",
+            eventDetails: eventDetails,
+            participant: updatedParticipant,
+            isApproved: status,
+          }),
+        });
+        toast.success("Approval/rejection email sent successfully!");
+      } catch (emailError) {
+        console.error("Failed to send approval/rejection email:", emailError);
+        toast.error("Failed to send approval/rejection email");
       }
     } catch (error) {
-      console.error('Error in handleApproval:', error);
-      toast.error('An error occurred while processing the approval');
+      console.error("Error in handleApproval:", error);
+      toast.error("An error occurred while processing the approval");
     }
   };
 
   // CSV conversion function
-const convertToCSV = (data: any[]) => {
-    const headers = ["Name", "Email", "Contact", "Registration Date", "Registration Time", "Status"];
-    const rows = data.map(participant => [
+  const convertToCSV = (data: any[]) => {
+    const headers = [
+      "Name",
+      "Email",
+      "Contact",
+      "Account Holder",
+      "Transaction ID",
+      "Registration Date",
+      "Registration Time",
+      "Status",
+    ];
+    const rows = data.map((participant) => [
       participant.participant_name,
       participant.participant_email,
       participant.participant_contact,
+      participant.account_holder_name,
+      participant.transaction_id,
       new Date(participant.created_at).toLocaleString(),
-      participant.is_approved === true ? "Approved" : participant.is_approved === false ? "Rejected" : "Pending",
+      participant.is_approved === true
+        ? "Approved"
+        : participant.is_approved === false
+          ? "Rejected"
+          : "Pending",
     ]);
 
-    const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+    const csvContent = [headers, ...rows].map((e) => e.join(",")).join("\n");
     return csvContent;
   };
 
@@ -195,10 +224,14 @@ const convertToCSV = (data: any[]) => {
         <Loading />
       ) : (
         <div className="w-full min-h-screen bg-black text-white py-[8rem] px-0 md:px-8 flex flex-col gap-10">
-          <h1 className="mb-6 text-3xl font-bold text-center">Participant Details</h1>
+          <h1 className="mb-6 text-3xl font-bold text-center">
+            Participant Details
+          </h1>
 
           <div className="w-full h-auto mb-8">
-            <h2 className="mb-4 text-2xl font-bold text-center text-cyan-400">Participant Growth Over Time</h2>
+            <h2 className="mb-4 text-2xl font-bold text-center text-cyan-400">
+              Participant Growth Over Time
+            </h2>
             <ResponsiveContainer width="100%" height={400}>
               <LineChart
                 data={chartData}
@@ -214,10 +247,23 @@ const convertToCSV = (data: any[]) => {
                   tick={{ fill: "#9CA3AF", fontSize: 12 }}
                   stroke="#4B5563"
                 />
-                <YAxis tick={{ fill: "#9CA3AF", fontSize: 12 }} stroke="#4B5563" />
-                <Tooltip content={<CustomTooltip active={false} payload={[]} label="" />} />
+                <YAxis
+                  tick={{ fill: "#9CA3AF", fontSize: 12 }}
+                  stroke="#4B5563"
+                />
+                <Tooltip
+                  content={
+                    <CustomTooltip active={false} payload={[]} label="" />
+                  }
+                />
                 <defs>
-                  <linearGradient id="colorParticipants" x1="0" y1="0" x2="0" y2="1">
+                  <linearGradient
+                    id="colorParticipants"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
                     <stop offset="5%" stopColor="#06B6D4" stopOpacity={0.8} />
                     <stop offset="95%" stopColor="#06B6D4" stopOpacity={0.2} />
                   </linearGradient>
@@ -272,60 +318,91 @@ const convertToCSV = (data: any[]) => {
 
           <div className="px-8">
             <button
-                onClick={downloadCSV}
-                className="px-4 py-2 mb-4 text-white bg-blue-500 rounded-md hover:bg-blue-600"
-                >Download Participants
+              onClick={downloadCSV}
+              className="px-4 py-2 mb-4 text-white bg-blue-500 rounded-md hover:bg-blue-600"
+            >
+              Download Participants
             </button>
-            <div className="h-full overflow-auto border border-white rounded-lg">
-              <ScrollArea className="h-full overflow-auto">
-                <Table className="min-w-full table-auto">
-                  <TableHeader>
-                    <TableRow className="bg-black hover:bg-gray-800">
-                      <TableHead className="text-gray-100">Name</TableHead>
-                      <TableHead className="text-gray-100">Email</TableHead>
-                      <TableHead className="text-gray-100">Contact</TableHead>
-                      <TableHead className="text-gray-100">Registered At</TableHead>
-                      <TableHead className="text-gray-100">Status</TableHead>
-                      <TableHead className="text-gray-100">Action</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredParticipants.map((participant) => (
-                      <TableRow key={participant.id} className="cursor-pointer hover:bg-gray-800">
-                        <TableCell className="font-medium">{participant.participant_name}</TableCell>
-                        <TableCell>{participant.participant_email}</TableCell>
-                        <TableCell>{participant.participant_contact}</TableCell>
-                        <TableCell>{new Date(participant.created_at).toLocaleString()}</TableCell>
-                        <TableCell>
-                          {participant.is_approved === true ? (
-                            <span className="text-green-500">Approved</span>
-                          ) : participant.is_approved === false ? (
-                            <span className="text-red-500">Rejected</span>
-                          ) : (
-                            <span className="text-yellow-500">Pending</span>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex gap-2">
-                            <button
-                              onClick={() => handleApproval(participant.id, true)}
-                              className="px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600"
-                            >
-                              Accept
-                            </button>
-                            <button
-                              onClick={() => handleApproval(participant.id, false)}
-                              className="px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600"
-                            >
-                              Reject
-                            </button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </ScrollArea>
+
+            <div className="overflow-x-auto overflow-y-auto">
+              <table className="min-w-full border-collapse border border-gray-200">
+                <thead>
+                  <tr>
+                    <th className="px-4 py-2 text-left text-gray-100 border border-gray-200">
+                      Participant Name
+                    </th>
+                    <th className="px-4 py-2 text-left text-gray-100 border border-gray-200">
+                      Contact
+                    </th>
+                    <th className="px-4 py-2 text-left text-gray-100 border border-gray-200">
+                      Account Holder
+                    </th>
+                    <th className="px-4 py-2 text-left text-gray-100 border border-gray-200">
+                      Transaction ID
+                    </th>
+                    <th className="px-4 py-2 text-left text-gray-100 border border-gray-200">
+                      Registered At
+                    </th>
+                    <th className="px-4 py-2 text-left text-gray-100 border border-gray-200">
+                      Status
+                    </th>
+                    <th className="px-4 py-2 text-left text-gray-100 border border-gray-200">
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredParticipants.map((participant) => (
+                    <tr
+                      key={participant.id}
+                      className="cursor-pointer hover:bg-gray-800"
+                    >
+                      <td className="px-4 py-2 border border-gray-200">
+                        {participant.participant_name}
+                      </td>
+                      <td className="px-4 py-2 border border-gray-200">
+                        {participant.participant_contact}
+                      </td>
+                      <td className="px-4 py-2 border border-gray-200">
+                        {participant.account_holder_name}
+                      </td>
+                      <td className="px-4 py-2 border border-gray-200">
+                        {participant.transaction_id}
+                      </td>
+                      <td className="px-4 py-2 border border-gray-200">
+                        {new Date(participant.created_at).toLocaleString()}
+                      </td>
+                      <td className="px-4 py-2 border border-gray-200">
+                        {participant.is_approved === true ? (
+                          <span className="text-green-500">Approved</span>
+                        ) : participant.is_approved === false ? (
+                          <span className="text-red-500">Rejected</span>
+                        ) : (
+                          <span className="text-yellow-500">Pending</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-2 border border-gray-200">
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleApproval(participant.id, true)}
+                            className="px-2 py-1 text-white bg-green-500 rounded-md hover:bg-green-600"
+                          >
+                            Accept
+                          </button>
+                          <button
+                            onClick={() =>
+                              handleApproval(participant.id, false)
+                            }
+                            className="px-2 py-1 text-white bg-red-500 rounded-md hover:bg-red-600"
+                          >
+                            Reject
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>

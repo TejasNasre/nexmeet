@@ -266,7 +266,7 @@ export default function AddEvent() {
 
     startTransition(async () => {
       try {
-        // check for date validation here
+        // Check for date validation here
         if (
           values.event_registration_startdate >
           values.event_registration_enddate
@@ -346,6 +346,28 @@ export default function AddEvent() {
             .select();
 
           if (imageError) throw imageError;
+        }
+
+        // Send notification email after successful registration
+        try {
+          await fetch("/api/email", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              type: "submission",
+              eventDetails: {
+                ...eventDetails,
+                event_startdate: eventDetails.event_startdate.toString(),
+                event_enddate: eventDetails.event_enddate.toString(),
+              },
+            }),
+          });
+          toast.success("Notification email sent successfully!");
+        } catch (emailError) {
+          console.error("Failed to send email notification:", emailError);
+          toast.error("Failed to send email notification");
         }
 
         toast.success("Event created successfully!");
