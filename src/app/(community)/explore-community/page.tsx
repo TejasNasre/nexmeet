@@ -42,15 +42,7 @@ const Page: React.FC = () => {
     community_category: "",
     community_image: "",
   });
-  const [editingCommunityId, setEditingCommunityId] = useState<string | null>(
-    null
-  ); // To track the community being edited
-
-  const [joinFormData, setJoinFormData] = useState({
-    name: "",
-    email: "",
-    contact: "",
-  });
+  const [editingCommunityId, setEditingCommunityId] = useState<string | null>(null); // To track the community being edited
 
   const session = useSession();
   const { user } = useUserDetails();
@@ -117,18 +109,16 @@ const Page: React.FC = () => {
       }
     } else {
       // Insert new community (as before)
-      const { data, error } = await supabase.from("communities").insert([
-        {
-          community_name,
-          community_description,
-          community_location,
-          community_category,
-          community_image,
-          community_members_count: 0,
-          community_creation_date: new Date().toISOString(),
-          is_approved: false,
-        },
-      ]);
+      const { data, error } = await supabase.from("communities").insert([{
+        community_name,
+        community_description,
+        community_location,
+        community_category,
+        community_image,
+        community_members_count: 0,
+        community_creation_date: new Date().toISOString(),
+        is_approved: false,
+      }]);
 
       if (error) {
         toast.error("Failed to create community.");
@@ -213,11 +203,6 @@ const Page: React.FC = () => {
     setShowAddCommunityForm(true); // Show the form to edit
   };
 
-  const handleJoinFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setJoinFormData({ ...joinFormData, [name]: value });
-  };
-
   const filteredAndSortedCommunities = useMemo(() => {
     return communities
       .filter((community) => {
@@ -291,75 +276,72 @@ const Page: React.FC = () => {
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
                 onClick={handleSearchClick}
               >
-                <SearchIcon className="w-5 h-5 text-white" />
+                <SearchIcon className="w-5 h-5 text-gray-400" />
               </div>
             </div>
-            <select
-              className="border border-white p-2 rounded-md bg-black text-white"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            >
-              <option value="">All Categories</option>
-              <option value="Tech">Tech</option>
-              <option value="Sports">Sports</option>
-              <option value="Music">Music</option>
-              <option value="Art">Art</option>
-            </select>
-            <select
-              className="border border-white p-2 rounded-md bg-black text-white"
-              value={sortByLikes}
-              onChange={(e) => setSortByLikes(e.target.value)}
-            >
-              <option value="">Sort by Members</option>
-              <option value="high">High to Low</option>
-              <option value="low">Low to High</option>
-            </select>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+            {currentCommunities.map((community) => (
+              <motion.div
+                key={community.id}
+                className={`relative border border-gray-300 p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 ${
+                  !community.is_approved ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                {/* Tooltip for Not Approved */}
+                {!community.is_approved && (
+                  <div className="absolute top-2 left-2 bg-red-500 text-white text-xs p-1 rounded">
+                    Not Approved
+                  </div>
+                )}
+
+                {/* Trash Icon for Delete */}
+                <button
+                  onClick={() => handleDeleteCommunity(community.id)}
+                  className={`absolute top-2 right-2 text-red-500 hover:text-red-700 ${
+                    !community.is_approved ? "cursor-not-allowed opacity-50" : ""
+                  }`}
+                  disabled={!community.is_approved}
+                >
+                  <TrashIcon className="w-6 h-6" />
+                </button>
+
+                <Image
+                  src={community.community_image}
+                  alt={community.community_name}
+                  className="w-full h-48 object-cover rounded-lg"
+                  width={500}
+                  height={500}
+                />
+                <h3 className="text-xl font-semibold mt-3">
+                  {community.community_name}
+                </h3>
+                <p className="text-gray-500 mt-2 flex items-center">
+                  <LocationMarkerIcon className="w-5 h-5 text-gray-400 mr-2" />
+                  {community.community_location}
+                </p>
+
+                <div className="flex justify-between items-center mt-4">
+                  <button
+                    onClick={() => handleViewEditCommunity(community)}
+                    className={`bg-yellow-500 text-white py-2 px-4 rounded-md hover:bg-yellow-600 ${
+                      !community.is_approved ? "cursor-not-allowed opacity-50" : ""
+                    }`}
+                    disabled={!community.is_approved}
+                  >
+                    Edit
+                  </button>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {currentCommunities.map((community) => (
-            <motion.div
-              key={community.id}
-              className="border border-gray-300 p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              {/* Trash Icon for Delete */}
-              <button
-                onClick={() => handleDeleteCommunity(community.id)}
-                className="absolute top-2 right-2 text-red-500 hover:text-red-700"
-              >
-                <TrashIcon className="w-6 h-6" />
-              </button>
-              <Image
-                src={community.community_image}
-                alt={community.community_name}
-                className="w-full h-48 object-cover rounded-lg"
-                width={500}
-                height={500}
-              />
-              <h3 className="text-xl font-semibold mt-3">
-                {community.community_name}
-              </h3>
-              <p className="text-gray-500 mt-2 flex items-center">
-                <LocationMarkerIcon className="w-5 h-5 text-gray-400 mr-2" />
-                {community.community_location}
-              </p>
-              <div className="flex justify-between items-center mt-4">
-                <button
-                  onClick={() => handleViewEditCommunity(community)} // View/Edit button
-                  className="bg-yellow-500 text-white py-2 px-4 rounded-md hover:bg-yellow-600"
-                >
-                  Edit
-                </button>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        <div className="text-center mt-[3rem]">
+        <div className="flex justify-center mt-6">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
