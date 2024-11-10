@@ -12,22 +12,11 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useSession } from "@supabase/auth-helpers-react";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
+
 const Page: React.FC = () => {
   interface CountLikes {
     [key: string]: number; // Maps event id to its like count
   }
-  // interface Event {
-  //   id: string;
-  //   event_title: string;
-  //   event_startdate: string;
-  //   event_location: string;
-  //   event_category: string;
-  //   event_price: number;
-  //   event_description: string;
-  //   event_likes: number;
-  //   event_images: { event_id: string; url: string }[];
-  // }
 
   const [loading, setLoading] = useState(true);
   const [event, setEvent]: any = useState([]);
@@ -288,9 +277,9 @@ const Page: React.FC = () => {
         return a.event_likes - b.event_likes;
       }
       if (sortByPrice === "high") {
-        return b.event_price - a.event_price;
+        return b.event_amount - a.event_amount;
       } else if (sortByPrice === "low") {
-        return a.event_price - b.event_price;
+        return a.event_amount - b.event_amount;
       }
       return 0;
     });
@@ -341,7 +330,7 @@ const Page: React.FC = () => {
     event_duration: string;
     team_size: string;
     event_formlink: string;
-    event_price: string;
+    event_amount: string;
     organizer_name: string;
     organizer_email: string;
     organizer_contact: string;
@@ -539,7 +528,7 @@ const Page: React.FC = () => {
                           </span>
                         </span>
                         <span className="text-sm font-semibold text-yellow-500">
-                          ${event.event_price}
+                          ${event.event_amount}
                         </span>
                       </div>
                       <p className="text-xs mb-3 line-clamp-2">

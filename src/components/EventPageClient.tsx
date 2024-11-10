@@ -13,7 +13,14 @@ import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { Comment } from "@/components/ui/comment";
 import { FaXTwitter } from "react-icons/fa6";
 
-import { PhoneIcon, MailIcon, User, ArrowRight, Tags, Trash } from "lucide-react";
+import {
+  PhoneIcon,
+  MailIcon,
+  User,
+  ArrowRight,
+  Tags,
+  Trash,
+} from "lucide-react";
 import { toast } from "sonner";
 
 import {
@@ -67,7 +74,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
       let { data, error }: any = await supabase
         .from("event_details")
         .select(
-          "*,event_images(event_id,url),event_participants(participant_email,is_registered)"
+          "*,event_images(event_id,url),event_participants(participant_email,is_registered,is_approved)"
         )
         .eq("id", eventsId);
       if (error) {
@@ -208,25 +215,33 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
   };
 
   const handleDeleteComment = async (commentId: string) => {
-    const commentToDelete = comments.find(c => c.id === commentId);
+    const commentToDelete = comments.find((c) => c.id === commentId);
     if (!commentToDelete) {
-        toast.error("Comment not found.");
-        return;
+      toast.error("Comment not found.");
+      return;
     }
 
     // Check if the comment belongs to the logged-in user
-    if (commentToDelete.author !== `${userData?.given_name} ${userData?.family_name}`) {
-        toast.error("You can only delete your own comments.");
-        return;
+    if (
+      commentToDelete.author !==
+      `${userData?.given_name} ${userData?.family_name}`
+    ) {
+      toast.error("You can only delete your own comments.");
+      return;
     }
 
-    const { error } = await supabase.from("comments").delete().eq("id", commentId);
+    const { error } = await supabase
+      .from("comments")
+      .delete()
+      .eq("id", commentId);
 
     if (error) {
       console.error("Error deleting comment:", error);
       toast.error("Failed to delete comment.");
     } else {
-      setComments((prevComments) => prevComments.filter(c => c.id !== commentId));
+      setComments((prevComments) =>
+        prevComments.filter((c) => c.id !== commentId)
+      );
       toast.success("Comment deleted successfully!");
     }
   };
@@ -326,7 +341,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                     <h1 className="flex flex-row items-center gap-3">
                       <Badge variant="destructive">
                         <span>&#8377;</span>
-                        {event.event_price}
+                        {event.event_amount}
                       </Badge>
                       <Badge
                         variant="destructive"
@@ -387,7 +402,18 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                         {registrationClosed
                           ? "Registration Closed"
                           : isRegistered
-                            ? "Registered ✔️"
+                            ? eventData[0]?.event_participants.find(
+                                (register: any) =>
+                                  register.participant_email === userData?.email
+                              )?.is_approved === null
+                              ? "Registered ✔️ Waiting For Approval"
+                              : eventData[0]?.event_participants.find(
+                                    (register: any) =>
+                                      register.participant_email ===
+                                      userData?.email
+                                  )?.is_approved
+                                ? "Registration Approved"
+                                : "Registration Rejected"
                             : !registrationClosed && !isRegistrationOpen
                               ? "Registration Upcoming"
                               : "Register Now"}
@@ -531,21 +557,22 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                           key={c.id}
                           className="flex flex-col gap-2 p-4 border border-white rounded-lg"
                         >
-                        <div className="flex justify-between items-center">
-                          <div className="flex items-center gap-2">
-                            <User className="w-5 h-5 text-[#FFC107]" />
-                            <span className="text-white">{c.author}</span>
-                            <span className="text-purple-500 text-sm">
-                              {new Date(c.timestamp).toLocaleString()}
-                            </span>
-                          </div>
-                          <Button
-                            variant="outline"
-                            className="ml-auto p-2 text-sm border-none" // Adjust padding and font size
-                            onClick={() => handleDeleteComment(c.id)} // Trigger delete function
+                          <div className="flex justify-between items-center">
+                            <div className="flex items-center gap-2">
+                              <User className="w-5 h-5 text-[#FFC107]" />
+                              <span className="text-white">{c.author}</span>
+                              <span className="text-purple-500 text-sm">
+                                {new Date(c.timestamp).toLocaleString()}
+                              </span>
+                            </div>
+                            <Button
+                              variant="outline"
+                              className="ml-auto p-2 text-sm border-none" // Adjust padding and font size
+                              onClick={() => handleDeleteComment(c.id)} // Trigger delete function
                             >
-                            <Trash className="w-4 h-4 text-red-500" /> {/* Use your delete icon here */}
-                          </Button>
+                              <Trash className="w-4 h-4 text-red-500" />{" "}
+                              {/* Use your delete icon here */}
+                            </Button>
                           </div>
                           <div className="flex items-center gap-2">
                             <ArrowRight className="w-4 h-4 text-red-500" />

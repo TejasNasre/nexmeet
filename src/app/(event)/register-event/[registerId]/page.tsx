@@ -9,6 +9,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { toast } from "sonner";
+import { QRCodeCanvas } from "qrcode.react";
+import { Button } from "@/components/ui/button";
 
 function Registerevent() {
   const params = useParams();
@@ -20,6 +22,7 @@ function Registerevent() {
   const [loading, setLoading]: any = useState(true);
   const [eventDetails, setEventDetails]: any = useState([]);
   const [submit, setSubmit]: any = useState(null);
+  const [pamenturl, setPaymenturl] = useState("");
 
   useEffect(() => {
     async function fetchEventDetails() {
@@ -31,8 +34,12 @@ function Registerevent() {
 
       if (event_details) {
         setEventDetails(event_details[0]);
+        // console.log(event_details[0]);
+        const upiData = `upi://pay?pa=${event_details[0].upi_id}&pn=${event_details[0].account_holder_name}&am=${event_details[0].event_amount}&cu=INR`;
+        setPaymenturl(upiData);
       }
     }
+
     fetchEventDetails();
   }, [registerId]);
 
@@ -44,6 +51,7 @@ function Registerevent() {
 
   const onSubmit = async (event_participants: any) => {
     setSubmit(false);
+    console.log(event_participants);
     const { data, error } = await supabase
       .from("event_participants")
       .insert([
@@ -52,6 +60,8 @@ function Registerevent() {
           participant_name: event_participants.participant_name,
           participant_email: event_participants.participant_email,
           participant_contact: event_participants.participant_contact,
+          transaction_id: event_participants.transaction_id,
+          account_holder_name: event_participants.account_holder_name,
           is_registered: true,
         },
       ])
@@ -138,17 +148,59 @@ function Registerevent() {
               className="w-full p-2 text-white bg-black border border-white rounded-md"
             />
             {errors.participant_contact && (
-              <span style={{ color: 'red' }}>Invalid contact number</span>
+              <span style={{ color: "red" }}>Invalid contact number</span>
             )}
           </div>
+          {eventDetails.isEventFree === "free" ? (
+            <>
+              <h1>
+                This Event Is Free No Need To Pay Any Amount Directly Register
+              </h1>
+            </>
+          ) : (
+            <>
+              <div className="flex flex-col gap-2">
+                <h1 className="text-red-600">*This Event Is Paid</h1>
+                <div className="bg-white md:w-[300px] flex flex-col justify-center items-center gap-6 p-2 md:px-10 md:py-4">
+                  <h1 className="text-black text-2xl">UPI QR-CODE</h1>
+                  <QRCodeCanvas value={`${pamenturl}`} size={250} />
+                </div>
+                <h1>
+                  Pay{" "}
+                  <span className="text-red-600 underline">
+                    {eventDetails.event_amount}
+                  </span>{" "}
+                  INR To Above QR-Code And Enter The Transaction ID Below
+                </h1>
+              </div>
 
-          <button
-            type="submit"
-            disabled={submit === false}
-            className="w-full p-2 text-white bg-black border border-white rounded-md hover:bg-white hover:text-black"
-          >
+              <div className="flex flex-col w-full gap-2">
+                <label htmlFor="transaction_id">UPI Transaction ID: </label>
+                <input
+                  type="text"
+                  placeholder="UPI Transaction ID"
+                  {...register("transaction_id", { required: true })}
+                  className="w-full p-2 text-white bg-black border border-white rounded-md"
+                />
+              </div>
+
+              <div className="flex flex-col w-full gap-2">
+                <label htmlFor="account_holder_name">
+                  Account Holder Name:{" "}
+                </label>
+                <input
+                  type="text"
+                  placeholder="Account Holder Name"
+                  {...register("account_holder_name", { required: true })}
+                  className="w-full p-2 text-white bg-black border border-white rounded-md"
+                />
+              </div>
+            </>
+          )}
+
+          <Button type="submit" disabled={submit === false}>
             {submit === false ? "Submitting..." : "Submit"}
-          </button>
+          </Button>
         </form>
       </div>
     </>

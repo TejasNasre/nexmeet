@@ -40,6 +40,7 @@
     "next": "^14.2.5",
     "next-sitemap": "^4.2.3",
     "next-themes": "^0.3.0",
+    "qrcode.react": "^4.1.0",
     "react": "^18",
     "react-big-calendar": "^1.15.0",
     "react-countup": "^6.5.3",
