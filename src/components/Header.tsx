@@ -197,7 +197,7 @@ function Header() {
                 key={href}
                 href={href}
                 onClick={() => handleNavigation(href)}
-                className={`pt-3 nav-link flex items-center justify-center h-12 transition-colors box-border ${isActive ? "border-b-2 border-white" : ""}`}
+                className={`font-bold pt-3 nav-link flex items-center justify-center h-12 transition-colors box-border ${isActive ? "border-b-2 border-white" : ""}`}
               >
                 {label}
               </Link>

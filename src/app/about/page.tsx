@@ -27,13 +27,13 @@ export default function AboutUs() {
   };
 
   return (
-    <div className="  w-full h-auto bg-black text-white py-[8rem] flex flex-col">
+    <div className="w-full h-auto bg-black text-white py-[8rem] flex flex-col">
       <section
         className={`${spaceGrotesk.className} bg-black text-white min-h-screen relative overflow-hidden`}
       >
         <div className="absolute inset-0 bg-grid-white/[0.05] bg-[length:20px_20px]" />
 
-        <div className="container mx-auto px-4 py-16 relative z-10">
+        <div className="container mx-auto px-4 relative z-10">
           <motion.h1
             className="text-5xl md:text-7xl font-bold mb-12 text-center tracking-tight font-spaceGrotesk"
             initial={{ opacity: 0, y: -50 }}

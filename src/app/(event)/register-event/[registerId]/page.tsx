@@ -51,7 +51,6 @@ function Registerevent() {
 
   const onSubmit = async (event_participants: any) => {
     setSubmit(false);
-    console.log(event_participants);
     const { data, error } = await supabase
       .from("event_participants")
       .insert([

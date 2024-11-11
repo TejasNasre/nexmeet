@@ -5,17 +5,13 @@ import { InfiniteMovingCards } from "../components/ui/infinite-moving-cards";
 import { BackgroundBeamsWithCollision } from "../components/ui/background-beams-with-collision";
 import { RegisterLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import Link from "next/link";
-
 import { useState, useEffect } from "react";
 import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
 import reviews from "../data/reviews.json";
 import data from "../data/community.json";
 import FeatureCards from "./FeatureCards";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-import { CiStar } from "react-icons/ci";
-import { AiFillStar } from "react-icons/ai";
 import axios from "axios";
-import ScrollToTop from "./Scroll-to-top";
 import Faq1 from "./faq";
 
 const Hero: React.FC = () => {

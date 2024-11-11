@@ -4,6 +4,7 @@ import { useUserDetails } from "../../../hooks/useUserDetails"; // Adjust the im
 import Pagination from "../../../components/Pagination";
 import { supabase } from "../../../utils/supabase";
 import Link from "next/link";
+import { Space_Grotesk } from "next/font/google";
 import Image from "next/image";
 import Loading from "../../../components/loading";
 import { HeartIcon } from "@heroicons/react/solid";
@@ -12,6 +13,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useSession } from "@supabase/auth-helpers-react";
 import { toast } from "sonner";
+
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
 
 const Page: React.FC = () => {
   interface CountLikes {
@@ -342,11 +345,11 @@ const Page: React.FC = () => {
   return (
     <>
       <div
-        className={`w-full h-auto bg-black text-white py-[8rem] ${
+        className={`${spaceGrotesk.className} w-full h-auto bg-black text-white py-[8rem] ${
           loading ? `px-0` : `px-4`
         }`}
       >
-        <div className="text-5xl md:text-6xl font-bold mb-12 text-center tracking-tight">
+        <div className="text-5xl md:text-7xl font-bold mb-12 text-center tracking-tight font-spaceGrotesk">
           Explore Events
           <div className="flex flex-col items-center justify-end md:items-start md:justify-start md:ml-0 md:mt-4">
             <Link href="/event-calendar">

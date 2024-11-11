@@ -1,60 +1,42 @@
 "use client";
-import React, { useState, useEffect, useMemo } from "react";
-import { useSession } from "@supabase/auth-helpers-react";
-import { supabase } from "../../../utils/supabase";
-import { toast } from "sonner";
-import Pagination from "../../../components/Pagination";
-import Loading from "../../../components/loading";
-import { useUserDetails } from "../../../hooks/useUserDetails";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import { SearchIcon, TrashIcon } from "@heroicons/react/solid"; // Import the search icon
-import { LocationMarkerIcon } from "@heroicons/react/solid";
-import Image from "next/image";
 
-const Page: React.FC = () => {
-  // Define types
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { Space_Grotesk } from "next/font/google";
+import { supabase } from "@/utils/supabase";
+import Image from "next/image";
+import Loading from "@/components/loading";
+
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
+
+export default function Page() {
+  const [searchTerm, setSearchTerm] = useState("");
+
   interface Community {
     id: string;
     community_name: string;
-    community_description: string;
-    community_location: string;
-    community_category: string;
-    community_members_count: number;
-    community_image: string;
-    community_creation_date: string;
-    is_approved: boolean;
+    logo_url: string;
+    tagline: string;
+    category: string;
+    community_size: number;
   }
 
-  // State hooks
-  const [loading, setLoading] = useState(true);
   const [communities, setCommunities] = useState<Community[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(9);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [category, setCategory] = useState("");
-  const [sortByLikes, setSortByLikes] = useState("");
-  const [showAddCommunityForm, setShowAddCommunityForm] = useState(false); // To toggle the form visibility
-  const [newCommunity, setNewCommunity] = useState({
-    community_name: "",
-    community_description: "",
-    community_location: "",
-    community_category: "",
-    community_image: "",
-  });
-  const [editingCommunityId, setEditingCommunityId] = useState<string | null>(null); // To track the community being edited
-
-  const session = useSession();
-  const { user } = useUserDetails();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchCommunities() {
-      const { data, error } = await supabase.from("communities").select("*");
+      const { data, error } = await supabase
+        .from("communities")
+        .select("*")
+        .eq("isApproved", true)
+        .order("community_name", { ascending: true });
+
       if (error) {
-        console.error("Error fetching communities:", error);
-        toast.error("Failed to load communities. Please try again later.");
+        console.error("Error fetching communities:", error.message);
       } else {
-        setCommunities(data || []); // Set default to empty array if data is null
+        setCommunities(data);
+        // console.log("Communities:", data);
       }
       setLoading(false);
     }
@@ -62,427 +44,87 @@ const Page: React.FC = () => {
     fetchCommunities();
   }, []);
 
-  const handleSearchClick = () => {
-    // Perform search action here
-    console.log("Search clicked!");
-  };
-
-  const handleFormSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const {
-      community_name,
-      community_description,
-      community_location,
-      community_category,
-      community_image,
-    } = newCommunity;
-
-    if (editingCommunityId) {
-      // Update the community
-      const { data, error } = await supabase
-        .from("communities")
-        .update({
-          community_name,
-          community_description,
-          community_location,
-          community_category,
-          community_image,
-        })
-        .eq("id", editingCommunityId);
-
-      if (error) {
-        toast.error("Failed to update community.");
-        console.error("Error updating community:", error);
-      } else {
-        toast.success("Community updated successfully!");
-        setShowAddCommunityForm(false);
-        setEditingCommunityId(null); // Reset editingCommunityId
-        // Optionally, update the state locally to reflect the change
-        setCommunities((prev) =>
-          prev.map((community) =>
-            community.id === editingCommunityId
-              ? { ...community, ...newCommunity }
-              : community
-          )
-        );
-      }
-    } else {
-      // Insert new community (as before)
-      const { data, error } = await supabase.from("communities").insert([{
-        community_name,
-        community_description,
-        community_location,
-        community_category,
-        community_image,
-        community_members_count: 0,
-        community_creation_date: new Date().toISOString(),
-        is_approved: false,
-      }]);
-
-      if (error) {
-        toast.error("Failed to create community.");
-        console.error("Error creating community:", error);
-      } else {
-        toast.success("Community created successfully!");
-        setShowAddCommunityForm(false);
-        setNewCommunity({
-          community_name: "",
-          community_description: "",
-          community_location: "",
-          community_category: "",
-          community_image: "",
-        });
-        if (Array.isArray(data)) {
-          setCommunities((prev) => [...prev, ...data]);
-        }
-      }
-    }
-  };
-
-  const handleCancel = () => {
-    setNewCommunity({
-      community_name: "",
-      community_description: "",
-      community_location: "",
-      community_category: "",
-      community_image: "",
-    });
-    setShowAddCommunityForm(false); // Close the form modal
-  };
-
-  const handleDeleteCommunity = async (communityId: string) => {
-    const confirmation = window.confirm(
-      "Are you sure you want to delete this community?"
-    );
-    if (!confirmation) return;
-
-    try {
-      // Step 1: Delete all members in the community
-      const { error: deleteMembersError } = await supabase
-        .from("community_members")
-        .delete()
-        .eq("community_id", communityId);
-
-      if (deleteMembersError) {
-        toast.error("Failed to delete community members.");
-        console.error("Error deleting community members:", deleteMembersError);
-        return;
-      }
-
-      // Step 2: Delete the community
-      const { error } = await supabase
-        .from("communities")
-        .delete()
-        .eq("id", communityId);
-
-      if (error) {
-        toast.error("Failed to delete community.");
-        console.error("Error deleting community:", error);
-      } else {
-        toast.success("Community deleted successfully!");
-        setCommunities((prev) =>
-          prev.filter((community) => community.id !== communityId)
-        );
-      }
-    } catch (error) {
-      toast.error("An unexpected error occurred.");
-      console.error("Unexpected error deleting community:", error);
-    }
-  };
-
-  const handleViewEditCommunity = (community: Community) => {
-    setNewCommunity({
-      community_name: community.community_name,
-      community_description: community.community_description,
-      community_location: community.community_location,
-      community_category: community.community_category,
-      community_image: community.community_image,
-    });
-    setEditingCommunityId(community.id); // Set the community ID being edited
-    setShowAddCommunityForm(true); // Show the form to edit
-  };
-
-  const filteredAndSortedCommunities = useMemo(() => {
-    return communities
-      .filter((community) => {
-        const matchesCategory = category
-          ? community.community_category === category
-          : true;
-        const matchesSearchTerm =
-          community.community_name
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase()) ||
-          community.community_location
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase());
-        return matchesCategory && matchesSearchTerm;
-      })
-      .sort((a, b) => {
-        if (sortByLikes === "high") {
-          return b.community_members_count - a.community_members_count;
-        } else if (sortByLikes === "low") {
-          return a.community_members_count - b.community_members_count;
-        }
-        return 0;
-      });
-  }, [communities, searchTerm, category, sortByLikes]);
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentCommunities = filteredAndSortedCommunities.slice(
-    indexOfFirstItem,
-    indexOfLastItem
+  const filteredCommunities = communities.filter((community) =>
+    community.community_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  const totalPages = Math.ceil(
-    filteredAndSortedCommunities.length / itemsPerPage
-  );
-
-  if (loading) {
-    return <Loading />;
-  }
 
   return (
-    <div
-      className={`w-full h-auto bg-black text-white py-[8rem] ${loading ? `px-0` : `px-4`}`}
-    >
-      <div className="text-5xl md:text-6xl font-bold mb-12 text-center items-center justify-center tracking-tight">
-        Explore Communities
+    <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white transition-colors duration-300 py-[8rem] px-10">
+      <div
+        className={`${spaceGrotesk.className} flex justify-center items-center`}
+      >
+        <h1 className="text-5xl md:text-7xl font-bold mb-12 text-center tracking-tight font-spaceGrotesk">
+          Explore Communities
+        </h1>
       </div>
 
-      <div className="container mx-auto p-6">
-        {/* Button to Show Add Community Form */}
-        <div className="flex justify-end mb-4">
-          <button
-            className="bg-blue-500 text-white py-2 px-4 rounded-md"
-            onClick={() => setShowAddCommunityForm(true)}
-          >
-            Add New Community
-          </button>
-        </div>
+      <div className="max-w-md mx-auto mb-12">
+        <input
+          type="search"
+          placeholder="SEARCH COMMUNITIES..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full dark:bg-black dark:text-white text-black text-xl font-bold px-4 py-2 rounded-full border-4 border-black dark:border-white focus:outline-none focus:border-2 focus:border-black dark:focus:border-white"
+        />
+      </div>
 
-        <div className="w-full my-[3rem] flex flex-col gap-4 justify-end">
-          <div className="flex space-x-4">
-            <div className="relative w-full">
-              <input
-                type="text"
-                placeholder="Search communities..."
-                className="bg-black text-white w-full p-2 rounded-md border border-white outline-none pr-10"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <div
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
-                onClick={handleSearchClick}
-              >
-                <SearchIcon className="w-5 h-5 text-gray-400" />
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-            {currentCommunities.map((community) => (
-              <motion.div
-                key={community.id}
-                className={`relative border border-gray-300 p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 ${
-                  !community.is_approved ? "opacity-50 cursor-not-allowed" : ""
-                }`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-              >
-                {/* Tooltip for Not Approved */}
-                {!community.is_approved && (
-                  <div className="absolute top-2 left-2 bg-red-500 text-white text-xs p-1 rounded">
-                    Not Approved
+      {loading ? (
+        <Loading />
+      ) : (
+        <>
+          {filteredCommunities.length === 0 ? (
+            <div className="text-center text-2xl">No communities found</div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 py-20">
+              {filteredCommunities.map((community) => (
+                <div
+                  key={community.id}
+                  className="dark:bg-black bg-white text-black dark:text-white p-4 rounded-xl border-4 border-black dark:border-white"
+                >
+                  <div className="w-20 h-20 mx-auto mb-6 overflow-hidden rounded-full bg-black dark:bg-white border-2 border-white">
+                    <Image
+                      src={`https://jzhgfowuznosxtwzkbkx.supabase.co/storage/v1/object/public/community-logos/${community.logo_url}`}
+                      alt={`${community.community_name} logo`}
+                      className="w-full h-full object-contain filter invert dark:invert-0 bg-black"
+                      width={128}
+                      height={128}
+                    />
                   </div>
-                )}
-
-                {/* Trash Icon for Delete */}
-                <button
-                  onClick={() => handleDeleteCommunity(community.id)}
-                  className={`absolute top-2 right-2 text-red-500 hover:text-red-700 ${
-                    !community.is_approved ? "cursor-not-allowed opacity-50" : ""
-                  }`}
-                  disabled={!community.is_approved}
-                >
-                  <TrashIcon className="w-6 h-6" />
-                </button>
-
-                <Image
-                  src={community.community_image}
-                  alt={community.community_name}
-                  className="w-full h-48 object-cover rounded-lg"
-                  width={500}
-                  height={500}
-                />
-                <h3 className="text-xl font-semibold mt-3">
-                  {community.community_name}
-                </h3>
-                <p className="text-gray-500 mt-2 flex items-center">
-                  <LocationMarkerIcon className="w-5 h-5 text-gray-400 mr-2" />
-                  {community.community_location}
-                </p>
-
-                <div className="flex justify-between items-center mt-4">
-                  <button
-                    onClick={() => handleViewEditCommunity(community)}
-                    className={`bg-yellow-500 text-white py-2 px-4 rounded-md hover:bg-yellow-600 ${
-                      !community.is_approved ? "cursor-not-allowed opacity-50" : ""
-                    }`}
-                    disabled={!community.is_approved}
+                  <h2 className="text-3xl font-black mb-4 text-center uppercase">
+                    {community.community_name}
+                  </h2>
+                  <p className="text-xl mb-4 text-center">
+                    {community.tagline}
+                  </p>
+                  <div className="flex justify-center mb-4">
+                    <span className="bg-black dark:bg-white text-white dark:text-black px-4 py-2 text-lg font-bold rounded-full">
+                      {community.category}
+                    </span>
+                  </div>
+                  <p className="text-xl font-bold text-center mb-6">
+                    {community.community_size.toLocaleString()} Members
+                  </p>
+                  <Link
+                    href={`/explore-community/${community.id}`}
+                    className="block w-full bg-black dark:bg-white text-white dark:text-black text-center py-2 text-xl font-bold rounded-full"
                   >
-                    Edit
-                  </button>
+                    View Community
+                  </Link>
                 </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex justify-center mt-6">
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={(page) => setCurrentPage(page)}
-          />
-        </div>
-      </div>
-
-      {/* Add or Edit Community Form Modal */}
-      {showAddCommunityForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-black p-6 rounded-lg w-full max-w-lg">
-            <h2 className="text-2xl font-bold mb-4">
-              {editingCommunityId ? "Edit Community" : "Add New Community"}
-            </h2>
-            <form onSubmit={handleFormSubmit}>
-              <div className="mb-4">
-                <label
-                  htmlFor="community_name"
-                  className="block text-sm font-semibold"
-                >
-                  Community Name
-                </label>
-                <input
-                  type="text"
-                  id="community_name"
-                  className="border border-gray-300 rounded-md w-full p-2 mt-2 bg-black"
-                  value={newCommunity.community_name}
-                  onChange={(e) =>
-                    setNewCommunity({
-                      ...newCommunity,
-                      community_name: e.target.value,
-                    })
-                  }
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="community_description"
-                  className="block text-sm font-semibold"
-                >
-                  Description
-                </label>
-                <textarea
-                  id="community_description"
-                  className="border border-gray-300 rounded-md w-full p-2 mt-2 bg-black"
-                  value={newCommunity.community_description}
-                  onChange={(e) =>
-                    setNewCommunity({
-                      ...newCommunity,
-                      community_description: e.target.value,
-                    })
-                  }
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="community_location"
-                  className="block text-sm font-semibold"
-                >
-                  Location
-                </label>
-                <input
-                  type="text"
-                  id="community_location"
-                  className="border border-gray-300 rounded-md w-full p-2 mt-2 bg-black"
-                  value={newCommunity.community_location}
-                  onChange={(e) =>
-                    setNewCommunity({
-                      ...newCommunity,
-                      community_location: e.target.value,
-                    })
-                  }
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="community_category"
-                  className="block text-sm font-semibold"
-                >
-                  Category
-                </label>
-                <input
-                  type="text"
-                  id="community_category"
-                  className="border border-gray-300 rounded-md w-full p-2 mt-2 bg-black"
-                  value={newCommunity.community_category}
-                  onChange={(e) =>
-                    setNewCommunity({
-                      ...newCommunity,
-                      community_category: e.target.value,
-                    })
-                  }
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="community_image"
-                  className="block text-sm font-semibold"
-                >
-                  Community Image URL
-                </label>
-                <input
-                  type="text"
-                  id="community_image"
-                  className="border border-gray-300 rounded-md w-full p-2 mt-2 bg-black"
-                  value={newCommunity.community_image}
-                  onChange={(e) =>
-                    setNewCommunity({
-                      ...newCommunity,
-                      community_image: e.target.value,
-                    })
-                  }
-                  required
-                />
-              </div>
-              <div className="flex justify-between">
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white py-2 px-4 rounded-md"
-                >
-                  {editingCommunityId ? "Update Community" : "Create Community"}
-                </button>
-                <button
-                  type="button"
-                  onClick={handleCancel}
-                  className="bg-red-500 text-white py-2 px-4 rounded-md"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+              ))}
+            </div>
+          )}
+        </>
       )}
+
+      <div className="mt-16 text-center">
+        <Link
+          href="/add-community"
+          className="bg-black dark:bg-white text-white dark:text-black text-xl font-bold px-8 py-4 rounded-full transform hover:skew-x-6 transition-transform duration-300"
+        >
+          Add Your Own Community
+        </Link>
+      </div>
     </div>
   );
-};
-
-export default Page;
+}

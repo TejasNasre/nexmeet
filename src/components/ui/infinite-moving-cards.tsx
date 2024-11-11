@@ -99,7 +99,7 @@ export const InfiniteMovingCards = ({
               alt={item.name}
               width={150}
               height={150}
-              className="bject-cover"
+              className="object-cover"
             />
           </li>
         ))}

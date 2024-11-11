@@ -10,11 +10,11 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "transition ease-in-out duration-300 hover:scale-105 dark:border-white border-black border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(0,0,0)] dark:hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md p-1 md:p-2",
+          "transition ease-in-out duration-300 hover:scale-20 dark:border-white border-black border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(0,0,0)] dark:hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md p-1 md:p-2",
         destructive:
-          "transition ease-in-out duration-300 hover:scale-105 border-white border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md p-1 md:p-2",
+          "transition ease-in-out duration-300 hover:scale-20 border-white border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md p-1 md:p-2",
         outline:
-          "transition ease-in-out duration-300 hover:scale-105 border-white border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md p-1 md:p-2",
+          "transition ease-in-out duration-300 hover:scale-20 border-white border-double border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md p-1 md:p-2",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
