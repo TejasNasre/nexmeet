@@ -3,5 +3,10 @@
     "id": 1,
     "name": "Lamit Club",
     "image": "https://jzhgfowuznosxtwzkbkx.supabase.co/storage/v1/object/public/community_img/lamit_club.png"
+  },
+  {
+    "id": 2,
+    "name": "Delhi NCR DAO",
+    "image": "https://jzhgfowuznosxtwzkbkx.supabase.co/storage/v1/object/public/community_img/delhi_ncr_dao.png"
   }
 ]

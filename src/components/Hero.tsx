@@ -58,7 +58,7 @@ const Hero: React.FC = () => {
 
   return (
     <>
-      <div className="h-full w-full bg-black text-white">
+      <div className="h-full w-full bg-black text-white pt-10">
         <BackgroundBeamsWithCollision>
           <div className="flex flex-col justify-center items-center gap-12">
             <h2 className="text-2xl relative z-20 md:text-4xl lg:text-7xl font-bold text-center text-white dark:text-white font-sans tracking-tight">
@@ -72,7 +72,6 @@ const Hero: React.FC = () => {
                 </div>
               </div>
             </h2>
-
             <div className="flex flex-row justify-center items-center gap-8">
               <Link
                 href="/explore-events"
@@ -93,8 +92,12 @@ const Hero: React.FC = () => {
                 </RegisterLink>
               )}
             </div>
-            {/* <h1 className="-mb-6">project is in development phase</h1> */}
-
+            <button className="bg-neutral-950 text-neutral-400 border border-neutral-400 border-b-4 font-medium overflow-hidden relative px-2 py-1 rounded-md hover:brightness-150 hover:border-t-4 hover:border-b active:opacity-75 outline-none duration-300 group">
+              <span className="bg-neutral-400 shadow-neutral-400 absolute -top-[150%] left-0 inline-flex w-80 h-[5px] rounded-md opacity-50 group-hover:top-[150%] duration-500 shadow-[0_0_10px_10px_rgba(0,0,0,0.3)]"></span>
+              <Link href={"https://chat.whatsapp.com/HD7kdkjzSP8Lf1nY6iTpnN"}>
+                Join Community
+              </Link>
+            </button>
             <div className="text-center">
               <span className="mr-4">⭐ Stars: {repoData.stars}</span>
             </div>
@@ -179,17 +182,17 @@ const Hero: React.FC = () => {
               </p>
             </div>
 
-            <div className="mg-6 grid grid-cols-1 gap-4 sm:mt-8 sm:grid-cols-2  sm:divide-y-0 lg:grid-cols-4">
+            <div className="mg-6 grid grid-cols-1 gap-4 sm:mt-8 sm:grid-cols-2  sm:divide-y-0 lg:grid-cols-3">
               <div className="flex flex-col px-4 py-8 text-center">
                 <dt className="order-last text-lg font-medium text-white">
-                  Total Sales
+                  Total Users
                 </dt>
                 <dd className="text-4xl font-extrabold text-blue-600 md:text-5xl">
                   <CountUp
                     start={0}
-                    end={1000}
+                    end={200}
                     duration={10}
-                    prefix="$"
+                    suffix="+"
                     separator=","
                   />
                 </dd>
@@ -197,28 +200,19 @@ const Hero: React.FC = () => {
 
               <div className="flex flex-col px-4 py-8 text-center">
                 <dt className="order-last text-lg font-medium text-white">
-                  Official Addons
+                  Official Community Partners
                 </dt>
                 <dd className="text-4xl font-extrabold text-blue-600 md:text-5xl">
-                  <CountUp start={0} end={50} duration={10} />
+                  <CountUp start={0} end={3} suffix="+" duration={10} />
                 </dd>
               </div>
 
               <div className="flex flex-col px-4 py-8 text-center">
                 <dt className="order-last text-lg font-medium text-white">
-                  Total Addons
+                  Total Event Organised
                 </dt>
                 <dd className="text-4xl font-extrabold text-blue-600 md:text-5xl">
-                  <CountUp start={0} end={100} duration={10} />
-                </dd>
-              </div>
-
-              <div className="flex flex-col px-4 py-8 text-center">
-                <dt className="order-last text-lg font-medium text-white">
-                  Downloads
-                </dt>
-                <dd className="text-4xl font-extrabold text-blue-600 md:text-5xl">
-                  <CountUp start={0} end={10000} duration={10} separator="," />
+                  <CountUp start={0} end={0} duration={10} />
                 </dd>
               </div>
             </div>

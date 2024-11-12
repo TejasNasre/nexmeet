@@ -97,8 +97,8 @@ export const InfiniteMovingCards = ({
             <Image
               src={item.image}
               alt={item.name}
-              width={150}
-              height={150}
+              width={200}
+              height={200}
               className="object-cover"
             />
           </li>

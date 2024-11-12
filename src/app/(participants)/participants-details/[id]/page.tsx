@@ -20,12 +20,13 @@ import { toast } from "sonner";
 
 function Page({ params }: { params: { id: any } }) {
   const router = useRouter();
-  const { isAuthenticated, isLoading } = useKindeBrowserClient();
+  const { isAuthenticated, isLoading, user } = useKindeBrowserClient();
 
   const [participants, setParticipants] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [chartData, setChartData] = useState<any[]>([]);
+  const [isOrganizer, setIsOrganizer] = useState(false);
 
   useEffect(() => {
     const fetchParticipants = async () => {
@@ -43,8 +44,30 @@ function Page({ params }: { params: { id: any } }) {
         setLoading(false);
       }
     };
-    fetchParticipants();
-  }, [params.id]);
+
+    const fetchEventDetails = async () => {
+      const { data: eventDetails, error } = await supabase
+        .from("event_details")
+        .select("organizer_email")
+        .eq("id", params.id)
+        .single();
+
+      if (error) {
+        console.log(error);
+        toast.error("Failed to fetch event details. Please try again.");
+      } else {
+        // Check if the authenticated user is the organizer
+        if (eventDetails.organizer_email === user?.email) {
+          setIsOrganizer(true);
+        }
+      }
+    };
+
+    if (isAuthenticated) {
+      fetchParticipants();
+      fetchEventDetails();
+    }
+  }, [params.id, isAuthenticated, user]);
 
   const processChartData = (data: any[]) => {
     // Sort the data by created_at
@@ -218,7 +241,7 @@ function Page({ params }: { params: { id: any } }) {
     return <Loading />;
   }
 
-  return isAuthenticated ? (
+  return isAuthenticated && isOrganizer ? (
     <>
       {loading ? (
         <Loading />
@@ -382,22 +405,26 @@ function Page({ params }: { params: { id: any } }) {
                         )}
                       </td>
                       <td className="px-4 py-2 border border-gray-200">
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleApproval(participant.id, true)}
-                            className="px-2 py-1 text-white bg-green-500 rounded-md hover:bg-green-600"
-                          >
-                            Accept
-                          </button>
-                          <button
-                            onClick={() =>
-                              handleApproval(participant.id, false)
-                            }
-                            className="px-2 py-1 text-white bg-red-500 rounded-md hover:bg-red-600"
-                          >
-                            Reject
-                          </button>
-                        </div>
+                        {isOrganizer && (
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() =>
+                                handleApproval(participant.id, true)
+                              }
+                              className="px-2 py-1 text-white bg-green-500 rounded-md hover:bg-green-600"
+                            >
+                              Accept
+                            </button>
+                            <button
+                              onClick={() =>
+                                handleApproval(participant.id, false)
+                              }
+                              className="px-2 py-1 text-white bg-red-500 rounded-md hover:bg-red-600"
+                            >
+                              Reject
+                            </button>
+                          </div>
+                        )}
                       </td>
                     </tr>
                   ))}

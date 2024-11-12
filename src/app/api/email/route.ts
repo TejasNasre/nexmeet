@@ -5,13 +5,22 @@ import { RegistrationEmail } from "../../../components/email-templates/Registrat
 import EventApprovalEmail from "../../../components/email-templates/EventApprovalEmail";
 import CommunityApprovalEmail from "../../../components/email-templates/CommunityApprovalEmail";
 import CommunityAddedEmail from "../../../components/email-templates/CommunityAddedEmail";
+import FormSubmissionEmail from "../../../components/email-templates/FormSubmissionEmail";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
   try {
-    const { type, eventDetails, participant, isApproved, communityDetails } =
-      await request.json();
+    const {
+      type,
+      eventDetails,
+      participant,
+      isApproved,
+      communityDetails,
+      name,
+      email,
+      message,
+    } = await request.json();
 
     let emailContent;
     let subject;
@@ -40,7 +49,12 @@ export async function POST(request: Request) {
       });
       subject = "Community Added Successfully";
       recipient = communityDetails.contactInfo;
-      cc = "tejasnasre120@gmail.com";
+      cc = ["tejasnasre120@gmail.com", "nexmeetup@gmail.com"];
+    } else if (type === "form-submission") {
+      emailContent = FormSubmissionEmail({ name, email, message });
+      subject = "Form Submission Received";
+      recipient = email;
+      cc = ["tejasnasre120@gmail.com", "nexmeetup@gmail.com"];
     } else {
       return NextResponse.json(
         { error: "Invalid email type" },
@@ -51,7 +65,7 @@ export async function POST(request: Request) {
     const { data, error } = await resend.emails.send({
       from: "NexMeet <events@nexmeet.social>",
       to: [recipient],
-      cc: cc ? [cc] : undefined,
+      cc: cc ? [...cc] : undefined,
       subject,
       react: emailContent,
     });

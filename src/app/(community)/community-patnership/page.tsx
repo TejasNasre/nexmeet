@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { supabase } from "../../utils/supabase";
+import { supabase } from "../../../utils/supabase";
 import { Space_Grotesk } from "next/font/google";
 import { Mail, Phone } from "lucide-react";
 import { toast } from "sonner";
@@ -15,7 +15,7 @@ function CommunityPartners() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [communityName, setCommunityName] = useState("");
-  const [communitySize, setCommunitySize] = useState("");
+  const [communitySize, setCommunitySize] = useState<string>("");
   const [description, setDescription] = useState("");
   const [quality, setQuality] = useState("");
   const [belief, setBelief] = useState("");
@@ -23,41 +23,42 @@ function CommunityPartners() {
   const [step, setStep] = useState(1);
   const [emailStatus, setEmailStatus] = useState(false); // Track email validation status
 
-
   const qualityOptions = [
     {
       id: "established",
       label: "Established Community",
-      description: "Active community with regular events and 2+ years of engagement"
+      description:
+        "Active community with regular events and 2+ years of engagement",
     },
     {
       id: "growing",
       label: "Growing Network",
-      description: "Rapidly expanding community with consistent monthly growth"
+      description: "Rapidly expanding community with consistent monthly growth",
     },
     {
       id: "specialized",
       label: "Specialized Focus",
-      description: "Niche community with deeply engaged members"
-    }
+      description: "Niche community with deeply engaged members",
+    },
   ];
 
   const beliefOptions = [
     {
       id: "innovation",
       label: "Innovation First",
-      description: "We focus on pushing boundaries and embracing new technologies"
+      description:
+        "We focus on pushing boundaries and embracing new technologies",
     },
     {
       id: "community",
       label: "Community-Driven",
-      description: "We prioritize community feedback and collective growth"
+      description: "We prioritize community feedback and collective growth",
     },
     {
       id: "impact",
       label: "Impact Focused",
-      description: "We're dedicated to creating meaningful industry change"
-    }
+      description: "We're dedicated to creating meaningful industry change",
+    },
   ];
 
   const handleNextStep = (e: React.FormEvent) => {
@@ -73,7 +74,14 @@ function CommunityPartners() {
   };
 
   const validateStep1 = () => {
-    if (!name || !email || !phone || !communityName || !communitySize || !description) {
+    if (
+      !name ||
+      !email ||
+      !phone ||
+      !communityName ||
+      !communitySize ||
+      !description
+    ) {
       toast.error("Please fill in all fields before proceeding");
       return false;
     }
@@ -90,7 +98,7 @@ function CommunityPartners() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (step === 1) {
       if (validateStep1()) {
         setStep(2);
@@ -105,22 +113,34 @@ function CommunityPartners() {
     setIsSubmitting(true);
 
     try {
-      const { error } = await supabase
-        .from("community_partners")
-        .insert([
-          {
-            name,
-            email,
-            phone,
-            community_name: communityName,
-            community_size: communitySize,
-            Desc: description,
-            qualities: quality,
-            believe: belief
-          }
-        ]);
+      const { error } = await supabase.from("community_partners").insert([
+        {
+          name,
+          email,
+          phone,
+          community_name: communityName,
+          community_size: communitySize,
+          Desc: description,
+          qualities: quality,
+          believe: belief,
+        },
+      ]);
 
       if (error) throw error;
+
+      // Send email notification
+      await fetch("/api/email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: "form-submission",
+          name,
+          email,
+          message: `Community Name: ${communityName}\nCommunity Size: ${communitySize}\nDescription: ${description}\nQuality: ${quality}\nBelief: ${belief}`,
+        }),
+      });
 
       toast.success("Successfully submitted your partnership application!");
       // Reset form
@@ -129,7 +149,7 @@ function CommunityPartners() {
       setPhone("");
       setCommunityName("");
       setEmailStatus(false);
-      setCommunitySize("");
+      setCommunitySize("0");
       setDescription("");
       setQuality("");
       setBelief("");
@@ -141,10 +161,10 @@ function CommunityPartners() {
       setIsSubmitting(false);
     }
   };
-  
+
   const checkEmailExists = async () => {
     if (!emailRegex.test(email.trim())) {
-      setEmailStatus(false); 
+      setEmailStatus(false);
       toast.error("Invalid Email.");
       return;
     }
@@ -153,13 +173,13 @@ function CommunityPartners() {
       setEmailStatus(false); // No status if the email is empty
       return;
     }
-  
+
     try {
       const { data } = await supabase
         .from("community_partners")
         .select("email")
         .eq("email", email);
-  
+
       if (data && data.length > 0) {
         setEmailStatus(false);
         toast.error("Email already exists. Please use a different email.");
@@ -172,7 +192,9 @@ function CommunityPartners() {
   };
 
   return (
-    <div className={`${spaceGrotesk.className} w-full min-h-screen bg-black text-white py-20 px-4`}>
+    <div
+      className={`${spaceGrotesk.className} w-full min-h-screen bg-black text-white py-[8rem] px-4`}
+    >
       <div className="absolute inset-0 bg-grid-white/[0.05] bg-[length:20px_20px]" />
 
       <div className="container mx-auto max-w-4xl relative z-10">
@@ -181,22 +203,23 @@ function CommunityPartners() {
             Community Partners
           </h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Join our ecosystem of innovative communities. Together, we build the future.
+            Join our ecosystem of innovative communities. Together, we build the
+            future.
           </p>
         </div>
 
         <div className="bg-white/5 border border-white/10 rounded-xl p-8">
           <div className="flex justify-between mb-8">
             <div className="flex gap-4">
-              <div 
+              <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center border 
-                  ${step >= 1 ? 'border-white bg-white text-black' : 'border-white/30'}`}
+                  ${step >= 1 ? "border-white bg-white text-black" : "border-white/30"}`}
               >
                 1
               </div>
-              <div 
+              <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center border 
-                  ${step >= 2 ? 'border-white bg-white text-black' : 'border-white/30'}`}
+                  ${step >= 2 ? "border-white bg-white text-black" : "border-white/30"}`}
               >
                 2
               </div>
@@ -234,23 +257,29 @@ function CommunityPartners() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <input
+                  <input
                     type="tel"
                     value={phone}
                     onChange={(e) => {
                       const phoneValue = e.target.value;
-                      if (/^\d*$/.test(phoneValue)) { // Allow only numeric characters
+                      if (/^\d*$/.test(phoneValue)) {
+                        // Allow only numeric characters
                         setPhone(phoneValue);
                       }
                     }}
                     placeholder="Your Phone"
                     required
                     className="w-full p-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-white/30"
-                    />
+                  />
                   <input
                     type="number"
                     value={communitySize}
-                    onChange={(e) => setCommunitySize(e.target.value)}
+                    onChange={(e) => {
+                      const value = parseInt(e.target.value, 10);
+                      if (value >= 0) {
+                        setCommunitySize(value.toString());
+                      }
+                    }}
                     placeholder="Community Size"
                     required
                     className="w-full p-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-white/30"
@@ -283,12 +312,16 @@ function CommunityPartners() {
             ) : (
               <div className="space-y-8">
                 <div className="space-y-4">
-                  <h3 className="text-xl font-semibold mb-4">What best describes your community?</h3>
+                  <h3 className="text-xl font-semibold mb-4">
+                    What best describes your community?
+                  </h3>
                   {qualityOptions.map((option) => (
                     <label
                       key={option.id}
                       className={`block p-4 border ${
-                        quality === option.id ? 'border-white' : 'border-white/10'
+                        quality === option.id
+                          ? "border-white"
+                          : "border-white/10"
                       } rounded-xl hover:bg-white/5 cursor-pointer transition-colors`}
                     >
                       <div className="flex items-start">
@@ -302,7 +335,9 @@ function CommunityPartners() {
                         />
                         <div>
                           <div className="font-medium">{option.label}</div>
-                          <div className="text-sm text-gray-400">{option.description}</div>
+                          <div className="text-sm text-gray-400">
+                            {option.description}
+                          </div>
                         </div>
                       </div>
                     </label>
@@ -310,12 +345,16 @@ function CommunityPartners() {
                 </div>
 
                 <div className="space-y-4">
-                  <h3 className="text-xl font-semibold mb-4">What drives your community forward?</h3>
+                  <h3 className="text-xl font-semibold mb-4">
+                    What drives your community forward?
+                  </h3>
                   {beliefOptions.map((option) => (
                     <label
                       key={option.id}
                       className={`block p-4 border ${
-                        belief === option.id ? 'border-white' : 'border-white/10'
+                        belief === option.id
+                          ? "border-white"
+                          : "border-white/10"
                       } rounded-xl hover:bg-white/5 cursor-pointer transition-colors`}
                     >
                       <div className="flex items-start">
@@ -329,7 +368,9 @@ function CommunityPartners() {
                         />
                         <div>
                           <div className="font-medium">{option.label}</div>
-                          <div className="text-sm text-gray-400">{option.description}</div>
+                          <div className="text-sm text-gray-400">
+                            {option.description}
+                          </div>
                         </div>
                       </div>
                     </label>
@@ -348,7 +389,7 @@ function CommunityPartners() {
                   Back
                 </button>
               )}
-              
+
               {step === 1 ? (
                 <button
                   type="button"

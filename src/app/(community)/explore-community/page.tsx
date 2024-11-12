@@ -49,7 +49,7 @@ export default function Page() {
   );
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white transition-colors duration-300 py-[8rem] px-10">
+    <div className="min-h-screen bg-black text-white transition-colors duration-300 py-[8rem] px-10">
       <div
         className={`${spaceGrotesk.className} flex justify-center items-center`}
       >
@@ -117,12 +117,18 @@ export default function Page() {
         </>
       )}
 
-      <div className="mt-16 text-center">
+      <div className="mt-16 text-center flex justify-center items-center flex-col md:flex-row gap-4">
         <Link
           href="/add-community"
           className="bg-black dark:bg-white text-white dark:text-black text-xl font-bold px-8 py-4 rounded-full transform hover:skew-x-6 transition-transform duration-300"
         >
           Add Your Own Community
+        </Link>
+        <Link
+          href="/community-patnership"
+          className="bg-black dark:bg-white text-white dark:text-black text-xl font-bold px-8 py-4 rounded-full transform hover:skew-x-6 transition-transform duration-300"
+        >
+          Be Community Partner With Nexmeet
         </Link>
       </div>
     </div>
