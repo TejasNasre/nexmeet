@@ -25,7 +25,7 @@ export async function POST(request: Request) {
     let emailContent;
     let subject;
     let recipient;
-    let cc;
+    let cc = ["nexmeetup@gmail.com"];
 
     if (type === "submission") {
       emailContent = EventSubmissionEmail({ eventDetails });
@@ -49,12 +49,12 @@ export async function POST(request: Request) {
       });
       subject = "Community Added Successfully";
       recipient = communityDetails.contactInfo;
-      cc = ["tejasnasre120@gmail.com", "nexmeetup@gmail.com"];
+      cc.push("tejasnasre120@gmail.com");
     } else if (type === "form-submission") {
       emailContent = FormSubmissionEmail({ name, email, message });
       subject = "Form Submission Received";
       recipient = email;
-      cc = ["tejasnasre120@gmail.com", "nexmeetup@gmail.com"];
+      cc.push("tejasnasre120@gmail.com");
     } else {
       return NextResponse.json(
         { error: "Invalid email type" },
@@ -65,7 +65,7 @@ export async function POST(request: Request) {
     const { data, error } = await resend.emails.send({
       from: "NexMeet <events@nexmeet.social>",
       to: [recipient],
-      cc: cc ? [...cc] : undefined,
+      cc,
       subject,
       react: emailContent,
     });
