@@ -27,6 +27,7 @@ function Page({ params }: { params: { id: any } }) {
   const [loading, setLoading] = useState(true);
   const [chartData, setChartData] = useState<any[]>([]);
   const [isOrganizer, setIsOrganizer] = useState(false);
+  const [dataFetched, setDataFetched] = useState(false);
 
   useEffect(() => {
     const fetchParticipants = async () => {
@@ -41,7 +42,6 @@ function Page({ params }: { params: { id: any } }) {
       } else {
         setParticipants(event_participants || []);
         processChartData(event_participants ?? []);
-        setLoading(false);
       }
     };
 
@@ -63,10 +63,16 @@ function Page({ params }: { params: { id: any } }) {
       }
     };
 
-    if (isAuthenticated) {
-      fetchParticipants();
-      fetchEventDetails();
-    }
+    const fetchData = async () => {
+      if (isAuthenticated) {
+        await fetchParticipants();
+        await fetchEventDetails();
+        setDataFetched(true);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, [params.id, isAuthenticated, user]);
 
   const processChartData = (data: any[]) => {
@@ -237,7 +243,7 @@ function Page({ params }: { params: { id: any } }) {
     return null;
   };
 
-  if (isLoading) {
+  if (isLoading || loading) {
     return <Loading />;
   }
 
