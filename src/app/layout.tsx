@@ -99,6 +99,7 @@ export default function RootLayout({
         <title>NexMeet</title>
       </head>
       <body suppressHydrationWarning={true} className={spaceGrotesk.className}>
+        <Analytics/>
         <Toaster
           theme="dark"
           richColors
