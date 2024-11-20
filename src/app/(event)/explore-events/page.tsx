@@ -530,8 +530,9 @@ const Page: React.FC = () => {
                             {isApproved ? "Approved" : "Rejected"}
                           </span>
                         </span>
-                        <span className="text-sm font-semibold text-yellow-500">
-                          ${event.event_amount}
+                        <span className="text-sm font-semibold text-yellow-500 flex gap-1">
+                          <span>&#8377;</span>
+                          {event.isEventFree == 0 ? "Free" : event.event_amount}
                         </span>
                       </div>
                       <p className="text-xs mb-3 line-clamp-2">
@@ -562,11 +563,23 @@ const Page: React.FC = () => {
                       </div>
                     </div>
                     <div className="px-4 pb-4">
-                      <Link href={`/explore-events/${event.id}`}>
-                        <button className="w-full bg-black border text-teal-500 text-sm font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out">
+                      {event.is_approved ? (
+                        <Link href={`/explore-events/${event.id}`}>
+                          <button
+                            className={`${event.is_approved == true ? `cursor-pointer` : `cursor-not-allowed`} w-full bg-black border text-teal-500 text-sm font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out`}
+                            disabled={event.is_approved == false}
+                          >
+                            View Details
+                          </button>
+                        </Link>
+                      ) : (
+                        <button
+                          className={`${event.is_approved == true ? `cursor-pointer` : `cursor-not-allowed`} w-full bg-black border text-teal-500 text-sm font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out`}
+                          disabled={event.is_approved == false}
+                        >
                           View Details
                         </button>
-                      </Link>
+                      )}
                     </div>
                   </div>
                 );

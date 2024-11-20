@@ -61,6 +61,7 @@ function Registerevent() {
           participant_contact: event_participants.participant_contact,
           transaction_id: event_participants.transaction_id,
           account_holder_name: event_participants.account_holder_name,
+          profile_link: event_participants.profile_link,
           is_registered: true,
         },
       ])
@@ -173,10 +174,28 @@ function Registerevent() {
               <span style={{ color: "red" }}>Invalid contact number</span>
             )}
           </div>
-          {eventDetails.isEventFree === "free" ? (
+          <div className="flex flex-col w-full gap-2">
+            <label htmlFor="profile_link">
+              Profile Link (Add Any One Profile Link Which Best Describes You) :{" "}
+            </label>
+            <input
+              type="url"
+              placeholder="https://www.linkedin.com/in/tejasnasre"
+              {...register("profile_link", {
+                required: true,
+                pattern: {
+                  value: /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/,
+                  message: "Invalid URL",
+                },
+              })}
+              className="w-full p-2 text-white bg-black border border-white rounded-md"
+            />
+          </div>
+
+          {eventDetails.isEventFree == 0 ? (
             <>
-              <h1>
-                This Event Is Free No Need To Pay Any Amount Directly Register
+              <h1 className="text-red-600">
+                *This Event Is Free No Need To Pay Any Amount Directly Register
               </h1>
             </>
           ) : (

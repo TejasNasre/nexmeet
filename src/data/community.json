@@ -8,5 +8,15 @@
     "id": 2,
     "name": "Delhi NCR DAO",
     "image": "https://jzhgfowuznosxtwzkbkx.supabase.co/storage/v1/object/public/community_img/delhi_ncr_dao.png"
+  },
+  {
+    "id": 2,
+    "name": "DevSource",
+    "image": "https://jzhgfowuznosxtwzkbkx.supabase.co/storage/v1/object/public/community_img/DevSource.png"
+  },
+  {
+    "id": 2,
+    "name": "DevLearn",
+    "image": "https://jzhgfowuznosxtwzkbkx.supabase.co/storage/v1/object/public/community_img/lw.png"
   }
 ]

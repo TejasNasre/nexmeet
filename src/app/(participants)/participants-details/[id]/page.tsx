@@ -364,6 +364,12 @@ function Page({ params }: { params: { id: any } }) {
                       Contact
                     </th>
                     <th className="px-4 py-2 text-left text-gray-100 border border-gray-200">
+                      Email
+                    </th>
+                    <th className="px-4 py-2 text-left text-gray-100 border border-gray-200">
+                      Profile Link
+                    </th>
+                    <th className="px-4 py-2 text-left text-gray-100 border border-gray-200">
                       Account Holder
                     </th>
                     <th className="px-4 py-2 text-left text-gray-100 border border-gray-200">
@@ -393,10 +399,23 @@ function Page({ params }: { params: { id: any } }) {
                         {participant.participant_contact}
                       </td>
                       <td className="px-4 py-2 border border-gray-200">
-                        {participant.account_holder_name}
+                        {participant.participant_email}
                       </td>
                       <td className="px-4 py-2 border border-gray-200">
-                        {participant.transaction_id}
+                        <a
+                          href={participant.profile_link}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-blue-500"
+                        >
+                          View Profile
+                        </a>
+                      </td>
+                      <td className="px-4 py-2 border border-gray-200">
+                        {participant.account_holder_name || "No Data"}
+                      </td>
+                      <td className="px-4 py-2 border border-gray-200">
+                        {participant.transaction_id || "No Data"}
                       </td>
                       <td className="px-4 py-2 border border-gray-200">
                         {new Date(participant.created_at).toLocaleString()}

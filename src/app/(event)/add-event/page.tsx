@@ -79,16 +79,10 @@ const formSchema = z
       .string()
       .min(1, { message: "Team size is required." })
       .regex(/^[1-9]\d*$/, { message: "Team size must be a positive number." }),
-    event_formlink: z.string().url({ message: "Please enter a valid URL." }),
-    isEventFree: z.string(),
-    account_holder_name: z.string().min(2, {
-      message: "Account holder name must be at least 2 characters.",
-    }),
-    upi_id: z.string().min(1, { message: "Upi id is required." }),
-    event_amount: z
-      .string()
-      .min(1, { message: "Amount is required" })
-      .regex(/^[1-9]\d*$/, { message: "Amount must be a positive number." }),
+    isEventFree: z.enum(["0", "paid"]),
+    account_holder_name: z.string().optional(),
+    upi_id: z.string().optional(),
+    event_amount: z.string().optional(),
     organizer_name: z
       .string()
       .min(2, { message: "Organizer name must be at least 2 characters." }),
@@ -221,8 +215,7 @@ export default function AddEvent() {
       event_enddate: "",
       event_duration: "",
       team_size: "",
-      event_formlink: "",
-      isEventFree: "",
+      isEventFree: "0",
       account_holder_name: "",
       upi_id: "",
       event_amount: "",
@@ -307,11 +300,14 @@ export default function AddEvent() {
           event_enddate: values.event_enddate,
           event_duration: parseInt(values.event_duration, 10),
           team_size: parseInt(values.team_size, 10),
-          event_formlink: values.event_formlink,
           isEventFree: values.isEventFree,
-          account_holder_name: values.account_holder_name,
-          upi_id: values.upi_id,
-          event_amount: parseInt(values.event_amount, 10),
+          account_holder_name:
+            values.isEventFree === "0" ? undefined : values.account_holder_name,
+          upi_id: values.isEventFree === "0" ? undefined : values.upi_id,
+          event_amount:
+            values.isEventFree === "0"
+              ? undefined
+              : parseInt(values.event_amount || "0", 10),
           organizer_name: values.organizer_name,
           organizer_email: user?.email,
           organizer_contact: values.organizer_contact,
@@ -563,23 +559,6 @@ export default function AddEvent() {
                     <Input
                       type="number"
                       placeholder="Enter Team Size"
-                      {...field}
-                      className="bg-black border-white text-white"
-                    />
-                  </FormControl>
-                  <FormMessage className="text-red-400" />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="event_formlink"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-base">Event Form Link:</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Enter Google Form Link / Website Link"
                       {...field}
                       className="bg-black border-white text-white"
                     />

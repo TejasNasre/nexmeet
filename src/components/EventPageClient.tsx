@@ -339,9 +339,9 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                       Location : {event.event_location}
                     </h1>
                     <h1 className="flex flex-row items-center gap-3">
-                      <Badge variant="destructive">
+                      <Badge variant="destructive" className="flex gap-1">
                         <span>&#8377;</span>
-                        {event.event_amount}
+                        {event.isEventFree == 0 ? "Free" : event.event_amount}
                       </Badge>
                       <Badge
                         variant="destructive"
@@ -400,23 +400,23 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                         onClick={isUser}
                       >
                         {registrationClosed
-                          ? "Registration Closed"
+                          ? "Registration Closed ❌"
                           : isRegistered
                             ? eventData[0]?.event_participants.find(
                                 (register: any) =>
                                   register.participant_email === userData?.email
                               )?.is_approved === null
-                              ? "Registered ✔️ Waiting For Approval"
+                              ? "Registered ⏳ Waiting For Approval"
                               : eventData[0]?.event_participants.find(
                                     (register: any) =>
                                       register.participant_email ===
                                       userData?.email
                                   )?.is_approved
-                                ? "Registration Approved"
-                                : "Registration Rejected"
+                                ? "Registration Approved ✔️"
+                                : "Registration Rejected ❌"
                             : !registrationClosed && !isRegistrationOpen
-                              ? "Registration Upcoming"
-                              : "Register Now"}
+                              ? "Registration Upcoming ⏳"
+                              : "Register Now 🎉"}
                       </Button>
                     </div>
                     <div>
