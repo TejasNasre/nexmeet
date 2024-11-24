@@ -247,7 +247,9 @@ export default function AddCommunityForm() {
           </div>
 
           <div className="my-4">
-            <Label htmlFor="contactInfo">Contact Information</Label>
+            <Label htmlFor="contactInfo">
+              Community Email (If Not Enter Founder Email)
+            </Label>
             <Controller
               name="contactInfo"
               control={control}

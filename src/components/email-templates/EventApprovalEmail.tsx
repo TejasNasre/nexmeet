@@ -23,8 +23,8 @@ const CommunityApprovalEmail: React.FC<CommunityApprovalEmailProps> = ({
 }) => {
   const greeting = getGreeting();
   const memeUrl = isApproved
-    ? "https://example.com/community-approved-meme.gif"
-    : "https://example.com/community-rejected-meme.gif";
+    ? "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExaWw3NXZxcGZseHZ0ZHl2OTloemhrcHFqZzljd2s1cWQxenhta2ZtZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/mDMOkkXWQZvEJMnvTW/giphy.webp"
+    : "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWVodWMxaHg3MWc1OG9mNXlxcGFyZ2dubmU4dGYza3lvbWNybW9nMCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l2SpUoAPo0CBOkyxq/giphy.webp";
 
   return (
     <Html>
@@ -37,40 +37,48 @@ const CommunityApprovalEmail: React.FC<CommunityApprovalEmailProps> = ({
           <Heading style={h1}>
             {isApproved ? "You're officially awesome! 🌟" : "Plot twist! 😮"}
           </Heading>
-          <Text style={text}>
-            {greeting} fearless community leader,
-          </Text>
+          <Text style={text}>{greeting} fearless community leader,</Text>
           <Img
             src={memeUrl}
             width="300"
             height="300"
-            alt={isApproved ? "Approved community meme" : "Rejected community meme"}
+            alt={
+              isApproved ? "Approved community meme" : "Rejected community meme"
+            }
           />
           {isApproved ? (
             <>
               <Text style={text}>
-                Break out the confetti! 🎊 Your community "{communityDetails.community_name}" just got the golden ticket to join our platform!
+                Break out the confetti! 🎊 Your community "
+                {communityDetails.community_name}" just got the golden ticket to
+                join our platform!
               </Text>
               <Text style={text}>
-                You're now part of an elite group of awesome communities. No pressure, but we expect great things (and maybe some viral memes) from you!
+                You're now part of an elite group of awesome communities. No
+                pressure, but we expect great things (and maybe some viral
+                memes) from you!
               </Text>
             </>
           ) : (
             <>
               <Text style={text}>
-                We hate to be the bearer of bad news, but your community "{communityDetails.community_name}" didn't make the cut this time. 😢
+                We hate to be the bearer of bad news, but your community "
+                {communityDetails.community_name}" didn't make the cut this
+                time. 😢
               </Text>
               <Text style={text}>
-                Don't let this get you down! Even The Beatles got rejected once. (Okay, maybe not, but you get the idea.) Why not take another shot? We believe in second chances and epic comebacks!
+                Don't let this get you down! Even The Beatles got rejected once.
+                (Okay, maybe not, but you get the idea.) Why not take another
+                shot? We believe in second chances and epic comebacks!
               </Text>
             </>
           )}
           <Text style={text}>
-            Remember, with great power comes great responsibility... to have fun and create amazing connections!
+            Remember, with great power comes great responsibility... to have fun
+            and create amazing connections!
           </Text>
           <Text style={signature}>
-            Cheering you on,
-            The NexMeet Fun Squad 🎭
+            Cheering you on, The NexMeet Fun Squad 🎭
           </Text>
         </Container>
       </Body>
@@ -121,4 +129,3 @@ const signature = {
   lineHeight: "1.5",
   margin: "40px 0 0",
 };
-

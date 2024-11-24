@@ -11,8 +11,6 @@ import {
   Text,
 } from "@react-email/components";
 
-const baseUrl = "https://example.com";
-
 export const ApprovalEmail = ({
   eventDetails,
   participant,
@@ -24,14 +22,15 @@ export const ApprovalEmail = ({
 }) => {
   const greeting = getGreeting();
   const memeUrl = isApproved
-    ? "https://example.com/approved-meme.gif"
-    : "https://example.com/rejected-meme.gif";
+    ? "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZW9kcXFta3d2dWM5dWhpZzVrcGJsdmw1MGZpN2MwdjF0dDVzbDJkZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/YKdm91XONLTaw/giphy.webp"
+    : "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZHIyNGM1N3M5MzkxMHBwM21mcHhrN2ZldHk0OGFkdHVyamVzdXprMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l2SpUoAPo0CBOkyxq/giphy.webp";
 
   return (
     <Html>
       <Head />
       <Preview>
-        {isApproved ? "You're in! 🎉" : "Aw, snap! 😢"} Event Registration Update
+        {isApproved ? "You're in! 🎉" : "Aw, snap! 😢"} Event Registration
+        Update
       </Preview>
       <Body style={main}>
         <Container style={container}>
@@ -50,7 +49,9 @@ export const ApprovalEmail = ({
           {isApproved ? (
             <>
               <Text style={text}>
-                Guess what? You made it! Your spot for "{eventDetails.event_title}" is locked in. Time to happy dance! 💃🕺
+                Guess what? You made it! Your spot for "
+                {eventDetails.event_title}" is locked in. Time to happy dance!
+                💃🕺
               </Text>
               <Text style={text}>Here's the lowdown:</Text>
               <ul>
@@ -61,24 +62,28 @@ export const ApprovalEmail = ({
                   <strong>Where:</strong> {eventDetails.event_location}
                 </li>
                 <li style={listItem}>
-                  <strong>When:</strong> {new Date(eventDetails.event_startdate).toLocaleString()} to {new Date(eventDetails.event_enddate).toLocaleString()}
+                  <strong>When:</strong>{" "}
+                  {new Date(eventDetails.event_startdate).toLocaleString()} to{" "}
+                  {new Date(eventDetails.event_enddate).toLocaleString()}
                 </li>
               </ul>
               <Text style={text}>
-                Can't wait to see your awesome self there! Don't forget to bring your A-game (and maybe some snacks 🍿).
+                Can't wait to see your awesome self there! Don't forget to bring
+                your A-game (and maybe some snacks 🍿).
               </Text>
             </>
           ) : (
             <Text style={text}>
-              We hate to be the bearer of bad news, but your registration for "{eventDetails.event_title}" didn't make the cut this time. Don't let it get you down though – there are plenty of other fish in the sea (or events in the calendar)!
+              We hate to be the bearer of bad news, but your registration for "
+              {eventDetails.event_title}" didn't make the cut this time. Don't
+              let it get you down though – there are plenty of other fish in the
+              sea (or events in the calendar)!
             </Text>
           )}
           <Text style={text}>
             Stay cool, stay awesome, and keep on rockin'!
           </Text>
-          <Text style={signature}>
-            The NexMeet Squad 😎
-          </Text>
+          <Text style={signature}>The NexMeet Squad 😎</Text>
         </Container>
       </Body>
     </Html>
@@ -135,4 +140,3 @@ const signature = {
   lineHeight: "1.5",
   margin: "40px 0 0",
 };
-

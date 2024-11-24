@@ -309,6 +309,8 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                             year: "numeric",
                             month: "short",
                             day: "numeric",
+                            hour: "numeric",
+                            minute: "numeric",
                           }
                         )}
                       </h1>
@@ -321,6 +323,8 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                             year: "numeric",
                             month: "short",
                             day: "numeric",
+                            hour: "numeric",
+                            minute: "numeric",
                           }
                         )}
                       </h1>
@@ -369,6 +373,8 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                           year: "numeric",
                           month: "short",
                           day: "numeric",
+                          hour: "numeric",
+                          minute: "numeric",
                         })}{" "}
                         To{" "}
                         {new Date(
@@ -377,6 +383,8 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                           year: "numeric",
                           month: "short",
                           day: "numeric",
+                          hour: "numeric",
+                          minute: "numeric",
                         })}{" "}
                       </h1>
                     </div>
