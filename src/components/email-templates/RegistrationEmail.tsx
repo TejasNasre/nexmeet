@@ -21,7 +21,7 @@ export const RegistrationEmail = ({
 }) => {
   const greeting = getGreeting();
   const gradient = getRandomGradient();
-  const textColor = getContrastColor(gradient.split(', ')[1].slice(0, -1));
+  const textColor = getContrastColor(gradient.split(", ")[1].slice(0, -1));
 
   return (
     <Html>
@@ -29,54 +29,66 @@ export const RegistrationEmail = ({
       <Preview>You&apos;re one step closer to awesome! 🎟️</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Section style={{
-            ...gradientSection,
-            backgroundImage: gradient,
-            color: textColor,
-          }}>
-            <Heading style={{...h1, color: textColor}}>You&apos;re on the VIP list! (Almost) 🌟</Heading>
-            <Text style={{...text, color: textColor}}>
+          <Section
+            style={{
+              ...gradientSection,
+              backgroundImage: gradient,
+              color: textColor,
+            }}
+          >
+            <Heading style={{ ...h1, color: textColor }}>
+              You&apos;re on the VIP list! (Almost) 🌟
+            </Heading>
+            <Text style={{ ...text, color: textColor }}>
               {greeting} {participant.participant_name}, you party animal!
             </Text>
             <Img
-              src="/placeholder.svg?height=300&width=300"
+              src="https://media1.tenor.com/m/MGUKTIFa8LIAAAAC/dog.gif"
               width="300"
               height="300"
               alt="Event registration meme"
               style={memeStyle}
             />
-            <Text style={{...text, color: textColor}}>
-              Woohoo! You&apos;ve just taken the first step towards what could be the event of the century (no pressure, event organizers 😉).
+            <Text style={{ ...text, color: textColor }}>
+              Woohoo! You&apos;ve just taken the first step towards what could
+              be the event of the century (no pressure, event organizers 😉).
             </Text>
-            <Text style={{...text, color: textColor}}>
+            <Text style={{ ...text, color: textColor }}>
               Here&apos;s what you&apos;re potentially getting yourself into:
             </Text>
             <ul style={list}>
-              <li style={{...listItem, color: textColor}}>
+              <li style={{ ...listItem, color: textColor }}>
                 <strong>The main attraction:</strong> {eventDetails.event_title}
               </li>
-              <li style={{...listItem, color: textColor}}>
-                <strong>The juicy details:</strong> {eventDetails.event_description}
+              <li style={{ ...listItem, color: textColor }}>
+                <strong>The juicy details:</strong>{" "}
+                {eventDetails.event_description}
               </li>
-              <li style={{...listItem, color: textColor}}>
-                <strong>The secret location:</strong> {eventDetails.event_location}
+              <li style={{ ...listItem, color: textColor }}>
+                <strong>The secret location:</strong>{" "}
+                {eventDetails.event_location}
               </li>
-              <li style={{...listItem, color: textColor}}>
-                <strong>When the fun begins:</strong> {new Date(eventDetails.event_startdate).toLocaleString()}
+              <li style={{ ...listItem, color: textColor }}>
+                <strong>When the fun begins:</strong>{" "}
+                {new Date(eventDetails.event_startdate).toLocaleString()}
               </li>
-              <li style={{...listItem, color: textColor}}>
-                <strong>When the party stops (boooo):</strong> {new Date(eventDetails.event_enddate).toLocaleString()}
+              <li style={{ ...listItem, color: textColor }}>
+                <strong>When the party stops (boooo):</strong>{" "}
+                {new Date(eventDetails.event_enddate).toLocaleString()}
               </li>
             </ul>
-            <Text style={{...text, color: textColor}}>
-              Now, don&apos;t go planning your outfit just yet. Your registration is pending approval faster than you can say &quot;Where&apos;s the dance floor?&quot; 💃🕺
+            <Text style={{ ...text, color: textColor }}>
+              Now, don&apos;t go planning your outfit just yet. Your
+              registration is pending approval faster than you can say
+              &quot;Where&apos;s the dance floor?&quot; 💃🕺
             </Text>
-            <Text style={{...text, color: textColor}}>
-              We&apos;ll hit you up with the final verdict quicker than you can perfect your moonwalk. In the meantime, maybe practice your small talk or polish your dad jokes?
+            <Text style={{ ...text, color: textColor }}>
+              We&apos;ll hit you up with the final verdict quicker than you can
+              perfect your moonwalk. In the meantime, maybe practice your small
+              talk or polish your dad jokes?
             </Text>
-            <Text style={{...signature, color: textColor}}>
-              Fingers crossed for you!
-              The NexMeet Party Planners 🎉
+            <Text style={{ ...signature, color: textColor }}>
+              Fingers crossed for you! The NexMeet Party Planners 🎉
             </Text>
           </Section>
         </Container>
@@ -153,4 +165,3 @@ const signature = {
   margin: "40px 0 0",
   textAlign: "center" as const,
 };
-

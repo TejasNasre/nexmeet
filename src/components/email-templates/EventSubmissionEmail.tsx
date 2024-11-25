@@ -25,7 +25,7 @@ const EventSubmissionEmail: React.FC<EventSubmissionEmailProps> = ({
 }) => {
   const greeting = getGreeting();
   const gradient = getRandomGradient();
-  const textColor = getContrastColor(gradient.split(', ')[1].slice(0, -1));
+  const textColor = getContrastColor(gradient.split(", ")[1].slice(0, -1));
 
   return (
     <Html>
@@ -33,44 +33,52 @@ const EventSubmissionEmail: React.FC<EventSubmissionEmailProps> = ({
       <Preview>Your event is under review! 🎉</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Section style={{
-            ...gradientSection,
-            backgroundImage: gradient,
-            color: textColor,
-          }}>
-            <Heading style={{...h1, color: textColor}}>You&apos;re almost there! 🚀</Heading>
-            <Text style={{...text, color: textColor}}>
+          <Section
+            style={{
+              ...gradientSection,
+              backgroundImage: gradient,
+              color: textColor,
+            }}
+          >
+            <Heading style={{ ...h1, color: textColor }}>
+              You&apos;re almost there! 🚀
+            </Heading>
+            <Text style={{ ...text, color: textColor }}>
               {greeting} event maestro,
             </Text>
             <Img
-              src="/public/eventsubmitted.jpg"
+              src="https://media1.tenor.com/m/YZq-ro5UO6cAAAAC/press-the-button-press.gif"
               width="300"
               height="300"
               alt="Event submission meme"
               style={memeStyle}
             />
-            <Text style={{...text, color: textColor}}>
-              Woohoo! Your event &quot;{eventDetails.event_title}&quot; has been submitted for review. It&apos;s like waiting for a soufflé to rise – exciting and a little nerve-wracking!
+            <Text style={{ ...text, color: textColor }}>
+              Woohoo! Your event &quot;{eventDetails.event_title}&quot; has been
+              submitted for review. It&apos;s like waiting for a soufflé to rise
+              – exciting and a little nerve-wracking!
             </Text>
-            <Text style={{...text, color: textColor}}>
+            <Text style={{ ...text, color: textColor }}>
               Here&apos;s a quick recap of your soon-to-be-legendary event:
             </Text>
-            <Text style={{...text, color: textColor}}>
+            <Text style={{ ...text, color: textColor }}>
               🎭 Event: {eventDetails.event_title}
               <br />
               🗓️ From: {new Date(eventDetails.event_startdate).toLocaleString()}
               <br />
               🏁 To: {new Date(eventDetails.event_enddate).toLocaleString()}
             </Text>
-            <Text style={{...text, color: textColor}}>
-              Our team of event-reviewing ninjas is on the case. We&apos;ll get back to you faster than you can say &quot;Is this thing on?&quot; (Well, maybe not that fast, but pretty darn quick!)
+            <Text style={{ ...text, color: textColor }}>
+              Our team of event-reviewing ninjas is on the case. We&apos;ll get
+              back to you faster than you can say &quot;Is this thing on?&quot;
+              (Well, maybe not that fast, but pretty darn quick!)
             </Text>
-            <Text style={{...text, color: textColor}}>
-              In the meantime, why not practice your hosting skills? Or maybe work on your opening joke?
+            <Text style={{ ...text, color: textColor }}>
+              In the meantime, why not practice your hosting skills? Or maybe
+              work on your opening joke?
             </Text>
-            <Text style={{...signature, color: textColor}}>
-              Fingers crossed for you!
-              The NexMeet Event Squad 🎭
+            <Text style={{ ...signature, color: textColor }}>
+              Fingers crossed for you! The NexMeet Event Squad 🎭
             </Text>
           </Section>
         </Container>

@@ -27,7 +27,7 @@ const EventApprovalEmail: React.FC<EventApprovalEmailProps> = ({
 }) => {
   const greeting = getGreeting();
   const gradient = getRandomGradient();
-  const textColor = getContrastColor(gradient.split(', ')[1].slice(0, -1));
+  const textColor = getContrastColor(gradient.split(", ")[1].slice(0, -1));
 
   return (
     <Html>
@@ -37,20 +37,22 @@ const EventApprovalEmail: React.FC<EventApprovalEmailProps> = ({
       </Preview>
       <Body style={main}>
         <Container style={container}>
-          <Section style={{
-            ...gradientSection,
-            backgroundImage: gradient,
-            color: textColor,
-          }}>
-            <Heading style={{...h1, color: textColor}}>
+          <Section
+            style={{
+              ...gradientSection,
+              backgroundImage: gradient,
+              color: textColor,
+            }}
+          >
+            <Heading style={{ ...h1, color: textColor }}>
               {isApproved ? "It&apos;s party time! 🎉" : "Rain check? ☔"}
             </Heading>
-            <Text style={{...text, color: textColor}}>
+            <Text style={{ ...text, color: textColor }}>
               {greeting} event enthusiast,
             </Text>
             {isApproved ? (
               <Img
-                src="/public/eventapproved.jpg"
+                src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExdzRiYm5sYnVlN2NqYnRvNTdnaTVram8xcHp4dmQ4bDFrazM4emcyNiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/mDMOkkXWQZvEJMnvTW/giphy.webp"
                 width="300"
                 height="300"
                 alt="Approved event meme"
@@ -67,37 +69,54 @@ const EventApprovalEmail: React.FC<EventApprovalEmailProps> = ({
             )}
             {isApproved ? (
               <>
-                <Text style={{...text, color: textColor}}>
-                  Guess what? Your event &quot;<span style={{...highlight, backgroundColor: `${textColor}33`}}>{eventDetails.event_title}</span>&quot; just got the green light! 🟢 Time to dust off your party pants!
+                <Text style={{ ...text, color: textColor }}>
+                  Guess what? Your event &quot;
+                  <span
+                    style={{ ...highlight, backgroundColor: `${textColor}33` }}
+                  >
+                    {eventDetails.event_title}
+                  </span>
+                  &quot; just got the green light! 🟢 Time to dust off your
+                  party pants!
                 </Text>
-                <Text style={{...text, color: textColor}}>
+                <Text style={{ ...text, color: textColor }}>
                   Here&apos;s when the magic happens:
                 </Text>
-                <Text style={{...text, color: textColor}}>
-                  🗓️ From: {new Date(eventDetails.event_startdate).toLocaleString()}
+                <Text style={{ ...text, color: textColor }}>
+                  🗓️ From:{" "}
+                  {new Date(eventDetails.event_startdate).toLocaleString()}
                   <br />
                   🏁 To: {new Date(eventDetails.event_enddate).toLocaleString()}
                 </Text>
-                <Text style={{...text, color: textColor}}>
-                  Get ready to host the event of the century! (No pressure or anything 😉)
+                <Text style={{ ...text, color: textColor }}>
+                  Get ready to host the event of the century! (No pressure or
+                  anything 😉)
                 </Text>
               </>
             ) : (
               <>
-                <Text style={{...text, color: textColor}}>
-                  We hate to rain on your parade, but your event &quot;<span style={{...highlight, backgroundColor: `${textColor}33`}}>{eventDetails.event_title}</span>&quot; didn&apos;t get the thumbs up this time. 👎
+                <Text style={{ ...text, color: textColor }}>
+                  We hate to rain on your parade, but your event &quot;
+                  <span
+                    style={{ ...highlight, backgroundColor: `${textColor}33` }}
+                  >
+                    {eventDetails.event_title}
+                  </span>
+                  &quot; didn&apos;t get the thumbs up this time. 👎
                 </Text>
-                <Text style={{...text, color: textColor}}>
-                  Don&apos;t let this dampen your spirits! Even the best party planners face setbacks. Why not take this as a chance to make your event even more awesome and try again?
+                <Text style={{ ...text, color: textColor }}>
+                  Don&apos;t let this dampen your spirits! Even the best party
+                  planners face setbacks. Why not take this as a chance to make
+                  your event even more awesome and try again?
                 </Text>
               </>
             )}
-            <Text style={{...text, color: textColor}}>
-              Remember, the best events are the ones where everyone has a blast (and maybe learns something too)!
+            <Text style={{ ...text, color: textColor }}>
+              Remember, the best events are the ones where everyone has a blast
+              (and maybe learns something too)!
             </Text>
-            <Text style={{...signature, color: textColor}}>
-              Keeping the party going,
-              The NexMeet Event Squad 🎭
+            <Text style={{ ...signature, color: textColor }}>
+              Keeping the party going, The NexMeet Event Squad 🎭
             </Text>
           </Section>
         </Container>

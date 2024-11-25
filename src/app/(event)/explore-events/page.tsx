@@ -522,12 +522,18 @@ const Page: React.FC = () => {
                           </span>
                           <span
                             className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                              isApproved
+                              isApproved === true
                                 ? "bg-green-100 text-green-800"
-                                : "bg-red-100 text-red-800"
+                                : isApproved === false
+                                  ? "bg-red-100 text-red-800"
+                                  : "bg-yellow-100 text-yellow-800"
                             }`}
                           >
-                            {isApproved ? "Approved" : "Rejected"}
+                            {isApproved === true
+                              ? "Approved"
+                              : isApproved === false
+                                ? "Rejected"
+                                : "Pending"}
                           </span>
                         </span>
                         <span className="text-sm font-semibold text-yellow-500 flex gap-1">

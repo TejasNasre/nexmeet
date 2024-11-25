@@ -25,7 +25,7 @@ const FormSubmissionEmail: React.FC<FormSubmissionEmailProps> = ({
 }) => {
   const greeting = getGreeting();
   const gradient = getRandomGradient();
-  const textColor = getContrastColor(gradient.split(', ')[1].slice(0, -1));
+  const textColor = getContrastColor(gradient.split(", ")[1].slice(0, -1));
 
   return (
     <Html>
@@ -33,48 +33,56 @@ const FormSubmissionEmail: React.FC<FormSubmissionEmailProps> = ({
       <Preview>We&apos;ve got your message! 📬</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Section style={{
-            ...gradientSection,
-            backgroundImage: gradient,
-            color: textColor,
-          }}>
-            <Heading style={{...h1, color: textColor}}>Your message is in our VIP inbox! 🌟</Heading>
-            <Text style={{...text, color: textColor}}>
+          <Section
+            style={{
+              ...gradientSection,
+              backgroundImage: gradient,
+              color: textColor,
+            }}
+          >
+            <Heading style={{ ...h1, color: textColor }}>
+              Your message is in our VIP inbox! 🌟
+            </Heading>
+            <Text style={{ ...text, color: textColor }}>
               {greeting} {name}, you awesome human!
             </Text>
             <Img
-              src="/public/formsubmission.jpg"
+              src="https://media1.tenor.com/m/BVqnAerwqeYAAAAd/dubsado-rafy.gif"
               width="300"
               height="300"
               alt="Message received meme"
               style={memeStyle}
             />
-            <Text style={{...text, color: textColor}}>
-              Guess what? Your message just parachuted into our inbox, and boy, are we excited! 🪂
+            <Text style={{ ...text, color: textColor }}>
+              Guess what? Your message just parachuted into our inbox, and boy,
+              are we excited! 🪂
             </Text>
-            <Text style={{...text, color: textColor}}>
+            <Text style={{ ...text, color: textColor }}>
               Here&apos;s a quick recap of what you sent our way:
             </Text>
             <ul style={list}>
-              <li style={{...listItem, color: textColor}}>
+              <li style={{ ...listItem, color: textColor }}>
                 <strong>From:</strong> {name} (that&apos;s you, superstar!)
               </li>
-              <li style={{...listItem, color: textColor}}>
+              <li style={{ ...listItem, color: textColor }}>
                 <strong>Email:</strong> {email}
               </li>
-              <li style={{...listItem, color: textColor}}>
+              <li style={{ ...listItem, color: textColor }}>
                 <strong>Your awesome message:</strong> {message}
               </li>
             </ul>
-            <Text style={{...text, color: textColor}}>
-              We&apos;re on it like a car bonnet! Our team of message-reading ninjas is preparing to dive into your words of wisdom. We&apos;ll get back to you faster than you can say &quot;Why did the scarecrow win an award? He was outstanding in his field!&quot; 🌾
+            <Text style={{ ...text, color: textColor }}>
+              We&apos;re on it like a car bonnet! Our team of message-reading
+              ninjas is preparing to dive into your words of wisdom. We&apos;ll
+              get back to you faster than you can say &quot;Why did the
+              scarecrow win an award? He was outstanding in his field!&quot; 🌾
             </Text>
-            <Text style={{...text, color: textColor}}>
-              In the meantime, feel free to practice your patience... or your dad jokes. Your choice!
+            <Text style={{ ...text, color: textColor }}>
+              In the meantime, feel free to practice your patience... or your
+              dad jokes. Your choice!
             </Text>
-            <Text style={{...signature, color: textColor}}>
-              Eagerly awaiting our chat,
-              The NexMeet Message Maestros 📮
+            <Text style={{ ...signature, color: textColor }}>
+              Eagerly awaiting our chat, The NexMeet Message Maestros 📮
             </Text>
           </Section>
         </Container>
@@ -151,4 +159,3 @@ const signature = {
   margin: "40px 0 0",
   textAlign: "center" as const,
 };
-

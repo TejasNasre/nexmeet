@@ -23,7 +23,7 @@ const CommunityAddedEmail: React.FC<CommunityAddedEmailProps> = ({
 }) => {
   const greeting = getGreeting();
   const gradient = getRandomGradient();
-  const textColor = getContrastColor(gradient.split(', ')[1].slice(0, -1));
+  const textColor = getContrastColor(gradient.split(", ")[1].slice(0, -1));
 
   return (
     <Html>
@@ -31,34 +31,42 @@ const CommunityAddedEmail: React.FC<CommunityAddedEmailProps> = ({
       <Preview>Welcome to the community! 🎉</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Section style={{
-            ...gradientSection,
-            backgroundImage: gradient,
-            color: textColor,
-          }}>
-            <Heading style={{...h1, color: textColor}}>You&apos;re in! 🚀</Heading>
-            <Text style={{...text, color: textColor}}>
+          <Section
+            style={{
+              ...gradientSection,
+              backgroundImage: gradient,
+              color: textColor,
+            }}
+          >
+            <Heading style={{ ...h1, color: textColor }}>
+              You&apos;re in! 🚀
+            </Heading>
+            <Text style={{ ...text, color: textColor }}>
               {greeting} awesome community creator,
             </Text>
             <Img
-              src="/public/communityadded.jpg"
+              src="https://media1.tenor.com/m/1nbTRAG--GgAAAAC/add-to-list-whip.gif"
               width="300"
               height="300"
               alt="Welcome to the community meme"
               style={memeStyle}
             />
-            <Text style={{...text, color: textColor}}>
-              Congratulations! Your community &quot;{communityDetails.community_name}&quot; has been added to our platform. It&apos;s time to pop the virtual champagne! 🍾
+            <Text style={{ ...text, color: textColor }}>
+              Congratulations! Your community &quot;
+              {communityDetails.community_name}&quot; has been added to our
+              platform. It&apos;s time to pop the virtual champagne! 🍾
             </Text>
-            <Text style={{...text, color: textColor}}>
-              You&apos;re now part of an elite group of community builders. No pressure, but we&apos;re expecting great things (and maybe some viral memes) from you!
+            <Text style={{ ...text, color: textColor }}>
+              You&apos;re now part of an elite group of community builders. No
+              pressure, but we&apos;re expecting great things (and maybe some
+              viral memes) from you!
             </Text>
-            <Text style={{...text, color: textColor}}>
-              Remember, with great power comes great responsibility... to have fun and create amazing connections!
+            <Text style={{ ...text, color: textColor }}>
+              Remember, with great power comes great responsibility... to have
+              fun and create amazing connections!
             </Text>
-            <Text style={{...signature, color: textColor}}>
-              Welcome aboard,
-              The NexMeet Community Squad 🎭
+            <Text style={{ ...signature, color: textColor }}>
+              Welcome aboard, The NexMeet Community Squad 🎭
             </Text>
           </Section>
         </Container>

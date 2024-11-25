@@ -103,13 +103,23 @@ const CommunityDetails = () => {
           <p>
             <strong>Events:</strong> {community.events}
           </p>
-          <Image
-            src={`https://jzhgfowuznosxtwzkbkx.supabase.co/storage/v1/object/public/community-media/${community.media_url}`}
-            alt={`${community.community_name} media`}
-            className="w-full h-auto object-cover rounded-lg"
-            width={800}
-            height={400}
-          />
+
+          {community.media_url ? (
+            <>
+              <Image
+                src={`https://jzhgfowuznosxtwzkbkx.supabase.co/storage/v1/object/public/community-media/${community.media_url}`}
+                alt={`${community.community_name} media`}
+                className="w-full h-auto object-cover rounded-lg"
+                width={800}
+                height={400}
+              />
+            </>
+          ) : (
+            <>
+              <p>No Media Found</p>
+            </>
+          )}
+
           <p>
             <strong>Community Size:</strong> {community.community_size}
           </p>

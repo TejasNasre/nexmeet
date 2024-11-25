@@ -49,6 +49,16 @@ const nextConfig = {
         hostname: "avatars.githubusercontent.com", // Add this line
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "media1.tenor.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "media2.giphy.com",
+        pathname: "/**",
+      },
     ],
   },
 };

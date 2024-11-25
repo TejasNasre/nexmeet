@@ -23,7 +23,7 @@ export const ApprovalEmail = ({
 }) => {
   const greeting = getGreeting();
   const gradient = getRandomGradient();
-  const textColor = getContrastColor(gradient.split(', ')[1].slice(0, -1));
+  const textColor = getContrastColor(gradient.split(", ")[1].slice(0, -1));
 
   return (
     <Html>
@@ -33,20 +33,24 @@ export const ApprovalEmail = ({
       </Preview>
       <Body style={main}>
         <Container style={container}>
-          <Section style={{
-            ...gradientSection,
-            backgroundImage: gradient,
-            color: textColor,
-          }}>
-            <Heading style={{...h1, color: textColor}}>
-              {isApproved ? "You&apos;re on the list! 🎉" : "Better luck next time 😢"}
+          <Section
+            style={{
+              ...gradientSection,
+              backgroundImage: gradient,
+              color: textColor,
+            }}
+          >
+            <Heading style={{ ...h1, color: textColor }}>
+              {isApproved
+                ? "You&apos;re on the list! 🎉"
+                : "Better luck next time 😢"}
             </Heading>
-            <Text style={{...text, color: textColor}}>
+            <Text style={{ ...text, color: textColor }}>
               {greeting} {participant.participant_name},
             </Text>
             {isApproved ? (
               <Img
-                src="/public/approvalofreg.jpg"
+                src="https://media1.tenor.com/m/dlGbktayOsEAAAAd/deadpool-you-are-in.gif"
                 width="300"
                 height="300"
                 alt="Approved meme"
@@ -54,7 +58,7 @@ export const ApprovalEmail = ({
               />
             ) : (
               <Img
-                src="/public/rejectionofreg.jpg"
+                src="https://media1.tenor.com/m/OUK_LciF--wAAAAd/simpsons-youre-out-of-the-game.gif"
                 width="300"
                 height="300"
                 alt="Rejected meme"
@@ -63,35 +67,78 @@ export const ApprovalEmail = ({
             )}
             {isApproved ? (
               <>
-                <Text style={{...text, color: textColor}}>
-                  <span style={{...highlight, backgroundColor: `${textColor}33`}}>Awesome news!</span> Your spot for &quot;{eventDetails.event_title}&quot; is confirmed. Time to celebrate! 💃🕺
+                <Text style={{ ...text, color: textColor }}>
+                  <span
+                    style={{ ...highlight, backgroundColor: `${textColor}33` }}
+                  >
+                    Awesome news!
+                  </span>{" "}
+                  Your spot for &quot;{eventDetails.event_title}&quot; is
+                  confirmed. Time to celebrate! 💃🕺
                 </Text>
-                <Text style={{...text, color: textColor}}>Here are the <span style={{...highlight, backgroundColor: `${textColor}33`}}>fantastic</span> details:</Text>
+                <Text style={{ ...text, color: textColor }}>
+                  Here are the{" "}
+                  <span
+                    style={{ ...highlight, backgroundColor: `${textColor}33` }}
+                  >
+                    fantastic
+                  </span>{" "}
+                  details:
+                </Text>
                 <ul style={list}>
-                  <li style={{...listItem, color: textColor}}>
+                  <li style={{ ...listItem, color: textColor }}>
                     <strong>What:</strong> {eventDetails.event_title}
                   </li>
-                  <li style={{...listItem, color: textColor}}>
+                  <li style={{ ...listItem, color: textColor }}>
                     <strong>Where:</strong> {eventDetails.event_location}
                   </li>
-                  <li style={{...listItem, color: textColor}}>
-                    <strong>When:</strong> {new Date(eventDetails.event_startdate).toLocaleString()} to {new Date(eventDetails.event_enddate).toLocaleString()}
+                  <li style={{ ...listItem, color: textColor }}>
+                    <strong>When:</strong>{" "}
+                    {new Date(eventDetails.event_startdate).toLocaleString()} to{" "}
+                    {new Date(eventDetails.event_enddate).toLocaleString()}
                   </li>
                 </ul>
-                <Text style={{...text, color: textColor}}>
-                  Can&apos;t wait to see you there! Don&apos;t forget to bring your <span style={{...highlight, backgroundColor: `${textColor}33`}}>A-game</span> (and maybe some snacks 🍿).
+                <Text style={{ ...text, color: textColor }}>
+                  Can&apos;t wait to see you there! Don&apos;t forget to bring
+                  your{" "}
+                  <span
+                    style={{ ...highlight, backgroundColor: `${textColor}33` }}
+                  >
+                    A-game
+                  </span>{" "}
+                  (and maybe some snacks 🍿).
                 </Text>
               </>
             ) : (
-              <Text style={{...text, color: textColor}}>
-                <span style={{...highlight, backgroundColor: `${textColor}33`}}>Oh no!</span> We hate to be the bearer of bad news, but your registration for &quot;{eventDetails.event_title}&quot; didn&apos;t make the cut this time. Don&apos;t let this get you down though – there are plenty of other fish in the sea (or events in the calendar)!
+              <Text style={{ ...text, color: textColor }}>
+                <span
+                  style={{ ...highlight, backgroundColor: `${textColor}33` }}
+                >
+                  Oh no!
+                </span>{" "}
+                We hate to be the bearer of bad news, but your registration for
+                &quot;{eventDetails.event_title}&quot; didn&apos;t make the cut
+                this time. Don&apos;t let this get you down though – there are
+                plenty of other fish in the sea (or events in the calendar)!
               </Text>
             )}
-            <Text style={{...text, color: textColor}}>
-              Stay <span style={{...highlight, backgroundColor: `${textColor}33`}}>cool</span>, stay <span style={{...highlight, backgroundColor: `${textColor}33`}}>awesome</span>, and keep on rockin&apos;!
+            <Text style={{ ...text, color: textColor }}>
+              Stay{" "}
+              <span style={{ ...highlight, backgroundColor: `${textColor}33` }}>
+                cool
+              </span>
+              , stay{" "}
+              <span style={{ ...highlight, backgroundColor: `${textColor}33` }}>
+                awesome
+              </span>
+              , and keep on rockin&apos;!
             </Text>
-            <Text style={{...signature, color: textColor}}>
-              The NexMeet <span style={{...highlight, backgroundColor: `${textColor}33`}}>Team</span> 😎
+            <Text style={{ ...signature, color: textColor }}>
+              The NexMeet{" "}
+              <span style={{ ...highlight, backgroundColor: `${textColor}33` }}>
+                Team
+              </span>{" "}
+              😎
             </Text>
           </Section>
         </Container>

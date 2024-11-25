@@ -401,6 +401,7 @@ export default function AddCommunityForm() {
                   {...rest}
                   id="communitySize"
                   type="number"
+                  min="50"
                   onChange={(e) => onChange(parseInt(e.target.value, 10))}
                   className="w-full p-2 text-white bg-black border border-white rounded-md"
                 />

@@ -41,24 +41,39 @@ export default function Admin() {
 
   useEffect(() => {
     const fetchEventsAndCommunities = async () => {
-      const { data: events_data, error: eventError } = await supabase
-        .from("event_details")
-        .select("*");
-      if (eventError) {
-        console.log(eventError);
-      }
-      setEvents(events_data || []);
+      try {
+        setLoading(true);
 
-      const { data: communities_data, error: communityError } = await supabase
-        .from("communities")
-        .select("*");
-      if (communityError) {
-        console.log(communityError);
+        const [
+          { data: events_data, error: eventError },
+          { data: communities_data, error: communityError },
+        ] = await Promise.all([
+          supabase.from("event_details").select("*"),
+          supabase.from("communities").select("*"),
+        ]);
+
+        if (eventError) {
+          console.error("Error fetching events:", eventError);
+        } else {
+          setEvents(events_data || []);
+        }
+
+        if (communityError) {
+          console.error("Error fetching communities:", communityError);
+        } else {
+          setCommunities(communities_data || []);
+        }
+      } catch (error) {
+        console.error("Unexpected error:", error);
+      } finally {
+        setLoading(false);
       }
-      setCommunities(communities_data || []);
-      setLoading(false);
     };
 
+    fetchEventsAndCommunities();
+  }, []);
+
+  useEffect(() => {
     const checkPermissions = async () => {
       const permission = await getPermission("events:approve");
       setIsSuperAdmin({
@@ -68,7 +83,6 @@ export default function Admin() {
       setIsPermissionLoading(false);
     };
 
-    fetchEventsAndCommunities();
     checkPermissions();
   }, [getPermission]);
 

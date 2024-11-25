@@ -294,10 +294,26 @@ export default function AddEvent() {
           event_title: values.event_title,
           event_description: values.event_description,
           event_location: values.event_location,
-          event_registration_startdate: values.event_registration_startdate,
-          event_registration_enddate: values.event_registration_enddate,
-          event_startdate: values.event_startdate,
-          event_enddate: values.event_enddate,
+          event_registration_startdate: new Date(
+            values.event_registration_startdate
+          )
+            .toISOString()
+            .slice(0, 19)
+            .replace("T", " "),
+          event_registration_enddate: new Date(
+            values.event_registration_enddate
+          )
+            .toISOString()
+            .slice(0, 19)
+            .replace("T", " "),
+          event_startdate: new Date(values.event_startdate)
+            .toISOString()
+            .slice(0, 19)
+            .replace("T", " "),
+          event_enddate: new Date(values.event_enddate)
+            .toISOString()
+            .slice(0, 19)
+            .replace("T", " "),
           event_duration: parseInt(values.event_duration, 10),
           team_size: parseInt(values.team_size, 10),
           isEventFree: values.isEventFree,
@@ -542,6 +558,7 @@ export default function AddEvent() {
                       type="number"
                       placeholder="Enter Event Duration (In hours)"
                       {...field}
+                      min="1"
                       className="bg-black border-white text-white"
                     />
                   </FormControl>
@@ -561,6 +578,7 @@ export default function AddEvent() {
                       placeholder="Enter Team Size"
                       {...field}
                       className="bg-black border-white text-white"
+                      min="1"
                     />
                   </FormControl>
                   <FormMessage className="text-red-400" />

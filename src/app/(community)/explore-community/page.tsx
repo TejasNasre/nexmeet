@@ -81,7 +81,7 @@ export default function Page() {
                   key={community.id}
                   className="dark:bg-black bg-white text-black dark:text-white p-4 rounded-xl border-4 border-black dark:border-white"
                 >
-                  <div className="w-20 h-20 mx-auto mb-6 overflow-hidden rounded-full bg-black dark:bg-white border-2 border-white">
+                  <div className="w-20 h-20 mx-auto mb-6 overflow-hidden rounded-full bg-black dark:bg-black border-2 border-white">
                     <Image
                       src={`https://jzhgfowuznosxtwzkbkx.supabase.co/storage/v1/object/public/community-logos/${community.logo_url}`}
                       alt={`${community.community_name} logo`}

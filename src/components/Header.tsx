@@ -26,7 +26,7 @@ function Header() {
 
   const [user, setUser] = useState<User | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
@@ -62,9 +62,11 @@ function Header() {
   };
 
   const toggleTheme = () => {
-    const newTheme = !isDarkMode;
-    setIsDarkMode(newTheme);
-    localStorage.setItem("isDarkMode", String(newTheme)); // Store theme preference
+    setIsDarkMode((prevMode) => {
+      const newTheme = !prevMode;
+      localStorage.setItem("isDarkMode", String(newTheme)); // Store theme preference
+      return newTheme;
+    });
     document.body.classList.toggle("white");
   };
 
