@@ -97,7 +97,7 @@ function Organisedevent({ user }: any) {
                   </Button>
                   <Link
                     href={`/manage-feedback/${event.id}`}
-                    className="flex flex-row justify-center items-center"
+                    className="flex flex-row"
                   >
                     <Button
                       variant="outline"
