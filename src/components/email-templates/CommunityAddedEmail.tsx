@@ -7,50 +7,60 @@ import {
   Html,
   Img,
   Preview,
+  Section,
   Text,
 } from "@react-email/components";
+import { getRandomGradient, getContrastColor } from "../../utils/colorUtils";
 
 interface CommunityAddedEmailProps {
-  communityName: string;
+  communityDetails: {
+    community_name: string;
+  };
 }
 
 const CommunityAddedEmail: React.FC<CommunityAddedEmailProps> = ({
-  communityName,
+  communityDetails,
 }) => {
   const greeting = getGreeting();
-  const memeUrl = "https://example.com/community-added-meme.gif";
+  const gradient = getRandomGradient();
+  const textColor = getContrastColor(gradient.split(', ')[1].slice(0, -1));
 
   return (
     <Html>
       <Head />
-      <Preview>Welcome to the club, {communityName}! 🎉</Preview>
+      <Preview>Welcome to the community! 🎉</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Heading style={h1}>You're officially part of the cool kids now!</Heading>
-          <Text style={text}>
-            {greeting} awesome community leader,
-          </Text>
-          <Img
-            src={memeUrl}
-            width="300"
-            height="300"
-            alt="Welcome to the community meme"
-          />
-          <Text style={text}>
-            Drum roll, please... 🥁 Your community "{communityName}" is now officially part of our big, happy NexMeet family!
-          </Text>
-          <Text style={text}>
-            We're so excited to have you on board that we're doing a little happy dance right now. Can you feel the vibes? 💃🕺
-          </Text>
-          <Text style={text}>
-            Get ready to connect, engage, and maybe even break the internet (in a good way, of course). The world isn't ready for how awesome your community is going to be!
-          </Text>
-          <Text style={text}>
-            Now go forth and conquer! And remember, with great power comes great responsibility... to have fun and make awesome connections!
-          </Text>
-          <Text style={signature}>
-            High fives from the NexMeet Crew 🖐️
-          </Text>
+          <Section style={{
+            ...gradientSection,
+            backgroundImage: gradient,
+            color: textColor,
+          }}>
+            <Heading style={{...h1, color: textColor}}>You&apos;re in! 🚀</Heading>
+            <Text style={{...text, color: textColor}}>
+              {greeting} awesome community creator,
+            </Text>
+            <Img
+              src="/public/communityadded.jpg"
+              width="300"
+              height="300"
+              alt="Welcome to the community meme"
+              style={memeStyle}
+            />
+            <Text style={{...text, color: textColor}}>
+              Congratulations! Your community &quot;{communityDetails.community_name}&quot; has been added to our platform. It&apos;s time to pop the virtual champagne! 🍾
+            </Text>
+            <Text style={{...text, color: textColor}}>
+              You&apos;re now part of an elite group of community builders. No pressure, but we&apos;re expecting great things (and maybe some viral memes) from you!
+            </Text>
+            <Text style={{...text, color: textColor}}>
+              Remember, with great power comes great responsibility... to have fun and create amazing connections!
+            </Text>
+            <Text style={{...signature, color: textColor}}>
+              Welcome aboard,
+              The NexMeet Community Squad 🎭
+            </Text>
+          </Section>
         </Container>
       </Body>
     </Html>
@@ -67,7 +77,7 @@ const getGreeting = () => {
 };
 
 const main = {
-  backgroundColor: "#ffffff",
+  backgroundColor: "#f6f9fc",
   fontFamily:
     '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
 };
@@ -75,29 +85,48 @@ const main = {
 const container = {
   margin: "0 auto",
   padding: "20px 0 48px",
-  maxWidth: "560px",
+};
+
+const gradientSection = {
+  margin: "0 auto",
+  padding: "40px",
+  borderRadius: "8px",
+  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+  maxWidth: "600px",
 };
 
 const h1 = {
-  color: "#333",
-  fontSize: "24px",
+  fontSize: "28px",
   fontWeight: "bold",
-  margin: "40px 0",
+  margin: "0 0 20px",
   padding: "0",
   lineHeight: "1.25",
+  textAlign: "center" as const,
 };
 
 const text = {
-  color: "#333",
   fontSize: "18px",
   lineHeight: "1.5",
   margin: "0 0 20px",
 };
 
+const memeStyle = {
+  display: "block",
+  margin: "20px auto",
+  maxWidth: "100%",
+  height: "auto",
+  borderRadius: "8px",
+};
+
 const signature = {
-  color: "#898989",
   fontSize: "16px",
   lineHeight: "1.5",
   margin: "40px 0 0",
+  textAlign: "center" as const,
 };
 
+const highlight = {
+  padding: "2px 4px",
+  borderRadius: "4px",
+  fontWeight: "bold",
+};

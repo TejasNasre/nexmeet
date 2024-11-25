@@ -7,86 +7,106 @@ import {
   Html,
   Img,
   Preview,
+  Section,
   Text,
 } from "@react-email/components";
+import { getRandomGradient, getContrastColor } from "../../utils/colorUtils";
 
-interface CommunityApprovalEmailProps {
-  communityDetails: {
-    community_name: string;
+interface EventApprovalEmailProps {
+  eventDetails: {
+    event_title: string;
+    event_startdate: string;
+    event_enddate: string;
   };
   isApproved: boolean;
 }
 
-const CommunityApprovalEmail: React.FC<CommunityApprovalEmailProps> = ({
-  communityDetails,
+const EventApprovalEmail: React.FC<EventApprovalEmailProps> = ({
+  eventDetails,
   isApproved,
 }) => {
   const greeting = getGreeting();
-  const memeUrl = isApproved
-    ? "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExaWw3NXZxcGZseHZ0ZHl2OTloemhrcHFqZzljd2s1cWQxenhta2ZtZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/mDMOkkXWQZvEJMnvTW/giphy.webp"
-    : "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWVodWMxaHg3MWc1OG9mNXlxcGFyZ2dubmU4dGYza3lvbWNybW9nMCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l2SpUoAPo0CBOkyxq/giphy.webp";
+  const gradient = getRandomGradient();
+  const textColor = getContrastColor(gradient.split(', ')[1].slice(0, -1));
 
   return (
     <Html>
       <Head />
       <Preview>
-        {isApproved ? "Your community is in! 🎉" : "Community update 📣"}
+        {isApproved ? "Your event is a go! 🚀" : "Event update 📣"}
       </Preview>
       <Body style={main}>
         <Container style={container}>
-          <Heading style={h1}>
-            {isApproved ? "You're officially awesome! 🌟" : "Plot twist! 😮"}
-          </Heading>
-          <Text style={text}>{greeting} fearless community leader,</Text>
-          <Img
-            src={memeUrl}
-            width="300"
-            height="300"
-            alt={
-              isApproved ? "Approved community meme" : "Rejected community meme"
-            }
-          />
-          {isApproved ? (
-            <>
-              <Text style={text}>
-                Break out the confetti! 🎊 Your community "
-                {communityDetails.community_name}" just got the golden ticket to
-                join our platform!
-              </Text>
-              <Text style={text}>
-                You're now part of an elite group of awesome communities. No
-                pressure, but we expect great things (and maybe some viral
-                memes) from you!
-              </Text>
-            </>
-          ) : (
-            <>
-              <Text style={text}>
-                We hate to be the bearer of bad news, but your community "
-                {communityDetails.community_name}" didn't make the cut this
-                time. 😢
-              </Text>
-              <Text style={text}>
-                Don't let this get you down! Even The Beatles got rejected once.
-                (Okay, maybe not, but you get the idea.) Why not take another
-                shot? We believe in second chances and epic comebacks!
-              </Text>
-            </>
-          )}
-          <Text style={text}>
-            Remember, with great power comes great responsibility... to have fun
-            and create amazing connections!
-          </Text>
-          <Text style={signature}>
-            Cheering you on, The NexMeet Fun Squad 🎭
-          </Text>
+          <Section style={{
+            ...gradientSection,
+            backgroundImage: gradient,
+            color: textColor,
+          }}>
+            <Heading style={{...h1, color: textColor}}>
+              {isApproved ? "It&apos;s party time! 🎉" : "Rain check? ☔"}
+            </Heading>
+            <Text style={{...text, color: textColor}}>
+              {greeting} event enthusiast,
+            </Text>
+            {isApproved ? (
+              <Img
+                src="/public/eventapproved.jpg"
+                width="300"
+                height="300"
+                alt="Approved event meme"
+                style={memeStyle}
+              />
+            ) : (
+              <Img
+                src="/public/eventrejected.jpg"
+                width="300"
+                height="300"
+                alt="Rejected event meme"
+                style={memeStyle}
+              />
+            )}
+            {isApproved ? (
+              <>
+                <Text style={{...text, color: textColor}}>
+                  Guess what? Your event &quot;<span style={{...highlight, backgroundColor: `${textColor}33`}}>{eventDetails.event_title}</span>&quot; just got the green light! 🟢 Time to dust off your party pants!
+                </Text>
+                <Text style={{...text, color: textColor}}>
+                  Here&apos;s when the magic happens:
+                </Text>
+                <Text style={{...text, color: textColor}}>
+                  🗓️ From: {new Date(eventDetails.event_startdate).toLocaleString()}
+                  <br />
+                  🏁 To: {new Date(eventDetails.event_enddate).toLocaleString()}
+                </Text>
+                <Text style={{...text, color: textColor}}>
+                  Get ready to host the event of the century! (No pressure or anything 😉)
+                </Text>
+              </>
+            ) : (
+              <>
+                <Text style={{...text, color: textColor}}>
+                  We hate to rain on your parade, but your event &quot;<span style={{...highlight, backgroundColor: `${textColor}33`}}>{eventDetails.event_title}</span>&quot; didn&apos;t get the thumbs up this time. 👎
+                </Text>
+                <Text style={{...text, color: textColor}}>
+                  Don&apos;t let this dampen your spirits! Even the best party planners face setbacks. Why not take this as a chance to make your event even more awesome and try again?
+                </Text>
+              </>
+            )}
+            <Text style={{...text, color: textColor}}>
+              Remember, the best events are the ones where everyone has a blast (and maybe learns something too)!
+            </Text>
+            <Text style={{...signature, color: textColor}}>
+              Keeping the party going,
+              The NexMeet Event Squad 🎭
+            </Text>
+          </Section>
         </Container>
       </Body>
     </Html>
   );
 };
 
-export default CommunityApprovalEmail;
+export default EventApprovalEmail;
 
 const getGreeting = () => {
   const hour = new Date().getHours();
@@ -96,7 +116,7 @@ const getGreeting = () => {
 };
 
 const main = {
-  backgroundColor: "#ffffff",
+  backgroundColor: "#f6f9fc",
   fontFamily:
     '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
 };
@@ -104,28 +124,48 @@ const main = {
 const container = {
   margin: "0 auto",
   padding: "20px 0 48px",
-  maxWidth: "560px",
+};
+
+const gradientSection = {
+  margin: "0 auto",
+  padding: "40px",
+  borderRadius: "8px",
+  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+  maxWidth: "600px",
 };
 
 const h1 = {
-  color: "#333",
-  fontSize: "24px",
+  fontSize: "28px",
   fontWeight: "bold",
-  margin: "40px 0",
+  margin: "0 0 20px",
   padding: "0",
   lineHeight: "1.25",
+  textAlign: "center" as const,
 };
 
 const text = {
-  color: "#333",
   fontSize: "18px",
   lineHeight: "1.5",
   margin: "0 0 20px",
 };
 
+const memeStyle = {
+  display: "block",
+  margin: "20px auto",
+  maxWidth: "100%",
+  height: "auto",
+  borderRadius: "8px",
+};
+
 const signature = {
-  color: "#898989",
   fontSize: "16px",
   lineHeight: "1.5",
   margin: "40px 0 0",
+  textAlign: "center" as const,
+};
+
+const highlight = {
+  padding: "2px 4px",
+  borderRadius: "4px",
+  fontWeight: "bold",
 };

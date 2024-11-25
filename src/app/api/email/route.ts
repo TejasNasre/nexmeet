@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
-import { EventSubmissionEmail } from "../../../components/email-templates/EventSubmissionEmail";
+import EventSubmissionEmail from "../../../components/email-templates/EventSubmissionEmail";
 import { RegistrationEmail } from "../../../components/email-templates/RegistrationEmail";
 import EventApprovalEmail from "../../../components/email-templates/EventApprovalEmail";
 import CommunityApprovalEmail from "../../../components/email-templates/CommunityApprovalEmail";
@@ -45,7 +45,7 @@ export async function POST(request: Request) {
       recipient = communityDetails.contact_info;
     } else if (type === "community-added") {
       emailContent = CommunityAddedEmail({
-        communityName: communityDetails.communityName,
+        communityDetails: communityDetails,
       });
       subject = "Community Added Successfully";
       recipient = communityDetails.contactInfo;

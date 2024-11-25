@@ -70,7 +70,7 @@ export default function Admin() {
 
     fetchEventsAndCommunities();
     checkPermissions();
-  }, []);
+  }, [getPermission]);
 
   const handleEventStatusChange = async (
     eventId: string,
