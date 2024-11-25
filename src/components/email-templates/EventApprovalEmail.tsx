@@ -60,7 +60,7 @@ const EventApprovalEmail: React.FC<EventApprovalEmailProps> = ({
               />
             ) : (
               <Img
-                src="/public/eventrejected.jpg"
+                src="https://media1.tenor.com/m/8UIJRYM1hscAAAAC/rejected-mirwen.gif"
                 width="300"
                 height="300"
                 alt="Rejected event meme"

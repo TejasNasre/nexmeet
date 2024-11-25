@@ -105,17 +105,23 @@ export default function Admin() {
       toast.success(
         `Event ${isApproved ? "approved" : "rejected"} successfully.`
       );
-      await fetch("/api/email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          type: "approval",
-          eventDetails: events.find((event) => event.id === eventId),
-          isApproved,
-        }),
-      });
+
+      try {
+        await fetch("/api/email", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            type: "event-approval",
+            eventDetails: events.find((event) => event.id === eventId),
+            isApproved,
+          }),
+        });
+        toast.success(`Email sent successfully.`);
+      } catch (error) {
+        toast.error(`Error sending email: ${error}`);
+      }
     }
   };
 
@@ -140,19 +146,25 @@ export default function Admin() {
       toast.success(
         `Community ${isApproved ? "approved" : "rejected"} successfully.`
       );
-      await fetch("/api/email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          type: "community-approval",
-          communityDetails: communities.find(
-            (community) => community.id === communityId
-          ),
-          isApproved,
-        }),
-      });
+
+      try {
+        await fetch("/api/email", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            type: "community-approval",
+            communityDetails: communities.find(
+              (community) => community.id === communityId
+            ),
+            isApproved,
+          }),
+        });
+        toast.success(`Email sent successfully.`);
+      } catch (error) {
+        toast.error(`Error sending email: ${error}`);
+      }
     }
   };
 

@@ -6,6 +6,7 @@ import EventApprovalEmail from "../../../components/email-templates/EventApprova
 import CommunityApprovalEmail from "../../../components/email-templates/CommunityApprovalEmail";
 import CommunityAddedEmail from "../../../components/email-templates/CommunityAddedEmail";
 import FormSubmissionEmail from "../../../components/email-templates/FormSubmissionEmail";
+import ApprovalEmail from "../../../components/email-templates/ApprovalEmail";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -35,9 +36,13 @@ export async function POST(request: Request) {
       emailContent = RegistrationEmail({ eventDetails, participant });
       subject = "Event Registration Confirmation";
       recipient = participant.participant_email;
-    } else if (type === "approval") {
+    } else if (type === "event-approval") {
       emailContent = EventApprovalEmail({ eventDetails, isApproved });
       subject = `Event Registration ${isApproved ? "Approved" : "Rejected"}`;
+      recipient = eventDetails.organizer_email;
+    } else if (type === "participant-approval") {
+      emailContent = ApprovalEmail({ eventDetails, participant, isApproved });
+      subject = `Participant ${isApproved ? "Approved" : "Rejected"}`;
       recipient = participant.participant_email;
     } else if (type === "community-approval") {
       emailContent = CommunityApprovalEmail({ communityDetails, isApproved });

@@ -42,7 +42,7 @@ export const ApprovalEmail = ({
           >
             <Heading style={{ ...h1, color: textColor }}>
               {isApproved
-                ? "You&apos;re on the list! 🎉"
+                ? "You are on the list! 🎉"
                 : "Better luck next time 😢"}
             </Heading>
             <Text style={{ ...text, color: textColor }}>
@@ -134,11 +134,7 @@ export const ApprovalEmail = ({
               , and keep on rockin&apos;!
             </Text>
             <Text style={{ ...signature, color: textColor }}>
-              The NexMeet{" "}
-              <span style={{ ...highlight, backgroundColor: `${textColor}33` }}>
-                Team
-              </span>{" "}
-              😎
+              The NexMeet Team 😎
             </Text>
           </Section>
         </Container>

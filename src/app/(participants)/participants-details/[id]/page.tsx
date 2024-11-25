@@ -168,7 +168,7 @@ function Page({ params }: { params: { id: any } }) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            type: "approval",
+            type: "participant-approval",
             eventDetails: eventDetails,
             participant: updatedParticipant,
             isApproved: status,
@@ -346,12 +346,28 @@ function Page({ params }: { params: { id: any } }) {
           </div>
 
           <div className="px-8">
-            <button
-              onClick={downloadCSV}
-              className="px-4 py-2 mb-4 text-white bg-blue-500 rounded-md hover:bg-blue-600"
-            >
-              Download Participants
-            </button>
+            <div className="w-full flex flex-col md:flex-row md:gap-10 md:justify-start md:items-center">
+              <button
+                onClick={downloadCSV}
+                className="px-4 py-2 mb-4 text-white bg-blue-500 rounded-md hover:bg-blue-600"
+              >
+                Download Participants
+              </button>
+              <div className="md:flex flex-col md:flex-row gap-4 my-4">
+                <div>Total Participants : {participants.length}</div>
+                <div>
+                  Approved : {participants.filter((p) => p.is_approved).length}
+                </div>
+                <div>
+                  Rejected :{" "}
+                  {participants.filter((p) => p.is_approved === false).length}
+                </div>
+                <div>
+                  Pending :{" "}
+                  {participants.filter((p) => p.is_approved === null).length}
+                </div>
+              </div>
+            </div>
 
             <div className="overflow-x-auto overflow-y-auto">
               <table className="min-w-full border-collapse border border-gray-200">
