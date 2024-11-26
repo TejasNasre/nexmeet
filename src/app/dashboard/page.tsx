@@ -130,7 +130,7 @@ export default function Page() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-10">
                 <Card className="flex flex-col">
                   <CardHeader className="items-center pb-0">
-                    <CardTitle>Total Participation</CardTitle>
+                    <CardTitle>Total Event Organised</CardTitle>
                   </CardHeader>
                   <CardContent className="w-full flex py-4 justify-center item-center">
                     <div className="w-40 h-40 rounded-full border-2 border-white flex flex-col justify-center items-center">
@@ -141,7 +141,7 @@ export default function Page() {
 
                 <Card className="flex flex-col">
                   <CardHeader className="items-center pb-0">
-                    <CardTitle>Total Participation</CardTitle>
+                    <CardTitle>Total Event Participation</CardTitle>
                   </CardHeader>
                   <CardContent className="w-full flex py-4 justify-center item-center">
                     <div className="w-40 h-40 rounded-full border-2 border-white flex flex-col justify-center items-center">
