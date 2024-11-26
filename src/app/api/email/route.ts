@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     let emailContent;
     let subject;
     let recipient;
- //   let cc = ["nexmeetup@gmail.com"];
+    let cc = ["nexmeetup@gmail.com"];
 
     if (type === "submission") {
       emailContent = EventSubmissionEmail({ eventDetails });
