@@ -497,7 +497,7 @@ const EventPageClient = ({ eventsId }: { eventsId: string }) => {
                           href={s}
                           target="_blank"
                           rel="noreferrer"
-                          className="text-red-500 break-all"
+                          className="text-blue-500 break-all"
                         >
                           {s}
                         </Link>

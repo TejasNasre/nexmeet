@@ -3,8 +3,6 @@
 import React, { useEffect, useState } from "react";
 import { userDetails } from "../../action/userDetails";
 import Loading from "../../components/loading";
-import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -21,36 +19,6 @@ import { supabase } from "@/utils/supabase";
 import { useRouter } from "next/navigation";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
-import {
-  PieChart,
-  Pie,
-  Cell,
-  ResponsiveContainer,
-  RadialBarChart,
-  RadialBar,
-  Legend as RadialLegend,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  LabelList,
-  BarChart,
-  Bar,
-  Label,
-  AreaChart,
-  Area,
-} from "recharts";
-
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
-
 interface User {
   id: string;
   given_name: string;
@@ -58,111 +26,6 @@ interface User {
   picture: string;
   email: string;
 }
-
-interface ChartDataItem {
-  category: string;
-  eventcount: number;
-  fill: string;
-}
-
-const categoryColors = {
-  technical: "var(--color-chrome)",
-  cultural: "var(--color-safari)",
-  conference: "var(--color-firefox)",
-  sports: "var(--color-edge)",
-  meetup: "var(--color-other)",
-};
-
-const chartConfig2 = {
-  desktop: {
-    label: "Desktop",
-    color: "hsl(var(--chart-1))",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "hsl(var(--chart-2))",
-  },
-  label: {
-    color: "hsl(var(--background))",
-  },
-} satisfies ChartConfig;
-
-const barChartConfig = {
-  category: {
-    label: "category",
-    color: "hsl(var(--chart-1))",
-  },
-  count: {
-    label: "count",
-    color: "hsl(var(--chart-2))",
-  },
-  label: {
-    color: "hsl(var(--background))",
-  },
-} satisfies ChartConfig;
-
-const chartConfig = {
-  visitors: {
-    label: "Visitors",
-  },
-  chrome: {
-    label: "Chrome",
-    color: "hsl(var(--chart-1))",
-  },
-  safari: {
-    label: "Safari",
-    color: "hsl(var(--chart-2))",
-  },
-  firefox: {
-    label: "Firefox",
-    color: "hsl(var(--chart-3))",
-  },
-  edge: {
-    label: "Edge",
-    color: "hsl(var(--chart-4))",
-  },
-  other: {
-    label: "Other",
-    color: "hsl(var(--chart-5))",
-  },
-} satisfies ChartConfig;
-
-const categoryChartConfig = {
-  label: {
-    color: "hsl(var(--background))",
-  },
-};
-
-const totalAttendeesData = [
-  { name: "Online", value: 1200 },
-  { name: "In-person", value: 800 },
-];
-
-const avgRatingData = [
-  { category: "Content", rating: 4.5 },
-  { category: "Speakers", rating: 4.7 },
-  { category: "Organization", rating: 4.2 },
-  { category: "Venue", rating: 4.0 },
-];
-
-const engagementRateData = [
-  { month: "Jan", rate: 65 },
-  { month: "Feb", rate: 59 },
-  { month: "Mar", rate: 80 },
-  { month: "Apr", rate: 72 },
-  { month: "May", rate: 78 },
-  { month: "Jun", rate: 85 },
-];
-
-const chartData2 = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-];
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 export default function Page() {
   const router = useRouter();
@@ -173,12 +36,9 @@ export default function Page() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [totalEventCount, setTotalEventCount] = useState(0);
-  const [totalAttendees, setTotalAttendees] = useState<any[]>([]);
-  const [totalAttendeesByEvent, setTotalAttendeesByEvent] = useState<any[]>([]);
 
-  const [chartData, setChartData] = useState<ChartDataItem[]>([]);
-  const [formatChartData, setFormatChartData] = useState<ChartDataItem[]>([]);
   const [eventcount, seteventCount] = useState("");
+  const [participantionCount, setParticipantionCount] = useState(0);
 
   const { getPermission } = useKindeBrowserClient();
   const isSuperAdmin = getPermission("events:approve");
@@ -207,27 +67,7 @@ export default function Page() {
       if (error) {
         console.log(error);
       } else {
-        // Calculate total events
         setTotalEventCount(organised_events?.length || 0);
-        // Count the occurrences of each event category
-        const categoryCounts: any = organised_events?.reduce<
-          Record<string, number>
-        >((acc, curr) => {
-          acc[curr.event_category] = (acc[curr.event_category] || 0) + 1;
-          return acc;
-        }, {});
-
-        // Prepare chart data for the pie chart
-        const formattedChartData: any = Object.entries(categoryCounts).map(
-          ([category, count]) => ({
-            category,
-            eventcount: count,
-            fill:
-              categoryColors[category as keyof typeof categoryColors] ||
-              "var(--color-other)",
-          })
-        );
-        setFormatChartData(formattedChartData);
         setLoading(true);
         setOrganisedEvent(organised_events);
         setLoading(false);
@@ -235,51 +75,6 @@ export default function Page() {
     };
     organizeEvents();
   }, [user]);
-
-  /* Total participants grouped by event category */
-  useEffect(() => {
-    const eventCategory: any = async () => {
-      const { data, error } = await supabase.from("event_participants").select(`
-          event_id,
-          event_details (event_category, event_title)
-        `);
-
-      if (error) {
-        console.error("Error fetching participants:", error);
-      } else {
-        // Process the data to count participants per category
-        const counts = data.reduce((acc: any, participant: any) => {
-          const category = participant.event_details.event_category;
-          acc[category] = (acc[category] || 0) + 1;
-          return acc;
-        }, {});
-
-        const participantsByCategory = Object.entries(counts).map(
-          ([category, count]) => ({
-            category,
-            count,
-          })
-        );
-        setTotalAttendees(participantsByCategory);
-
-        // Process the data to count participants per event title
-        const countsByEvent = data.reduce((acc: any, participant: any) => {
-          const title = participant.event_details.event_title;
-          acc[title] = (acc[title] || 0) + 1;
-          return acc;
-        }, {});
-
-        const participantsByTitle = Object.entries(countsByEvent).map(
-          ([title, count]) => ({
-            title,
-            count,
-          })
-        );
-        setTotalAttendeesByEvent(participantsByTitle);
-      }
-    };
-    eventCategory();
-  }, []);
 
   useEffect(() => {
     const fetchEventStats = async () => {
@@ -299,30 +94,25 @@ export default function Page() {
         return;
       }
 
-      const categoryCounts = data.reduce<Record<string, number>>(
-        (acc, curr) => {
-          acc[curr.event_category] = (acc[curr.event_category] || 0) + 1;
-          return acc;
-        },
-        {}
-      );
-
-      const formattedChartData: ChartDataItem[] = Object.entries(
-        categoryCounts
-      ).map(([category, count]) => ({
-        category,
-        eventcount: count,
-        fill:
-          categoryColors[category as keyof typeof categoryColors] ||
-          "var(--color-other)",
-      }));
       seteventCount(data.length.toString());
-      setChartData(formattedChartData);
       setLoading(false);
     };
 
     fetchEventStats();
   }, []);
+
+  useEffect(() => {
+    const fetchEventParticipants = async () => {
+      let { data: event_participants, error } = await supabase
+        .from("event_participants")
+        .select("participant_email")
+        .eq("participant_email", user?.email);
+
+      setParticipantionCount(event_participants?.length || 0);
+    };
+
+    fetchEventParticipants();
+  });
 
   if (isLoading) {
     return <Loading />;
@@ -331,313 +121,32 @@ export default function Page() {
   return isAuthenticated ? (
     <>
       <div className="w-full h-auto bg-black text-white py-[8rem] flex flex-col">
+        <h1 className="text-5xl md:text-7xl font-bold mb-12 text-center tracking-tight font-spaceGrotesk">
+          Your Dashboard
+        </h1>
         <main className="flex-grow container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8">
-          {/*
-          <div className="flex flex-col justify-start items-center gap-24 border-white md:border rounded-md p-10">
-            <h1 className="text-center text-4xl font-bold">Your Profile</h1>
-            {loading ? (
-              <Loading />
-            ) : user ? (
-              <div className="flex flex-col justify-center items-center gap-4">
-                <Image
-                  src={user.picture || "/profile.jpg"}
-                  alt={`${user.given_name} ${user.family_name}`}
-                  width={96}
-                  height={96}
-                  className="rounded-full border-2 border-white"
-                />
-                <h1>
-                  {user.given_name} {user.family_name}
-                </h1>
-                <h2>{user.email}</h2>
-                <LogoutLink
-                  className="mono transition ease-in-out delay-100 hover:scale-105 border-double border-white border-2 hover:border-white hover:shadow-[5px_5px_0px_0px_rgb(255,255,255)] rounded-md px-4 py-1"
-                  postLogoutRedirectURL="/"
-                >
-                  Log out
-                </LogoutLink>
-              </div>
-
-            ) : (
-              <h1>No user details available</h1>
-            )}
-          </div>
-        */}
-
           <div className="flex-grow space-y-8">
             <div className="w-full p-2 space-y-2">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
-                {/* Total Events */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-10">
                 <Card className="flex flex-col">
                   <CardHeader className="items-center pb-0">
-                    <CardTitle>Total Events</CardTitle>
-                    {/* <CardDescription>January - June 2024</CardDescription> */}
+                    <CardTitle>Total Participation</CardTitle>
                   </CardHeader>
-                  <CardContent className="flex-1 pb-0">
-                    <ChartContainer
-                      config={chartConfig}
-                      className="mx-auto aspect-square max-h-[250px]"
-                    >
-                      <PieChart>
-                        <ChartTooltip
-                          cursor={false}
-                          content={
-                            <ChartTooltipContent
-                              hideLabel
-                              className="bg-black"
-                            />
-                          }
-                        />
-                        <Pie
-                          data={chartData}
-                          dataKey="eventcount"
-                          nameKey="category"
-                          innerRadius={60}
-                          strokeWidth={5}
-                        >
-                          <Label
-                            content={({ viewBox }) => {
-                              if (
-                                viewBox &&
-                                "cx" in viewBox &&
-                                "cy" in viewBox
-                              ) {
-                                return (
-                                  <text
-                                    x={viewBox.cx}
-                                    y={viewBox.cy}
-                                    textAnchor="middle"
-                                    dominantBaseline="middle"
-                                  >
-                                    <tspan
-                                      x={viewBox.cx}
-                                      y={viewBox.cy}
-                                      className="fill-white text-3xl font-bold"
-                                    >
-                                      {totalEventCount}
-                                    </tspan>
-                                    <tspan
-                                      x={viewBox.cx}
-                                      y={(viewBox.cy || 0) + 24}
-                                      className="fill-white"
-                                    >
-                                      Events
-                                    </tspan>
-                                  </text>
-                                );
-                              }
-                            }}
-                          />
-                        </Pie>
-                      </PieChart>
-                    </ChartContainer>
+                  <CardContent className="w-full flex py-4 justify-center item-center">
+                    <div className="w-40 h-40 rounded-full border-2 border-white flex flex-col justify-center items-center">
+                      <h1 className="text-4xl">{totalEventCount}</h1>
+                    </div>
                   </CardContent>
                 </Card>
 
-                {/*
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-center">
-                      Total Attendes
-                    </CardTitle>
+                <Card className="flex flex-col">
+                  <CardHeader className="items-center pb-0">
+                    <CardTitle>Total Participation</CardTitle>
                   </CardHeader>
-                  <CardContent className="mt-2 md:mt-4">
-                    <ChartContainer config={chartConfig2}>
-                      <AreaChart
-                        accessibilityLayer
-                        data={chartData2}
-                        margin={{
-                          left: 12,
-                          right: 12,
-                        }}
-                      >
-                        <XAxis
-                          dataKey="month"
-                          tickLine={false}
-                          axisLine={false}
-                          tickMargin={8}
-                          tickFormatter={(value) => value.slice(0, 3)}
-                        />
-                        <ChartTooltip
-                          cursor={false}
-                          content={
-                            <ChartTooltipContent
-                              indicator="dot"
-                              className="bg-black"
-                            />
-                          }
-                        />
-                        <Area
-                          dataKey="mobile"
-                          type="natural"
-                          fill="var(--color-mobile)"
-                          // fillOpacity={0.2}
-                          stroke="var(--color-mobile)"
-                          stackId="a"
-                        />
-                        <Area
-                          dataKey="desktop"
-                          type="natural"
-                          fill="var(--color-desktop)"
-                          // fillOpacity={0.2}
-                          stroke="var(--color-desktop)"
-                          stackId="a"
-                        />
-                      </AreaChart>
-                    </ChartContainer>
-                  </CardContent>
-                </Card>
-*/}
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-center">
-                      Participants By Event
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="mt-2 md:mt-4">
-                    <ChartContainer config={barChartConfig}>
-                      <BarChart
-                        accessibilityLayer
-                        data={totalAttendeesByEvent}
-                        layout="vertical"
-                        margin={{ left: 12 }} // Adjust the left margin for Y-axis labels
-                      >
-                        <YAxis
-                          dataKey="title"
-                          type="category"
-                          tickLine={false}
-                          axisLine={false}
-                          tickFormatter={(value) => value} // Return the full value
-                        />
-                        <XAxis dataKey="count" type="number" hide />
-                        <ChartTooltip
-                          cursor={false}
-                          content={
-                            <ChartTooltipContent
-                              indicator="line"
-                              className="bg-black"
-                            />
-                          }
-                        />
-                        <Bar dataKey="count" fill="#4CAF50" radius={4}>
-                          <LabelList
-                            dataKey="count"
-                            position="insideLeft"
-                            offset={8}
-                            className="fill-[--color-label]"
-                            fontSize={12}
-                          />
-                        </Bar>
-                      </BarChart>
-                    </ChartContainer>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-center">
-                      Participants By Category
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="mt-2 md:mt-4">
-                    <ChartContainer config={barChartConfig}>
-                      <BarChart
-                        accessibilityLayer
-                        data={totalAttendees}
-                        layout="vertical"
-                        margin={{ left: 12 }} // Adjust the left margin for Y-axis labels
-                      >
-                        <YAxis
-                          dataKey="category"
-                          type="category"
-                          tickLine={false}
-                          axisLine={false}
-                          tickFormatter={(value) => value} // Return the full value
-                        />
-                        <XAxis dataKey="count" type="number" hide />
-                        <ChartTooltip
-                          cursor={false}
-                          content={
-                            <ChartTooltipContent
-                              indicator="line"
-                              className="bg-black"
-                            />
-                          }
-                        />
-                        <Bar
-                          dataKey="count"
-                          fill="var(--color-category)"
-                          radius={4}
-                        >
-                          <LabelList
-                            dataKey="count"
-                            position="insideLeft"
-                            offset={8}
-                            className="fill-[--color-label]"
-                            fontSize={12}
-                          />
-                        </Bar>
-                      </BarChart>
-                    </ChartContainer>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-center">
-                      Engagement Rate
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="mt-2 md:mt-4">
-                    <ChartContainer config={chartConfig2}>
-                      <LineChart
-                        accessibilityLayer
-                        data={chartData2}
-                        margin={{
-                          top: 20,
-                          left: 12,
-                          right: 12,
-                        }}
-                      >
-                        {/* <CartesianGrid vertical={false} /> */}
-                        <XAxis
-                          dataKey="month"
-                          tickLine={false}
-                          axisLine={false}
-                          tickMargin={8}
-                          tickFormatter={(value) => value.slice(0, 3)}
-                        />
-                        <ChartTooltip
-                          cursor={false}
-                          content={
-                            <ChartTooltipContent
-                              indicator="line"
-                              className="bg-black"
-                            />
-                          }
-                        />
-                        <Line
-                          dataKey="desktop"
-                          type="natural"
-                          stroke="var(--color-desktop)"
-                          strokeWidth={2}
-                          dot={{
-                            fill: "var(--color-desktop)",
-                          }}
-                          activeDot={{
-                            r: 6,
-                          }}
-                        >
-                          <LabelList
-                            position="top"
-                            offset={12}
-                            className="fill-foreground"
-                            fontSize={12}
-                          />
-                        </Line>
-                      </LineChart>
-                    </ChartContainer>
+                  <CardContent className="w-full flex py-4 justify-center item-center">
+                    <div className="w-40 h-40 rounded-full border-2 border-white flex flex-col justify-center items-center">
+                      <h1 className="text-4xl">{participantionCount}</h1>
+                    </div>
                   </CardContent>
                 </Card>
               </div>

@@ -212,7 +212,7 @@ const Hero: React.FC = () => {
                   Total Event Organised
                 </dt>
                 <dd className="text-4xl font-extrabold text-blue-600 md:text-5xl">
-                  <CountUp start={0} end={0} duration={10} />
+                  <CountUp start={0} end={1} duration={10} suffix="+" />
                 </dd>
               </div>
             </div>

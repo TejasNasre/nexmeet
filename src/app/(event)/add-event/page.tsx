@@ -670,7 +670,7 @@ export default function AddEvent() {
                           <FormControl>
                             <Input
                               type="number"
-                              placeholder="Enter Upi Id"
+                              placeholder="Enter Amount"
                               {...field}
                               className="bg-black border-white text-white"
                             />
