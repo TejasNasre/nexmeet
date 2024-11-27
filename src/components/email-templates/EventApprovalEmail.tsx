@@ -84,9 +84,30 @@ const EventApprovalEmail: React.FC<EventApprovalEmailProps> = ({
                 </Text>
                 <Text style={{ ...text, color: textColor }}>
                   🗓️ From:{" "}
-                  {new Date(eventDetails.event_startdate).toLocaleString()}
+                  {new Date(eventDetails.event_startdate).toLocaleString(
+                    "en-US",
+                    {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                      hour: "numeric",
+                      minute: "numeric",
+                      hour12: true,
+                    }
+                  )}
                   <br />
-                  🏁 To: {new Date(eventDetails.event_enddate).toLocaleString()}
+                  🏁 To:{" "}
+                  {new Date(eventDetails.event_enddate).toLocaleString(
+                    "en-US",
+                    {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                      hour: "numeric",
+                      minute: "numeric",
+                      hour12: true,
+                    }
+                  )}
                 </Text>
                 <Text style={{ ...text, color: textColor }}>
                   Get ready to host the event of the century! (No pressure or

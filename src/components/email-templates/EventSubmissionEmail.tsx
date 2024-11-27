@@ -64,9 +64,25 @@ const EventSubmissionEmail: React.FC<EventSubmissionEmailProps> = ({
             <Text style={{ ...text, color: textColor }}>
               🎭 Event: {eventDetails.event_title}
               <br />
-              🗓️ From: {new Date(eventDetails.event_startdate).toLocaleString()}
+              🗓️ From:{" "}
+              {new Date(eventDetails.event_startdate).toLocaleString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+                hour12: true,
+              })}
               <br />
-              🏁 To: {new Date(eventDetails.event_enddate).toLocaleString()}
+              🏁 To:{" "}
+              {new Date(eventDetails.event_enddate).toLocaleString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+                hour12: true,
+              })}
             </Text>
             <Text style={{ ...text, color: textColor }}>
               Our team of event-reviewing ninjas is on the case. We&apos;ll get

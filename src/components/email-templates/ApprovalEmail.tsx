@@ -94,8 +94,29 @@ export const ApprovalEmail = ({
                   </li>
                   <li style={{ ...listItem, color: textColor }}>
                     <strong>When:</strong>{" "}
-                    {new Date(eventDetails.event_startdate).toLocaleString()} to{" "}
-                    {new Date(eventDetails.event_enddate).toLocaleString()}
+                    {new Date(eventDetails.event_startdate).toLocaleString(
+                      "en-US",
+                      {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                        hour: "numeric",
+                        minute: "numeric",
+                        hour12: true,
+                      }
+                    )}{" "}
+                    to{" "}
+                    {new Date(eventDetails.event_enddate).toLocaleString(
+                      "en-US",
+                      {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                        hour: "numeric",
+                        minute: "numeric",
+                        hour12: true,
+                      }
+                    )}
                   </li>
                 </ul>
                 <Text style={{ ...text, color: textColor }}>

@@ -11,18 +11,20 @@ import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { toast } from "sonner";
 import { QRCodeCanvas } from "qrcode.react";
 import { Button } from "@/components/ui/button";
+import { set } from "date-fns";
 
 function Registerevent() {
   const params = useParams();
   const { registerId } = params as { registerId: string };
 
   const router = useRouter();
-  const { isAuthenticated, isLoading } = useKindeBrowserClient();
+  const { isAuthenticated, isLoading, user } = useKindeBrowserClient();
 
   const [loading, setLoading]: any = useState(true);
   const [eventDetails, setEventDetails]: any = useState([]);
   const [submit, setSubmit]: any = useState(null);
   const [pamenturl, setPaymenturl] = useState("");
+  const [isRegistred, setIsRegistred] = useState(false);
 
   useEffect(() => {
     async function fetchEventDetails() {
@@ -42,6 +44,25 @@ function Registerevent() {
 
     fetchEventDetails();
   }, [registerId]);
+
+  useEffect(() => {
+    const checkUserRegister = async () => {
+      if (user?.email) {
+        let { data: check_isregistered, error } = await supabase
+          .from("event_participants")
+          .select("event_id,participant_email,is_registered")
+          .eq("event_id", registerId)
+          .eq("participant_email", user.email);
+
+        setIsRegistred(
+          check_isregistered && check_isregistered[0]?.is_registered
+        );
+      }
+    };
+    setLoading(true);
+    checkUserRegister();
+    setLoading(false);
+  }, [user]);
 
   const {
     register,
@@ -109,6 +130,23 @@ function Registerevent() {
 
   if (isLoading) {
     return <Loading />;
+  }
+
+  if (isRegistred) {
+    return (
+      <div className="w-full h-screen bg-black text-white py-[8rem] px-[2rem] flex flex-col justify-center items-center gap-10">
+        <h1 className="text-2xl font-extrabold text-center md:text-4xl">
+          You have already registered for{" "}
+          <Link href={`/explore-events/${registerId}`} className="text-red-500">
+            {eventDetails.event_title}
+          </Link>
+        </h1>
+
+        <Link href={`/explore-events}`}>
+          <Button>Checkout Other Events</Button>
+        </Link>
+      </div>
+    );
   }
 
   return isAuthenticated ? (
