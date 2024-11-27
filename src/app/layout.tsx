@@ -1,6 +1,7 @@
 import React from "react";
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { DM_Mono } from "next/font/google";
 import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
@@ -99,7 +100,8 @@ export default function RootLayout({
         <title>NexMeet</title>
       </head>
       <body suppressHydrationWarning={true} className={spaceGrotesk.className}>
-        <Analytics/>
+        <Analytics />
+        <SpeedInsights />
         <Toaster
           theme="dark"
           richColors
