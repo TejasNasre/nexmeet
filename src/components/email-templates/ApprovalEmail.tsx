@@ -103,6 +103,7 @@ export const ApprovalEmail = ({
                         hour: "numeric",
                         minute: "numeric",
                         hour12: true,
+                        timeZone: "Asia/Kolkata", // Adjusted to IST
                       }
                     )}{" "}
                     to{" "}
@@ -115,6 +116,7 @@ export const ApprovalEmail = ({
                         hour: "numeric",
                         minute: "numeric",
                         hour12: true,
+                        timeZone: "Asia/Kolkata", // Adjusted to IST
                       }
                     )}
                   </li>
