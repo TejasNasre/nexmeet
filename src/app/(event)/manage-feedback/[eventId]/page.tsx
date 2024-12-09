@@ -3,30 +3,22 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "../../../../utils/supabase";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  LineChart,
-  Line,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Area,
+  PieChart,
+  Pie,
+  Cell,
 } from "recharts";
 import { parseISO, format } from "date-fns";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { useParams, useRouter } from "next/navigation";
 import Loading from "@/components/loading";
 import { toast } from "sonner";
-
 
 function EventResponsesPage() {
   const params = useParams();
@@ -35,7 +27,9 @@ function EventResponsesPage() {
   const [responses, setResponses] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
-  const [chartData, setChartData] = useState<any[]>([]);
+  const [organizationRatings, setOrganizationRatings] = useState<any[]>([]);
+  const [satisfactionData, setSatisfactionData] = useState<any[]>([]);
+  const [recommendationData, setRecommendationData] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchResponses = async () => {
@@ -59,54 +53,66 @@ function EventResponsesPage() {
         toast.error("Failed to fetch responses. Please try again.");
       } else {
         setResponses(eventFeedback || []);
-        processChartData(eventFeedback || []);
+        processOrganizationRatings(eventFeedback || []);
+        processSatisfactionData(eventFeedback || []);
+        processRecommendationData(eventFeedback || []);
         setLoading(false);
       }
     };
     fetchResponses();
   }, [params.eventId]);
 
-  const processChartData = (data: any[]) => {
-    data.sort(
-      (a, b) =>
-        new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-    );
-
-    const processedData = data.reduce((acc, curr, index) => {
-      const date = format(parseISO(curr.created_at), "MMM dd HH:mm");
-      const existingEntry = acc.find((item: any) => item.date === date);
-
+  const processOrganizationRatings = (data: any[]) => {
+    const ratings = data.reduce((acc: any[], curr: any) => {
+      const rating = curr.organization_rating;
+      const existingEntry = acc.find((item: any) => item.rating === rating);
       if (existingEntry) {
-        existingEntry.responses = index + 1;
+        existingEntry.count++;
       } else {
-        acc.push({ date, responses: index + 1 });
+        acc.push({ rating, count: 1 });
       }
-
       return acc;
     }, []);
+    setOrganizationRatings(ratings);
+  };
 
-    setChartData(processedData);
+  const processSatisfactionData = (data: any[]) => {
+    const satisfactionLevels = data.reduce((acc: any[], curr: any) => {
+      const satisfaction = curr.overall_satisfaction;
+      const existingEntry = acc.find(
+        (item: any) => item.satisfaction === satisfaction
+      );
+      if (existingEntry) {
+        existingEntry.count++;
+      } else {
+        acc.push({ satisfaction, count: 1 });
+      }
+      return acc;
+    }, []);
+    setSatisfactionData(satisfactionLevels);
+  };
+
+  const processRecommendationData = (data: any[]) => {
+    const recommendations = data.reduce((acc: any[], curr: any) => {
+      const recommendation = curr.recommendation;
+      const existingEntry = acc.find(
+        (item: any) => item.recommendation === recommendation
+      );
+      if (existingEntry) {
+        existingEntry.count++;
+      } else {
+        acc.push({ recommendation, count: 1 });
+      }
+      return acc;
+    }, []);
+    setRecommendationData(recommendations);
   };
 
   const filteredResponses = responses.filter((response) =>
     response.respondent_email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const CustomTooltip: React.FC<{
-    active: boolean;
-    payload: any[];
-    label: string;
-  }> = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="p-4 bg-gray-800 border border-gray-700 rounded-lg shadow-md">
-          <p className="text-sm font-semibold text-gray-300">{`Date: ${label}`}</p>
-          <p className="text-sm text-cyan-400">{`Responses: ${payload[0].value}`}</p>
-        </div>
-      );
-    }
-    return null;
-  };
+  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
 
   if (isLoading) {
     return <Loading />;
@@ -122,81 +128,76 @@ function EventResponsesPage() {
             Event Responses
           </h1>
           <>
-            <div className="w-full h-auto mb-8">
-              <h2 className="mb-4 text-2xl font-bold text-center text-cyan-400">
-                Response Count Over Time
-              </h2>
-              <ResponsiveContainer width="100%" height={400}>
-                <LineChart
-                  data={chartData}
-                  margin={{
-                    top: 20,
-                    right: 30,
-                    left: 20,
-                    bottom: 20,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-                  <XAxis
-                    dataKey="date"
-                    angle={-45}
-                    textAnchor="end"
-                    height={60}
-                    interval={0}
-                    tick={{ fill: "#9CA3AF", fontSize: 12 }}
-                    stroke="#4B5563"
-                  />
-                  <YAxis
-                    tick={{ fill: "#9CA3AF", fontSize: 12 }}
-                    stroke="#4B5563"
-                  />
-                  <Tooltip
-                    content={
-                      <CustomTooltip active={false} payload={[]} label="" />
-                    }
-                  />
-                  <defs>
-                    <linearGradient
-                      id="colorResponses"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="w-full h-auto">
+                <h2 className="mb-4 text-2xl font-bold text-center text-cyan-400">
+                  Organization Ratings
+                </h2>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={organizationRatings}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                    <XAxis
+                      dataKey="rating"
+                      tick={{ fill: "#9CA3AF", fontSize: 12 }}
+                    />
+                    <YAxis tick={{ fill: "#9CA3AF", fontSize: 12 }} />
+                    <Tooltip
+                      contentStyle={{ backgroundColor: "#333", border: "none" }}
+                    />
+                    <Bar dataKey="count" fill="#06B6D4" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+
+              <div className="w-full h-auto">
+                <h2 className="mb-4 text-2xl font-bold text-center text-cyan-400">
+                  Overall Satisfaction
+                </h2>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={satisfactionData}
+                      dataKey="count"
+                      nameKey="satisfaction"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={80}
+                      fill="#06B6D4"
+                      label
                     >
-                      <stop
-                        offset="5%"
-                        stopColor="#06B6D4"
-                        stopOpacity={0.8}
-                      />
-                      <stop
-                        offset="95%"
-                        stopColor="#06B6D4"
-                        stopOpacity={0.2}
-                      />
-                    </linearGradient>
-                  </defs>
-                  <Area
-                    type="monotone"
-                    dataKey="responses"
-                    stroke="#06B6D4"
-                    fillOpacity={1}
-                    fill="url(#colorResponses)"
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="responses"
-                    stroke="#22D3EE"
-                    strokeWidth={3}
-                    dot={false}
-                    activeDot={{
-                      r: 8,
-                      fill: "#22D3EE",
-                      stroke: "#000",
-                      strokeWidth: 2,
-                    }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+                      {satisfactionData.map((entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))}
+                    </Pie>
+                    <Tooltip
+                      contentStyle={{ backgroundColor: "#333", border: "none" }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+
+              <div className="w-full h-auto">
+                <h2 className="mb-4 text-2xl font-bold text-center text-cyan-400">
+                  Recommendation Scores
+                </h2>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={recommendationData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                    <XAxis
+                      dataKey="recommendation"
+                      tick={{ fill: "#9CA3AF", fontSize: 12 }}
+                    />
+                    <YAxis tick={{ fill: "#9CA3AF", fontSize: 12 }} />
+                    <Tooltip
+                      contentStyle={{ backgroundColor: "#333", border: "none" }}
+                    />
+                    <Bar dataKey="count" fill="#06B6D4" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             </div>
 
             <div className="px-8">
@@ -223,77 +224,64 @@ function EventResponsesPage() {
               </label>
             </div>
 
-            <div className="px-8">
-              <div className="h-full overflow-auto border border-white rounded-lg">
-                <ScrollArea className="h-full">
-                  <Table className="text-white border-separate border-spacing-y-2">
-                    <TableHeader className="sticky top-0 bg-black text-white font-bold">
-                      <TableRow>
-                        <TableHead className="text-left">
-                          Respondent Email
-                        </TableHead>
-                        <TableHead className="text-left">
-                          Submission Date
-                        </TableHead>
-                        <TableHead className="text-left">
-                          Enjoyment
-                        </TableHead>
-                        <TableHead className="text-left">
-                          Organization Rating
-                        </TableHead>
-                        <TableHead className="text-left">
-                          Overall Satisfaction
-                        </TableHead>
-                        <TableHead className="text-left">
-                          Recommendations
-                        </TableHead>
-                        <TableHead className="text-left">
-                          Suggestions
-                        </TableHead>
-                        <TableHead className="text-left"></TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {filteredResponses.length === 0 ? (
-                        <TableRow>
-                          <TableCell colSpan={8} className="text-center">
-                            No feedback found.
-                          </TableCell>
-                        </TableRow>
-                      ) : (
-                        filteredResponses.map((response) => (
-                          <TableRow key={response.id}>
-                            <TableCell>
-                              {response.respondent_email}
-                            </TableCell>
-                            <TableCell>
-                              {format(
-                                new Date(response.created_at),
-                                "MMM dd, yyyy hh:mm a"
-                              )}
-                            </TableCell>
-                            <TableCell>
-                              {response.enjoy_most} {/* Adjust field names if necessary */}
-                            </TableCell>
-                            <TableCell>
-                              {response.organization_rating} {/* Adjust field names if necessary */}
-                            </TableCell>
-                            <TableCell>
-                              {response.overall_satisfaction} {/* Adjust field names if necessary */}
-                            </TableCell>
-                            <TableCell>
-                              {response.recommendation} {/* Adjust field names if necessary */}
-                            </TableCell>
-                            <TableCell>
-                              {response.improvement} {/* Adjust field names if necessary */}
-                            </TableCell>
-                          </TableRow>
-                        ))
-                      )}
-                    </TableBody>
-                  </Table>
-                </ScrollArea>
-              </div>
+            <div className="overflow-x-auto overflow-y-auto">
+              <table className="min-w-full border-collapse border border-gray-200">
+                <thead>
+                  <tr>
+                    <th className="px-4 py-2 text-left text-gray-100 border border-gray-200">
+                      User Email
+                    </th>
+                    <th className="px-4 py-2 text-left text-gray-100 border border-gray-200">
+                      Enjoy Most
+                    </th>
+                    <th className="px-4 py-2 text-left text-gray-100 border border-gray-200">
+                      Rating
+                    </th>
+                    <th className="px-4 py-2 text-left text-gray-100 border border-gray-200">
+                      Overall Satisfaction
+                    </th>
+                    <th className="px-4 py-2 text-left text-gray-100 border border-gray-200">
+                      Recommendation
+                    </th>
+                    <th className="px-4 py-2 text-left text-gray-100 border border-gray-200">
+                      Improvement
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredResponses.length === 0 ? (
+                    <tr>
+                      <td className="text-center">No feedback found.</td>
+                    </tr>
+                  ) : (
+                    filteredResponses.map((response) => (
+                      <tr
+                        key={response.id}
+                        className="cursor-pointer hover:bg-gray-800"
+                      >
+                        <td className="px-4 py-2 border border-gray-200">
+                          {response.respondent_email}
+                        </td>
+                        <td className="px-4 py-2 border border-gray-200">
+                          {response.enjoy_most}
+                        </td>
+                        <td className="px-4 py-2 border border-gray-200">
+                          {response.organization_rating}
+                        </td>
+                        <td className="px-4 py-2 border border-gray-200">
+                          {response.overall_satisfaction}
+                        </td>
+                        <td className="px-4 py-2 border border-gray-200">
+                          {response.recommendation}
+                        </td>
+                        <td className="px-4 py-2 border border-gray-200">
+                          {response.improvement}
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
             </div>
           </>
         </div>
